@@ -77,9 +77,20 @@ void AddItems(Red::Handle<Red::game::Object> & object, Red::DynArray<Red::TweakD
 
         auto item_record = Red::Handle<Red::game::data::Item_Record>();
         GetItemRecord(&item_record, item);
+        if (!item_record)
+        {
+            spdlog::warn("Item record not found");
+            continue;
+        }
         
         auto placementSlotHandle = Red::Handle<Red::game::data::AttachmentSlot_Record>();
         GetPlacementSlot(item_record.instance, &placementSlotHandle, 0);
+        if (!placementSlotHandle)
+        {
+            spdlog::warn("Placement slot not found... kinda weird");
+            continue;
+        }
+
         auto placementSlot = placementSlotHandle.instance->recordID;
 
         Red::CString str;
