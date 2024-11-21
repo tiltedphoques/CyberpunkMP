@@ -1,0 +1,17 @@
+build/*
+.xmake/*
+vs20*/
+vsxmake*/
+.vs/
+package/*
+**.netpack.gen.cpp
+**.netpack.gen.h
+.cache/*
+compile_commands.json
+out/*
+code/client/Archives/CyberpunkMP.zip
+code/scripting/CyberpunkSdk/CyberpunkSdk.csproj.user
+code/scripting/JobSystem/Properties/PublishProfiles/FolderProfile.pubxml.user
+Cyberpunk2077.exe*
+imgui.ini
+distrib/*

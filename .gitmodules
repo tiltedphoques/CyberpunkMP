@@ -1,0 +1,12 @@
+[submodule "vendor/RED4ext.SDK"]
+	path = vendor/RED4ext.SDK
+	url = https://github.com/tiltedphoques/RED4ext.SDK.git
+[submodule "vendor/ArchiveXL"]
+	path = vendor/ArchiveXL
+	url = https://github.com/psiberx/cp2077-archive-xl.git
+[submodule "vendor/TweakXL"]
+	path = vendor/TweakXL
+	url = https://github.com/psiberx/cp2077-tweak-xl.git
+[submodule "vendor/Codeware"]
+	path = vendor/Codeware
+	url = https://github.com/psiberx/cp2077-codeware.git

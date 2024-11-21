@@ -1,0 +1,231 @@
+{
+    __meta__ = {
+        version = "1.0"
+    },
+    ["windows|x64"] = {
+        ["abseil#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "20240116.2"
+        },
+        ["catch2 2.13.9#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v2.13.9"
+        },
+        ["cmake#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "3.23.0"
+        },
+        ["cryptopp#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "8.9.0"
+        },
+        ["cxxopts#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v3.2.1"
+        },
+        ["dotnet#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "8.0.6"
+        },
+        ["entt#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v3.13.2"
+        },
+        ["flecs#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v3.2.11"
+        },
+        ["gamenetworkingsockets#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.4.1"
+        },
+        ["glm#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "1.0.1"
+        },
+        ["hopscotch-map#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v2.3.1"
+        },
+        ["imgui#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.90.8"
+        },
+        ["libuv#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.48.0"
+        },
+        ["mem#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "1.0.0"
+        },
+        ["microsoft-gsl#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v4.0.0"
+        },
+        ["mimalloc#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "2.1.2"
+        },
+        ["minhook#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.3.3"
+        },
+        ["nameof#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "0.10.4"
+        },
+        ["nlohmann_json#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v3.11.3"
+        },
+        ["openssl#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "1.1.1-w"
+        },
+        ["protobuf-cpp 3.19.4#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "3.19.4"
+        },
+        ["protobuf-cpp#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "27.0"
+        },
+        ["semver#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "2023.10.04"
+        },
+        ["snappy#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "1.1.10"
+        },
+        ["spdlog#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.14.1"
+        },
+        ["wil#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "2023.12.16"
+        },
+        ["xbyak#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v7.06"
+        },
+        ["zlib#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "a815ba49334cf0d2883d7174e2004fa857059c4c",
+                url = "https://gitlab.com/tboox/xmake-repo.git"
+            },
+            version = "v1.3.1"
+        }
+    }
+}

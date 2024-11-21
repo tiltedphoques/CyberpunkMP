@@ -1,0 +1,43 @@
+{
+  "name": "CyberpunkMP",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:ow-electron": "set ELECTRON_DEV=1 && ow-electron --test-ad .",
+    "build:ow-electron": "ow-electron-builder --publish=never"
+  },
+  "author": {
+    "name": "Tilted Phoques SRL"
+  },
+  "productName": "CyberpunkMP",
+  "build": {
+    "productName": "CyberpunkMP",
+    "includeSubNodeModules": "true",
+    "directories": {
+      "output": "out"
+    },
+    "extraFiles": [
+      "./dist/**",
+      "./preload.js"
+    ],
+    "files": [
+      "./dist/**/*",
+      "./app.js",
+      "./preload.js"
+    ],
+    "extraResources": [
+      "./preload.js"
+    ]
+  },
+  "private": true,
+  "devDependencies": {
+    "@overwolf/ow-electron": "^31.4.0",
+    "@overwolf/ow-electron-builder": "^24.7.0"
+  },
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "electron-store": "^7.0.0"
+  }
+}

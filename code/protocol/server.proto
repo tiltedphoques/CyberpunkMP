@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package server;
+
+import "common.proto";
+
+message Settings {
+    uint32 update_rate = 1;
+}
+
+message AuthenticationResponse {
+    bool success = 1;
+    string error = 2;
+    Settings settings = 3;
+}
+
+message SpawnCharacterResponse{
+    uint64 id = 1;
+    uint64 cookie = 2;
+}
+
+message NotifyCharacterLoad {
+    uint64 id = 1;
+    common.Vector3 position = 2;
+    float rotation = 3;
+    bool is_player = 4;
+    repeated string equipment = 5;
+    bytes ccstate = 6;
+}
+
+message NotifyVehicleLoad {
+    uint64 id = 1;
+    common.Vector3 position = 2;
+    float rotation = 3;
+    uint64 tweak_id = 4;
+}
+
+message NotifyVehicleControlAssigned {
+    uint64 vehicle_id = 1;
+}
+
+message NotifyVehicleEnter {
+    uint64 vehicle_id = 1;
+    uint64 character_id = 2;
+    uint64 sit_id = 3;
+}
+
+message NotifyVehicleExit {
+    uint64 character_id = 1;
+}
+
+message NotifyEntityUnload {
+    uint64 id = 1;
+}
+
+message NotifyEntityMove {
+    bool unreliable = 1000; // This is just a tag to indicate that this message is unreliable
+    uint64 id = 1;
+    common.Vector3 position = 2;
+    float rotation = 3;
+    uint64 tick = 4;
+    float speed = 5;
+    common.Vector3 full_rotation = 6;
+}
+
+message ChatMessage {
+    string username = 1;
+    string message = 2;
+}
+
+message RpcCall {
+    uint32 id = 1;
+	bytes arguments = 2;
+}
+
+message RpcDefinition {
+    uint32 id = 1;
+    fixed64 klass = 2;
+    fixed64 function = 3;
+}
+
+message RpcDefinitions {
+    repeated RpcDefinition client_definitions = 1;
+    repeated RpcDefinition server_definitions = 2;
+}
+
+message Protocol {
+    oneof content {
+        AuthenticationResponse authentication_response = 1;
+        NotifyCharacterLoad notify_character_load = 2;
+        NotifyEntityUnload notify_character_unload = 3;
+        SpawnCharacterResponse spawn_character_response = 4;
+        NotifyEntityMove notify_character_move = 5;
+        ChatMessage chat_message = 6;
+        RpcCall rpc_call = 7;
+        RpcDefinitions rpc_definitions = 8;
+        NotifyVehicleLoad notify_vehicle_load = 9;
+        NotifyVehicleEnter notify_vehicle_enter = 10;
+        NotifyVehicleExit notify_vehicle_exit = 11;
+        NotifyVehicleControlAssigned notify_vehicle_control_assigned = 12;
+    }
+}

@@ -1,0 +1,72 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+Printf("Unkarking\n");
+
+#include "CP77_CR2W_Unkarkify.1sc"
+
+TFindResults r, changed;
+
+changed = FindAll("CyberpunkMP.Ink.CMPListItemCntlr");
+if (changed.count) {
+    Printf("Removing custom classes\n");
+
+    r = FindAll("CyberpunkMP.Ink.CMPGameController");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "PauseMenuBackgroundGameController");
+
+    r = FindAll("CyberpunkMP.Ink.CMPListItemCntlr");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "characterCreationSummaryListItem");
+
+    r = FindAll("CyberpunkMP.Ink.CMPHK");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "PhoneHotkeyController");
+
+    r = FindAll("CyberpunkMP.Ink.ServerListItemCtr");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "PhoneContactItemVirtualController");
+
+    r = FindAll("CyberpunkMP.Ink.ServerList");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "PhoneDialerLogicController");
+
+} else {
+    Printf("Adding custom classes\n");
+
+    r = FindAll("PauseMenuBackgroundGameController");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "CyberpunkMP.Ink.CMPGameController");
+  
+    r = FindAll("characterCreationSummaryListItem");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "CyberpunkMP.Ink.CMPListItemCntlr");
+  
+    r = FindAll("PhoneHotkeyController");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "CyberpunkMP.Ink.CMPHK");
+  
+    r = FindAll("PhoneDialerLogicController");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "CyberpunkMP.Ink.ServerList");
+  
+    r = FindAll("PhoneContactItemVirtualController");
+    for( i = 0; i < r.count; i++ )
+        WriteString(r.start[i], "CyberpunkMP.Ink.ServerListItemCtr");
+
+}
+
+Printf("Re-karking\n");
+#include "CP77_CR2W_Rebuild.1sc"
+
+Printf("Saving\n");
+FileSave();
+Printf("Completed!\n");

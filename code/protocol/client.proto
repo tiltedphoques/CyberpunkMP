@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package client;
+
+import "common.proto";
+
+message AuthenticationRequest {
+    string username = 1;
+    string token = 2;
+    uint64 client_protocol = 3;
+    uint64 server_protocol = 4;
+}
+
+message SpawnCharacterRequest {
+    common.Vector3 position = 1;
+    float rotation = 2;
+    bool is_player = 3;
+    uint64 cookie = 4;
+    repeated string equipment = 5;
+    bytes ccstate = 6;
+}
+
+message MoveEntityRequest {
+    bool unreliable = 1000; // This is just a tag to indicate that this message is unreliable
+    uint64 id = 1;
+    common.Vector3 position = 2;
+    float rotation = 3;
+    float speed = 4;
+    common.Vector3 full_rotation = 5;
+    uint64 tick = 6;
+}
+
+message EnterVehicleRequest {
+    uint64 id = 1;
+    common.Vector3 position = 2;
+    float rotation = 3;
+    uint64 vehicle_id = 4;
+    uint64 sit_id = 5;
+    uint64 remote_vehicle_id = 6;
+}
+
+message ExitVehicleRequest {
+    uint64 id = 1;
+}
+
+message ChatMessageRequest {
+    string message = 1;
+}
+
+message RpcCall {
+    uint32 id = 1;
+	bytes arguments = 2;
+}
+
+message Protocol {
+    oneof content {
+        AuthenticationRequest authentication_request = 1;
+        SpawnCharacterRequest spawn_character_request = 2;
+        MoveEntityRequest move_entity_request = 3;
+        ChatMessageRequest chat_message_request = 4;
+        RpcCall rpc_call = 5;
+        EnterVehicleRequest enter_vehicle_request = 6;
+        ExitVehicleRequest exit_vehicle_request = 7;
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "configurations": [
+    {
+       "name": "XMake Debug",
+        "type": "xmake",
+        "request": "launch",
+        "target": "Client"
+    }
+  ]
+}

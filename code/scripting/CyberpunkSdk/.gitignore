@@ -1,0 +1,5 @@
+bin/
+obj/
+CyberpunkSdk.cs
+Std.cs
+*.cpp

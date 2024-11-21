@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SdkGenerator", "SdkGenerator\SdkGenerator.csproj", "{BBED1E63-F6F5-4385-9746-E9C020F9C575}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CyberpunkSdk", "CyberpunkSdk\CyberpunkSdk.csproj", "{25C2DA2B-CA12-4A90-9B45-8FF3B3CD9E2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobSystem", "JobSystem\JobSystem.csproj", "{17F34DF8-467C-474B-A31C-2DC38096E96A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmoteSystem", "EmoteSystem\EmoteSystem.csproj", "{F0A2A07A-910C-4D67-8CE5-F3BF7A2B21E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBED1E63-F6F5-4385-9746-E9C020F9C575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBED1E63-F6F5-4385-9746-E9C020F9C575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBED1E63-F6F5-4385-9746-E9C020F9C575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBED1E63-F6F5-4385-9746-E9C020F9C575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25C2DA2B-CA12-4A90-9B45-8FF3B3CD9E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25C2DA2B-CA12-4A90-9B45-8FF3B3CD9E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25C2DA2B-CA12-4A90-9B45-8FF3B3CD9E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25C2DA2B-CA12-4A90-9B45-8FF3B3CD9E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F34DF8-467C-474B-A31C-2DC38096E96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F34DF8-467C-474B-A31C-2DC38096E96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F34DF8-467C-474B-A31C-2DC38096E96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F34DF8-467C-474B-A31C-2DC38096E96A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A2A07A-910C-4D67-8CE5-F3BF7A2B21E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A2A07A-910C-4D67-8CE5-F3BF7A2B21E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A2A07A-910C-4D67-8CE5-F3BF7A2B21E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A2A07A-910C-4D67-8CE5-F3BF7A2B21E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E54E3C72-5258-4B2A-BB15-E3C84F3C47AE}
+	EndGlobalSection
+EndGlobal

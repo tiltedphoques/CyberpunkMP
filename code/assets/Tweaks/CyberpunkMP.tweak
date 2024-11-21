@@ -1,0 +1,213 @@
+Character.Muppet : Character.TPP_Player {
+	// entityTemplatePath = "mods\cyberpunkmp\player_ma_tpp.ent";
+	appearanceName = "TPP_Body";
+	// appearanceName = "pma_default";
+	// appearanceName = "character_creation";
+	priority = "SpawnableObjectPriority.Regular";
+	reactionPreset = "ReactionPresets.NoReaction";
+	uiNameplate = "UINameplate.MpPlayerSettings";
+	abilities += [ "Ability.CanCrouch", "Ability.CanSprint" ];
+	// tags = [];
+	// genders = [
+	// 	{
+	// 		initial = true;
+	// 		gender = "Gender.Male";
+	// 		entity = "mods\cyberpunkmp\player_ma_tpp.ent";
+	// 	},
+	// 	{
+	// 		initial = false;
+	// 		gender = "Gender.Female";
+	// 		entity = "mods\cyberpunkmp\player_ma_tpp.ent";
+	// 	}
+	// ];
+	
+	// ours
+	entityTemplatePath = "mods\cyberpunkmp\player_wa_fpp.ent";
+	// genders = [
+	// 	{
+	// 		initial = true;
+	// 		gender = "Gender.Female";
+	// 		entity = "mods\cyberpunkmp\player_wa_fpp.ent";
+	// 	}, 
+	// 	{
+	// 		gender = "Gender.Male";
+	// 		entity = "mods\cyberpunkmp\player_ma_fpp.ent";
+	// 	}
+	// ];
+
+	// From Panam
+	// entityTemplatePath = "base\quest\primary_characters\panam.ent";
+	// // this isn't
+	// genders = [
+	// 	{
+	// 		initial = true;
+	// 		gender = "Gender.Female";
+	// 		entity = "base\quest\primary_characters\panam.ent";
+	// 	}, 
+	// 	{
+	// 		gender = "Gender.Male";
+	// 		entity = "base\quest\primary_characters\panam.ent";
+	// 	}
+	// ];
+
+	// From TPP_Player
+	// entityTemplatePath = "base\characters\entities\player\player_wa_fpp.ent";
+	genders = [
+		{
+			initial = true;
+			gender = "Gender.Female";
+			entity = "base\characters\entities\player\player_wa_tpp.ent";
+		}, 
+		{
+			gender = "Gender.Male";
+			entity = "base\characters\entities\player\player_ma_tpp.ent";
+		}
+	];
+}
+
+Character.MaMuppet : Character.Panam {
+	appearanceName = "TPP_Body";
+	priority = "SpawnableObjectPriority.Regular";
+	reactionPreset = "ReactionPresets.NoReaction";
+	uiNameplate = "UINameplate.MpPlayerSettings";
+	abilities += [ "Ability.CanCrouch", "Ability.CanSprint" ];
+	// entityTemplatePath = "mods\cyberpunkmp\player_ma_fpp.ent";
+	// entityTemplatePath = "base\characters\entities\player\player_ma_tpp_cutscene.ent";
+	entityTemplatePath = "mods\cyberpunkmp\player_ma_tpp_cutscene.ent";
+	genders = 
+	[
+		{
+			initial = true;
+			gender = "Gender.Male";
+			// entity = "mods\cyberpunkmp\player_ma_fpp.ent";
+			// entity = "base\characters\entities\player\player_ma_tpp_cutscene.ent";
+			entity = "mods\cyberpunkmp\player_ma_tpp_cutscene.ent";
+		}
+	];
+}
+
+Character.WaMuppet : Character.Panam {
+	appearanceName = "TPP_Body";
+	// appearanceName = "panam_nude";
+	priority = "SpawnableObjectPriority.Regular";
+	reactionPreset = "ReactionPresets.NoReaction";
+	uiNameplate = "UINameplate.MpPlayerSettings";
+	abilities += [ "Ability.CanCrouch", "Ability.CanSprint" ];
+	// entityTemplatePath = "mods\cyberpunkmp\player_wa_fpp.ent";
+	// entityTemplatePath = "base\characters\entities\player\player_wa_tpp_cutscene.ent";
+	entityTemplatePath = "mods\cyberpunkmp\player_wa_tpp_cutscene.ent";
+	// entityTemplatePath = "base\quest\primary_characters\panam.ent";
+	genders = 
+	[
+		{
+			initial = true;
+			gender = "Gender.Female";
+			// entity = "mods\cyberpunkmp\player_wa_fpp.ent";
+			// entity = "base\characters\entities\player\player_wa_tpp_cutscene.ent";
+			entity = "mods\cyberpunkmp\player_wa_tpp_cutscene.ent";
+			// entity = "base\quest\primary_characters\panam.ent";
+		}
+	];
+}
+
+Items.MuppetMaHead : Items.PlayerMaTppHead {
+	string friendlyName = "character_customization_head";
+	CName entityName = "player_ma_tpp_head";
+	CName appearanceName = "character_customization";
+}
+
+Items.MuppetWaHead : Items.PlayerWaTppHead {
+	string friendlyName = "character_customization_head";
+	CName entityName = "player_wa_tpp_head";
+	CName appearanceName = "character_customization";
+}
+
+Items.MuppetArms : Items.BaseHolsteredArms
+{
+	appearanceName = "character_customization";
+	// appearanceName = "holstered_default";
+}
+
+// UiPhone/UiVendor method
+
+playerStateMachineDefinitions.InputContext {
+    states += ["uiMultiplayerContext", "uiChatInputContext"];
+}
+
+playerStateMachineInputContext.uiMultiplayerContext
+{
+	string stateBodyClassName = "";
+	bool[] transitionSkipInternalCondition = [];
+	bool[] transitionConditionOverridesEnterCondition = [];
+	bool hasExitCondition = false;
+	bool hasOnEnter = false;
+	bool hasOnExit = false;
+	bool hasOnUpdate = false;
+	CName affinity = "";
+	CName[] alias = 
+	[
+		"allUIContexts"
+	];
+	bool hasEnterCondition = true;
+	string[] transitionTo = 
+	[
+		"allForcedContexts", "allUIContexts", "gameplayContext"
+	];
+	string[] transitionCondition = 
+	[
+		"", "", "ExitCondition"
+	];
+	CName forceInputContext = "UI_Multiplayer";
+}
+
+playerStateMachineInputContext.uiChatInputContext
+{
+	string stateBodyClassName = "";
+	bool[] transitionSkipInternalCondition = [];
+	bool[] transitionConditionOverridesEnterCondition = [];
+	bool hasExitCondition = false;
+	bool hasOnEnter = false;
+	bool hasOnExit = false;
+	bool hasOnUpdate = false;
+	CName affinity = "";
+	CName[] alias = 
+	[
+		"allUIContexts"
+	];
+	bool hasEnterCondition = true;
+	string[] transitionTo = 
+	[
+		"allForcedContexts", "allUIContexts", "gameplayContext"
+	];
+	string[] transitionCondition = 
+	[
+		"", "", "ExitCondition"
+	];
+	CName forceInputContext = "UI_ChatInput";
+}
+
+playerStateMachineInputContext.uiEmoteSelectionContext
+{
+	string stateBodyClassName = "";
+	bool[] transitionSkipInternalCondition = [];
+	bool[] transitionConditionOverridesEnterCondition = [];
+	bool hasExitCondition = false;
+	bool hasOnEnter = false;
+	bool hasOnExit = false;
+	bool hasOnUpdate = false;
+	CName affinity = "";
+	CName[] alias = 
+	[
+		"allUIContexts"
+	];
+	bool hasEnterCondition = true;
+	string[] transitionTo = 
+	[
+		"allForcedContexts", "allUIContexts", "gameplayContext"
+	];
+	string[] transitionCondition = 
+	[
+		"", "", "ExitCondition"
+	];
+	CName forceInputContext = "UI_EmoteSelection";
+}

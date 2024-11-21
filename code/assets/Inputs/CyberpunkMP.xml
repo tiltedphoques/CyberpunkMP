@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<bindings>
+	<blend from="__ANY__" to="UI_Multiplayer" event="AXIS_RESET_TO_ZERO_NO_WAIT" />
+	<blend from="__ANY__" to="UI_Multiplayer" event="BUTTON_RELEASE_IF_TO_DOESNT_CONTAIN" />
+	<blend from="__ANY__" to="UI_ChatInput" event="AXIS_RESET_TO_ZERO_NO_WAIT" />
+	<blend from="__ANY__" to="UI_ChatInput" event="BUTTON_RELEASE_IF_TO_DOESNT_CONTAIN" />
+	<blend from="__ANY__" to="UI_EmoteSelection" event="AXIS_RESET_TO_ZERO_NO_WAIT" />
+	<blend from="__ANY__" to="UI_EmoteSelection" event="BUTTON_RELEASE_IF_TO_DOESNT_CONTAIN" />
+	<blend from="UI_EmoteSelection" to="__ANY__" event="AXIS_RESET_TO_ZERO_NO_WAIT" />
+	<blend from="UI_EmoteSelection" to="__ANY__" event="BUTTON_RELEASE_IF_TO_DOESNT_CONTAIN" />
+
+	<mapping name="UIConnectToServer_Button" type="Button" >
+		<button id="IK_Slash" />
+    </mapping>
+
+	<mapping name="UIEmote_Button" type="Button" >
+		<button id="IK_Period" />
+    </mapping>
+
+	<mapping name="UIShop_Button" type="Button" >
+		<button id="IK_Comma" />
+    </mapping>
+
+	<mapping name="UIJob_Button" type="Button" >
+		<button id="IK_Comma" />
+    </mapping>
+	
+	<mapping name="UIDisconnectFromServer_Button" type="Button" >
+		<button id="IK_Slash" />
+    </mapping>
+
+	<mapping name="UIEnterChatMessage_Button" type="Button" >
+		<button id="IK_Semicolon" />
+    </mapping>
+
+	<mapping name="ChatTop_Button" type="Button" >
+		<button id="IK_PageUp" />
+    </mapping>
+
+	<mapping name="ChatBottom_Button" type="Button" >
+		<button id="IK_PageDown" />
+    </mapping>
+    
+    <context name="UI_Multiplayer" >
+		<include name="UINotifications" />
+		<action name="sms_view_scroll_km" map="sms_view_scroll_km" priority="-1" />
+    </context>
+
+    <context name="UI_ChatInput" >
+		<action name="EnterChat" map="EnterChat_Button" />
+		<action name="back" map="back" />
+        <action name="navigate_up" map="up_button" />
+        <action name="navigate_down" map="down_button" />
+        <action name="ChatTop" map="ChatTop_Button" />
+        <action name="ChatBottom" map="ChatBottom_Button" />
+    </context>
+
+    <context name="UI_EmoteSelection" >
+        <action name="UIEmote" map="UIEmote_Button" />		
+		<action name="mouse_x" map="MouseX" priority="-1" />
+		<action name="mouse_y" map="MouseY" priority="-1" />
+    </context>
+
+    <context name="UI_ShopSelection" >
+        <action name="UIShop" map="UIShop_Button" />		
+		<action name="mouse_x" map="MouseX" priority="-1" />
+		<action name="mouse_y" map="MouseY" priority="-1" />
+    </context>
+
+    <hold action="UIConnectToServer" timeout="0.5" />
+    <hold action="UIDisconnectFromServer" timeout="0.5" />
+    <hold action="UIShop" timeout="0.5" />
+    <hold action="UIJob" timeout="0.5" />
+
+	<acceptedEvents action="UIConnectToServer">
+		<event name="BUTTON_HOLD_COMPLETE" />
+		<event name="BUTTON_HOLD_PROGRESS" />
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+	<acceptedEvents action="UIDisconnectFromServer">
+		<event name="BUTTON_HOLD_COMPLETE" />
+		<event name="BUTTON_HOLD_PROGRESS" />
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+	<acceptedEvents action="UIEnterChatMessage">
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+	<acceptedEvents action="UIEmote">
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+	<acceptedEvents action="UIShop">
+		<event name="BUTTON_HOLD_COMPLETE" />
+		<event name="BUTTON_HOLD_PROGRESS" />
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+	<acceptedEvents action="UIJob">
+		<event name="BUTTON_HOLD_COMPLETE" />
+		<event name="BUTTON_HOLD_PROGRESS" />
+		<event name="BUTTON_PRESSED" />
+		<event name="BUTTON_RELEASED" />
+	</acceptedEvents>
+
+    <context name="UIBase" append="true">
+        <action name="UIConnectToServer" map="UIConnectToServer_Button" />
+        <action name="UIDisconnectFromServer" map="UIDisconnectFromServer_Button" />
+        <action name="UIEnterChatMessage" map="UIEnterChatMessage_Button" />
+        <action name="UIEmote" map="UIEmote_Button" />
+        <action name="UIShop" map="UIShop_Button" />
+        <action name="UIJob" map="UIJob_Button" />
+    </context>
+
+</bindings>
