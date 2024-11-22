@@ -11,7 +11,7 @@ public class JobListItemController extends ListItemController {
     public let m_shopDescription: wref<inkText>;
 
     protected cb func OnInitialize() -> Bool {
-        LogChannel(n"DEBUG", s"[JobListItemController] OnInitialize");
+        CMPLog(s"");
         // super.OnInitialize();
         this.RegisterToCallback(n"OnSelected", this, n"OnSelected");
         this.RegisterToCallback(n"OnDeselected", this, n"OnDeselected");
@@ -19,7 +19,7 @@ public class JobListItemController extends ListItemController {
         this.m_shopName = this.GetWidget(n"textContainer/NamePreviewContainer/NameContainer/contactLabel") as inkText;
         this.m_shopDescription = this.GetWidget(n"textContainer/NamePreviewContainer/preview") as inkText;
         if !IsDefined(this.m_shopName) {
-            LogChannel(n"DEBUG", s"[JobListItemController] COULD NOT FIND LABEL");
+            CMPLog(s"COULD NOT FIND LABEL");
         }
         // this.RegisterToCallback(n"OnAddedToList", this, n"OnAddedToList");
     }
@@ -29,7 +29,7 @@ public class JobListItemController extends ListItemController {
     }
 
     protected cb func OnSelected(itemController: wref<inkVirtualCompoundItemController>, discreteNav: Bool) -> Bool {
-        LogChannel(n"DEBUG", s"[JobListItemController] OnSelected");
+        CMPLog(s"");
         // let animOptions: inkAnimOptions;
         // if IsDefined(this.m_animProxySelection) {
         //     this.m_animProxySelection.GotoStartAndStop(true);
@@ -51,7 +51,7 @@ public class JobListItemController extends ListItemController {
     }
     
     protected cb func OnDataChanged(value: ref<IScriptable>) -> Bool {
-        LogChannel(n"DEBUG", s"[JobListItemController] OnDataChanged");
+        CMPLog(s"");
         // super.OnDataChanged(value);
         this.m_data = value as JobType;
         this.m_shopName.SetText(s"\(this.m_data.m_name)");
