@@ -1,6 +1,18 @@
 import {
-  Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableFooter,
-  TablePagination, TableRow, TextField
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent, Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TablePagination,
+  TableRow,
+  TextField,
+  Tooltip
 } from '@mui/material'
 import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from 'react'
 import ServerData from '../../data/ServerData.ts'
@@ -8,6 +20,9 @@ import HeadRow from './HeadRow.tsx'
 import ServerRow from './ServerRow.tsx'
 import ModDownloadPanel from '../ModDownloadPanel.tsx'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import Typography from '@mui/material/Typography'
+import { Add } from '@mui/icons-material'
+import AddServerDialog from '../dialogs/AddServerDialog.tsx'
 
 type Order = 'asc' | 'desc';
 
@@ -73,13 +88,21 @@ export default function ServerList () {
   const [filteredCount, setFilteredCount] = useState<number>(0)
 
   const [openedServerModal, setOpenedServerModal] = useState<ServerData | null>(null)
+  const [addServerDialogOpen, setAddServerDialogOpen] = useState<boolean>(false)
 
-  const [shouldQuery, setShouldQuery] = useState(true)
+  const [queryToastOpen, setQueryToastOpen] = useState(false)
 
   useEffect(() => {
-    if (!shouldQuery) {
-      return
-    }
+    queryServers()
+
+    const handle = setInterval(() => {
+      queryServers()
+    }, 10000)
+
+    return () => clearInterval(handle)
+  }, [])
+
+  const queryServers = () => {
     const ipToFavorite = new Map<string, number>()
     const favoriteServers = window.localStorage.getItem('favoriteServers')
     if (favoriteServers) {
@@ -108,9 +131,11 @@ export default function ServerList () {
           }
         })
         setServers(newServers)
-        setShouldQuery(false)
+        setQueryToastOpen(false)
+      }).catch(() => {
+        setQueryToastOpen(true)
       })
-  }, [shouldQuery])
+  }
 
   const handleRequestSort = (
     _: MouseEvent,
@@ -128,6 +153,17 @@ export default function ServerList () {
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
+  }
+
+  const handleAddServer = (serverData?: ServerData) => {
+    setAddServerDialogOpen(false)
+    if (!serverData) {
+      return
+    }
+    setServers([
+      ...servers,
+      serverData
+    ])
   }
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -159,9 +195,52 @@ export default function ServerList () {
 
   return (
     <div>
-      <Box sx={{ width: 'calc(100% - 20px)', m: '10px' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
-          <TableContainer sx={{ height: '80%', overflow: 'hidden' }}>
+      <Card>
+        <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="h5">List of servers</Typography>
+
+            <Box>
+              <Tooltip title="Add private server">
+                <Button sx={{ mr: '12px' }}
+                        variant="outlined"
+                        color="success"
+                        disabled
+                        startIcon={<Add/>}
+                        onClick={() => setAddServerDialogOpen(true)}
+                >
+                  Add
+                </Button>
+              </Tooltip>
+
+              <AddServerDialog open={addServerDialogOpen}
+                               onClose={handleAddServer}
+              />
+
+              <Tooltip title="Refresh list of servers">
+                <Button variant="outlined"
+                        startIcon={<RefreshIcon/>}
+                        onClick={() => queryServers()}
+                >
+                  Refresh
+                </Button>
+              </Tooltip>
+
+              <Snackbar open={queryToastOpen}
+                        onClose={() => setQueryToastOpen(false)}
+                        autoHideDuration={4000}>
+                <Alert
+                  severity="error"
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                >
+                  Failed to update the list of servers.
+                </Alert>
+              </Snackbar>
+            </Box>
+          </Box>
+
+          <TableContainer>
             <Table
               sx={{ minWidth: 750, tableLayout: 'fixed' }}
               aria-labelledby="tableTitle"
@@ -192,14 +271,15 @@ export default function ServerList () {
                       height: (53) * emptyRows
                     }}
                   >
-                    <TableCell colSpan={6} />
+                    <TableCell colSpan={6}/>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
           </TableContainer>
+
           <TableFooter sx={{ display: 'flex', justifyContent: 'space-between', pl: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end' }}>
               <TextField
                 id="standard-basic"
                 label="Filter"
@@ -208,10 +288,8 @@ export default function ServerList () {
                   setFilter(event.target.value.toLowerCase())
                 }}
               />
-              <Button onClick={() => setShouldQuery(true)}>
-                <RefreshIcon/>
-              </Button>
             </Box>
+
             <TablePagination
               rowsPerPageOptions={[rowsPerPage]}
               component="div"
@@ -222,8 +300,9 @@ export default function ServerList () {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </TableFooter>
-        </Paper>
-      </Box>
+        </CardContent>
+      </Card>
+
       <ModDownloadPanel
         onClose={() => {
           setOpenedServerModal(null)
