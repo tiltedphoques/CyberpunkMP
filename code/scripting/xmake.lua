@@ -7,8 +7,6 @@ target("Scripting")
         import("core.project.depend")
         import("utils.progress")
 
-        print("Scripting before_build")
-
         local dependfile = target:dependfile("scripting")
 
         --depend.on_changed(function ()
@@ -26,6 +24,8 @@ target("Scripting")
                 end
             end
 
+            progress.show(opt.progress, "${color.build.target}build codegen")
+            os.run("dotnet build " .. sdk_gen_proj)
             progress.show(opt.progress, "${color.build.target}codegen sdk")
             os.run("dotnet run --project " .. sdk_gen_proj .. " -- " .. files)
             progress.show(opt.progress, "${color.build.target}build sdk")
