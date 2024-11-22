@@ -1058,32 +1058,18 @@ namespace CyberpunkSdk.Internal
         }
     }
 
-    public unsafe partial class IConfig : IDisposable
+    public unsafe abstract partial class IConfig : IDisposable
     {
-        [StructLayout(LayoutKind.Sequential, Size = 216)]
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
         public partial struct __Internal
         {
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C Name;
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C Description;
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C ApiKey;
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C IconUrl;
-            internal ushort MaxPlayer;
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C Tags;
-            internal byte Public;
-            internal ushort Port;
-            internal ushort WebPort;
-            internal ushort TickRate;
-            internal ushort UpdateRate;
-            internal global::Std.BasicString.__Internalc__N_std_S_basic_string__C___N_std_S_char_traits__C___N_std_S_allocator__C Password;
-
-            [SuppressUnmanagedCodeSecurity, DllImport("Server.exe", EntryPoint = "??0IConfig@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
-            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+            internal __IntPtr vfptr_IConfig;
 
             [SuppressUnmanagedCodeSecurity, DllImport("Server.exe", EntryPoint = "??0IConfig@@QEAA@XZ", CallingConvention = __CallingConvention.Cdecl)]
             internal static extern __IntPtr ctor(__IntPtr __instance);
 
-            [SuppressUnmanagedCodeSecurity, DllImport("Server.exe", EntryPoint = "??1IConfig@@QEAA@XZ", CallingConvention = __CallingConvention.Cdecl)]
-            internal static extern void dtor(__IntPtr __instance);
+            [SuppressUnmanagedCodeSecurity, DllImport("Server.exe", EntryPoint = "??0IConfig@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
 
             [SuppressUnmanagedCodeSecurity, DllImport("Server.exe", EntryPoint = "?Get@IConfig@@SAPEBU1@XZ", CallingConvention = __CallingConvention.Cdecl)]
             internal static extern __IntPtr Get();
@@ -1111,7 +1097,7 @@ namespace CyberpunkSdk.Internal
         {
             if (native == __IntPtr.Zero)
                 return null;
-            return new IConfig(native.ToPointer(), skipVTables);
+            return new IConfigInternal(native.ToPointer(), skipVTables);
         }
 
         internal static IConfig __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
@@ -1126,23 +1112,19 @@ namespace CyberpunkSdk.Internal
             return result;
         }
 
+        internal static IConfig __GetInstance(__IntPtr native)
+        {
+            if (!__TryGetNativeToManagedMapping(native, out var managed))
+                throw new global::System.Exception("No managed instance was found");
+            var result = (IConfig)managed;
+            if (result.__ownsNativeInstance)
+                result.SetupVTables();
+            return result;
+        }
+
         internal static IConfig __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            return new IConfig(native, skipVTables);
-        }
-
-        private static void* __CopyValue(__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
-            global::CyberpunkSdk.Internal.IConfig.__Internal.cctor(ret, new __IntPtr(&native));
-            return ret.ToPointer();
-        }
-
-        private IConfig(__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            __RecordNativeToManagedMapping(__Instance, this);
+            return new IConfigInternal(native, skipVTables);
         }
 
         protected IConfig(void* native, bool skipVTables = false)
@@ -1152,7 +1134,16 @@ namespace CyberpunkSdk.Internal
             __Instance = new __IntPtr(native);
         }
 
-        public IConfig(global::CyberpunkSdk.Internal.IConfig _0)
+        protected IConfig()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::CyberpunkSdk.Internal.IConfig.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            __Internal.ctor(__Instance);
+            SetupVTables(GetType().FullName == "CyberpunkSdk.Internal.IConfig");
+        }
+
+        protected IConfig(global::CyberpunkSdk.Internal.IConfig _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::CyberpunkSdk.Internal.IConfig.__Internal));
             __ownsNativeInstance = true;
@@ -1161,14 +1152,7 @@ namespace CyberpunkSdk.Internal
                 throw new global::System.ArgumentNullException("_0", "Cannot be null because it is a C++ reference (&).");
             var __arg0 = _0.__Instance;
             __Internal.cctor(__Instance, __arg0);
-        }
-
-        public IConfig()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::CyberpunkSdk.Internal.IConfig.__Internal));
-            __ownsNativeInstance = true;
-            __RecordNativeToManagedMapping(__Instance, this);
-            __Internal.ctor(__Instance);
+            SetupVTables(GetType().FullName == "CyberpunkSdk.Internal.IConfig");
         }
 
         public void Dispose()
@@ -1183,9 +1167,8 @@ namespace CyberpunkSdk.Internal
             if (__Instance == IntPtr.Zero)
                 return;
             NativeToManagedMap.TryRemove(__Instance, out _);
+            *(IntPtr*)(__Instance + 0) = __VTables.Tables[0];
             DisposePartial(disposing);
-            if (callNativeDtor)
-                __Internal.dtor(__Instance);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
@@ -1198,165 +1181,444 @@ namespace CyberpunkSdk.Internal
             return __result0;
         }
 
-        public string Name
+        public abstract string Name
         {
-            get
+            get;
+        }
+
+        public abstract string Description
+        {
+            get;
+        }
+
+        public abstract string ApiKey
+        {
+            get;
+        }
+
+        public abstract string IconUrl
+        {
+            get;
+        }
+
+        public abstract string Tags
+        {
+            get;
+        }
+
+        public abstract string Password
+        {
+            get;
+        }
+
+        public abstract ushort MaxPlayer
+        {
+            get;
+        }
+
+        public abstract ushort Port
+        {
+            get;
+        }
+
+        public abstract ushort WebPort
+        {
+            get;
+        }
+
+        public abstract ushort TickRate
+        {
+            get;
+        }
+
+        public abstract ushort UpdateRate
+        {
+            get;
+        }
+
+        public abstract bool Public
+        {
+            get;
+        }
+
+        #region Virtual table interop
+
+        // char* GetName() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetNameDelegateInstance;
+
+        private static __IntPtr _GetNameDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Name;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // char* GetDescription() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetDescriptionDelegateInstance;
+
+        private static __IntPtr _GetDescriptionDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Description;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // char* GetApiKey() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetApiKeyDelegateInstance;
+
+        private static __IntPtr _GetApiKeyDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.ApiKey;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // char* GetIconUrl() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetIconUrlDelegateInstance;
+
+        private static __IntPtr _GetIconUrlDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.IconUrl;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // char* GetTags() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetTagsDelegateInstance;
+
+        private static __IntPtr _GetTagsDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Tags;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // char* GetPassword() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr _GetPasswordDelegateInstance;
+
+        private static __IntPtr _GetPasswordDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Password;
+            var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(___ret);
+            var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+            Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+            Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+            return __bytePtr0;
+        }
+
+        // uint16_t GetMaxPlayer() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr _GetMaxPlayerDelegateInstance;
+
+        private static ushort _GetMaxPlayerDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.MaxPlayer;
+            return ___ret;
+        }
+
+        // uint16_t GetPort() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr _GetPortDelegateInstance;
+
+        private static ushort _GetPortDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Port;
+            return ___ret;
+        }
+
+        // uint16_t GetWebPort() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr _GetWebPortDelegateInstance;
+
+        private static ushort _GetWebPortDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.WebPort;
+            return ___ret;
+        }
+
+        // uint16_t GetTickRate() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr _GetTickRateDelegateInstance;
+
+        private static ushort _GetTickRateDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.TickRate;
+            return ___ret;
+        }
+
+        // uint16_t GetUpdateRate() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr _GetUpdateRateDelegateInstance;
+
+        private static ushort _GetUpdateRateDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.UpdateRate;
+            return ___ret;
+        }
+
+        // bool GetPublic() const = 0
+        private static global::CyberpunkSdk.Internal.Delegates.Func_bool___IntPtr _GetPublicDelegateInstance;
+
+        private static bool _GetPublicDelegateHook(__IntPtr __instance)
+        {
+            var __target = global::CyberpunkSdk.Internal.IConfig.__GetInstance(__instance);
+            var ___ret = __target.Public;
+            return ___ret;
+        }
+
+        internal static class VTableLoader
+        {
+            private static volatile bool initialized;
+            private static readonly IntPtr*[] ManagedVTables = new IntPtr*[1];
+            private static readonly IntPtr[] Thunks = new IntPtr[12];
+            private static CppSharp.Runtime.VTables VTables;
+            private static readonly global::System.Collections.Generic.List<CppSharp.Runtime.SafeUnmanagedMemoryHandle>
+                SafeHandles = new global::System.Collections.Generic.List<CppSharp.Runtime.SafeUnmanagedMemoryHandle>();
+                
+            static VTableLoader()
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->Name));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
+                _GetNameDelegateInstance += _GetNameDelegateHook;
+                _GetDescriptionDelegateInstance += _GetDescriptionDelegateHook;
+                _GetApiKeyDelegateInstance += _GetApiKeyDelegateHook;
+                _GetIconUrlDelegateInstance += _GetIconUrlDelegateHook;
+                _GetTagsDelegateInstance += _GetTagsDelegateHook;
+                _GetPasswordDelegateInstance += _GetPasswordDelegateHook;
+                _GetMaxPlayerDelegateInstance += _GetMaxPlayerDelegateHook;
+                _GetPortDelegateInstance += _GetPortDelegateHook;
+                _GetWebPortDelegateInstance += _GetWebPortDelegateHook;
+                _GetTickRateDelegateInstance += _GetTickRateDelegateHook;
+                _GetUpdateRateDelegateInstance += _GetUpdateRateDelegateHook;
+                _GetPublicDelegateInstance += _GetPublicDelegateHook;
+                Thunks[0] = Marshal.GetFunctionPointerForDelegate(_GetNameDelegateInstance);
+                Thunks[1] = Marshal.GetFunctionPointerForDelegate(_GetDescriptionDelegateInstance);
+                Thunks[2] = Marshal.GetFunctionPointerForDelegate(_GetApiKeyDelegateInstance);
+                Thunks[3] = Marshal.GetFunctionPointerForDelegate(_GetIconUrlDelegateInstance);
+                Thunks[4] = Marshal.GetFunctionPointerForDelegate(_GetTagsDelegateInstance);
+                Thunks[5] = Marshal.GetFunctionPointerForDelegate(_GetPasswordDelegateInstance);
+                Thunks[6] = Marshal.GetFunctionPointerForDelegate(_GetMaxPlayerDelegateInstance);
+                Thunks[7] = Marshal.GetFunctionPointerForDelegate(_GetPortDelegateInstance);
+                Thunks[8] = Marshal.GetFunctionPointerForDelegate(_GetWebPortDelegateInstance);
+                Thunks[9] = Marshal.GetFunctionPointerForDelegate(_GetTickRateDelegateInstance);
+                Thunks[10] = Marshal.GetFunctionPointerForDelegate(_GetUpdateRateDelegateInstance);
+                Thunks[11] = Marshal.GetFunctionPointerForDelegate(_GetPublicDelegateInstance);
             }
 
-            set
+            public static CppSharp.Runtime.VTables SetupVTables(IntPtr instance, bool destructorOnly = false)
             {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->Name), value);
+                if (!initialized)
+                {
+                    lock (ManagedVTables)
+                    {
+                        if (!initialized)
+                        {
+                            initialized = true;
+                            VTables.Tables = new IntPtr[] { *(IntPtr*)(instance + 0) };
+                            VTables.Methods = new Delegate[1][];
+                            ManagedVTables[0] = CppSharp.Runtime.VTables.CloneTable(SafeHandles, instance, 0, 12, 0);
+                            ManagedVTables[0][0] = Thunks[0];
+                            ManagedVTables[0][1] = Thunks[1];
+                            ManagedVTables[0][2] = Thunks[2];
+                            ManagedVTables[0][3] = Thunks[3];
+                            ManagedVTables[0][4] = Thunks[4];
+                            ManagedVTables[0][5] = Thunks[5];
+                            ManagedVTables[0][6] = Thunks[6];
+                            ManagedVTables[0][7] = Thunks[7];
+                            ManagedVTables[0][8] = Thunks[8];
+                            ManagedVTables[0][9] = Thunks[9];
+                            ManagedVTables[0][10] = Thunks[10];
+                            ManagedVTables[0][11] = Thunks[11];
+                            VTables.Methods[0] = new Delegate[12];
+                            if (destructorOnly)
+                                return VTables;
+                        }
+                    }
+                }
+
+                *(IntPtr**)(instance + 0) = ManagedVTables[0];
+                return VTables;
             }
         }
 
-        public string Description
+        protected CppSharp.Runtime.VTables __vtables;
+        internal virtual CppSharp.Runtime.VTables __VTables
+        {
+            get {
+                if (__vtables.IsEmpty)
+                    __vtables.Tables = new IntPtr[] { *(IntPtr*)(__Instance + 0) };
+                return __vtables;
+            }
+
+            set {
+                __vtables = value;
+            }
+        }
+        internal virtual void SetupVTables(bool destructorOnly = false)
+        {
+            if (__VTables.IsTransient)
+                __VTables = VTableLoader.SetupVTables(__Instance, destructorOnly);
+        }
+        #endregion
+    }
+
+    public unsafe partial class IConfigInternal : global::CyberpunkSdk.Internal.IConfig, IDisposable
+    {
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        internal IConfigInternal(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        internal IConfigInternal(void* native, bool skipVTables = false)
+            : base((void*) native)
+        {
+        }
+
+        public override string Name
         {
             get
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->Description));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
-            }
-
-            set
-            {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->Description), value);
+                var ___GetNameDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 0);
+                var ___ret = ___GetNameDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public string ApiKey
+        public override string Description
         {
             get
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->ApiKey));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
-            }
-
-            set
-            {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->ApiKey), value);
+                var ___GetDescriptionDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 1);
+                var ___ret = ___GetDescriptionDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public string IconUrl
+        public override string ApiKey
         {
             get
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->IconUrl));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
-            }
-
-            set
-            {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->IconUrl), value);
+                var ___GetApiKeyDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 2);
+                var ___ret = ___GetApiKeyDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public ushort MaxPlayer
+        public override string IconUrl
         {
             get
             {
-                return ((__Internal*)__Instance)->MaxPlayer;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->MaxPlayer = value;
+                var ___GetIconUrlDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 3);
+                var ___ret = ___GetIconUrlDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public string Tags
+        public override string Tags
         {
             get
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->Tags));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
-            }
-
-            set
-            {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->Tags), value);
+                var ___GetTagsDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 4);
+                var ___ret = ___GetTagsDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public bool Public
+        public override string Password
         {
             get
             {
-                return ((__Internal*)__Instance)->Public != 0;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->Public = (byte) (value ? 1 : 0);
+                var ___GetPasswordDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func___IntPtr___IntPtr>(0, 5);
+                var ___ret = ___GetPasswordDelegate(__Instance);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
             }
         }
 
-        public ushort Port
+        public override ushort MaxPlayer
         {
             get
             {
-                return ((__Internal*)__Instance)->Port;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->Port = value;
+                var ___GetMaxPlayerDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr>(0, 6);
+                var ___ret = ___GetMaxPlayerDelegate(__Instance);
+                return ___ret;
             }
         }
 
-        public ushort WebPort
+        public override ushort Port
         {
             get
             {
-                return ((__Internal*)__Instance)->WebPort;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->WebPort = value;
+                var ___GetPortDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr>(0, 7);
+                var ___ret = ___GetPortDelegate(__Instance);
+                return ___ret;
             }
         }
 
-        public ushort TickRate
+        public override ushort WebPort
         {
             get
             {
-                return ((__Internal*)__Instance)->TickRate;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->TickRate = value;
+                var ___GetWebPortDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr>(0, 8);
+                var ___ret = ___GetWebPortDelegate(__Instance);
+                return ___ret;
             }
         }
 
-        public ushort UpdateRate
+        public override ushort TickRate
         {
             get
             {
-                return ((__Internal*)__Instance)->UpdateRate;
-            }
-
-            set
-            {
-                ((__Internal*)__Instance)->UpdateRate = value;
+                var ___GetTickRateDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr>(0, 9);
+                var ___ret = ___GetTickRateDelegate(__Instance);
+                return ___ret;
             }
         }
 
-        public string Password
+        public override ushort UpdateRate
         {
             get
             {
-                var __basicStringRet0 = global::Std.BasicString<sbyte, global::Std.CharTraits<sbyte>, global::Std.Allocator<sbyte>>.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->Password));
-                return global::Std.BasicStringExtensions.Data(__basicStringRet0);
+                var ___GetUpdateRateDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_ushort___IntPtr>(0, 10);
+                var ___ret = ___GetUpdateRateDelegate(__Instance);
+                return ___ret;
             }
+        }
 
-            set
+        public override bool Public
+        {
+            get
             {
-                global::Std.BasicStringExtensions.__Internal.Assign(new __IntPtr(&((__Internal*)__Instance)->Password), value);
+                var ___GetPublicDelegate = __VTables.GetMethodDelegate<global::CyberpunkSdk.Internal.Delegates.Func_bool___IntPtr>(0, 11);
+                var ___ret = ___GetPublicDelegate(__Instance);
+                return ___ret;
             }
         }
     }
