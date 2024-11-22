@@ -32,6 +32,10 @@ to handle RPC functionality.
 If you want visual studio projects execute `xmake project -k vsxmake` and you 
 will find the sln in the newly created `vsxmake` folder.
 
+> [!IMPORTANT]
+> On Windows, you'll need to use Windows SDK **below** v10.0.26100.0. An issue
+> is currently breaking the build due to package `protobuf-cpp`.
+
 ### Additional configuration / troubleshooting
 
 - [RED4ext](https://github.com/WopsS/RED4ext/releases)
