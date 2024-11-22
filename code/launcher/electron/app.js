@@ -20,7 +20,8 @@ const createWindow = () => {
     }
   })
 
-  win.loadFile('./dist/index.html')
+  // win.loadURL('http://localhost:5173') // for development
+  win.loadFile('./dist/index.html') // for production
 
   win.on('ready-to-show', () => {
   })
