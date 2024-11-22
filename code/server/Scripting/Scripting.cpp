@@ -178,7 +178,7 @@ void Scripting::Initialize()
 component_entry_point_fn Scripting::GetFunction(const wchar_t* apNameW) const
 {
 #if TP_PLATFORM_WINDOWS
-    const char* apName = apNameW;
+    const wchar_t* apName = apNameW;
 #else
     const size_t apNameWSize = std::wcslen(apNameW) + 1;
     char apName[apNameWSize];
