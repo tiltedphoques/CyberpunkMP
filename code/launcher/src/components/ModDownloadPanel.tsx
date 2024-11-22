@@ -24,7 +24,7 @@ interface Props {
   onClose: () => void
 }
 
-export default function ModDownloadPanel(props: Props) {
+export default function ModDownloadPanel (props: Props) {
   const { serverData, onClose } = props
   const [isGameStarted, setIsGameStarted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,7 +45,7 @@ export default function ModDownloadPanel(props: Props) {
     setError(null)
 
     const params = ['--online', '--ip', `${serverData._ip}`, '--port', serverData._port]
-    
+
     try {
       const gamePath = await window.electronAPI.getGamePath()
 
@@ -56,8 +56,8 @@ export default function ModDownloadPanel(props: Props) {
         onClose()
       })
     } catch (err: any) {
-      console.error("Error launching game:", err)
-      setError(err.message || "An error occurred while launching the game.")
+      console.error('Error launching game:', err)
+      setError(err.message || 'An error occurred while launching the game.')
       setIsGameStarted(false)
     }
   }
@@ -83,9 +83,11 @@ export default function ModDownloadPanel(props: Props) {
             {isGameStarted ? 'Launching game...' : `Launch game for ${serverData?.name}`}
           </Typography>
           <Box sx={{ p: 2, display: 'flex', flexDirection: 'column' }} alignItems="center" justifyContent="center">
-            {isGameStarted ? (
+            {isGameStarted
+              ? (
               <CircularProgress />
-            ) : (
+                )
+              : (
               <>
                 {error && <Alert severity="error" sx={{ mb: 2, width: '100%' }}>{error}</Alert>}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -93,7 +95,7 @@ export default function ModDownloadPanel(props: Props) {
                   <Button onClick={onClose} variant="outlined">Cancel</Button>
                 </Box>
               </>
-            )}
+                )}
           </Box>
         </Box>
       </Fade>

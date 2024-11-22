@@ -64,8 +64,7 @@ function stableSort<T> (array: readonly T[], comparator: (a: T, b: T) => number)
 const ipv6Regex = /^(?:(?:[a-fA-F\d]{1,4}:){7}(?:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){6}(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){5}(?::(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,2}|:)|(?:[a-fA-F\d]{1,4}:){4}(?:(?::[a-fA-F\d]{1,4}){0,1}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,3}|:)|(?:[a-fA-F\d]{1,4}:){3}(?:(?::[a-fA-F\d]{1,4}){0,2}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,4}|:)|(?:[a-fA-F\d]{1,4}:){2}(?:(?::[a-fA-F\d]{1,4}){0,3}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,5}|:)|(?:[a-fA-F\d]{1,4}:){1}(?:(?::[a-fA-F\d]{1,4}){0,4}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,6}|:)|(?::(?:(?::[a-fA-F\d]{1,4}){0,5}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,7}|:)))(?:%[0-9a-zA-Z]{1,})?$/gm
 
 export default function ServerList () {
-  const [servers, setServers] = useState<ServerData[]>([
-  ])
+  const [servers, setServers] = useState<ServerData[]>([])
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<keyof ServerData>('name')
   const [page, setPage] = useState(0)
@@ -91,7 +90,7 @@ export default function ServerList () {
     fetch('https://cyberpunk.skyrim-together.com/list')
       .then(res => res.json())
       .then(data => {
-        const newServers: ServerData[] = data.servers.map((server: any) : ServerData => {
+        const newServers: ServerData[] = data.servers.map((server: any): ServerData => {
           const fav = ipToFavorite.get(`${server.ip}:${server.port}`)
           const isIpv6 = ipv6Regex.test(server.ip)
           return {
@@ -133,7 +132,7 @@ export default function ServerList () {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - servers.length) : 0
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - servers.length) : 0
 
   useEffect(() => {
     setPage(0)

@@ -11,42 +11,41 @@ const darkTheme = createTheme({
 })
 
 export default function App () {
-  const [_selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
-  const [_error, setError] = useState<string>('');
+  const [_selectedFilePath, setSelectedFilePath] = useState<string | null>(null)
+  const [_error, setError] = useState<string>('')
 
   const handleSelectFile = async () => {
     try {
-      const result = await window.electronAPI.selectGameDialog();
+      const result = await window.electronAPI.selectGameDialog()
       if (result.canceled) {
-        return;
+        return
       }
 
-      const filePath = result.filePaths[0];
+      const filePath = result.filePaths[0]
 
       if (filePath.endsWith('Cyberpunk2077.exe')) {
-        setSelectedFilePath(filePath);
-        setError('');
-        window.electronAPI.setGamePath(filePath);
+        setSelectedFilePath(filePath)
+        setError('')
+        window.electronAPI.setGamePath(filePath)
       } else {
-        setError('Please select a file named "Cyberpunk2077.exe"');
+        setError('Please select a file named "Cyberpunk2077.exe"')
       }
     } catch (err) {
-      console.error('Error selecting file:', err);
-      setError('Exception: "' + err + '"');
+      console.error('Error selecting file:', err)
+      setError('Exception: "' + err + '"')
     }
-  };
+  }
 
   useEffect(() => {
-    
     // Load the saved file path from electron-store
     window.electronAPI.getGamePath().then((storedPath: any) => {
       if (storedPath && window.electronAPI.pathExists(storedPath)) {
-        setSelectedFilePath(storedPath);
+        setSelectedFilePath(storedPath)
       } else {
-        handleSelectFile();
+        handleSelectFile()
       }
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <ThemeProvider theme={darkTheme}>
