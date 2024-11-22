@@ -24,7 +24,7 @@ target("Launcher")
     
         -- Run npm commands in the electron directory
         run_command(npm, {"install"})
-        run_command(npm, {"run", "build:ow-electron"})
+        run_command(npm, {"run", "build:electron"})
     
         -- Copy produced files
         local src = path.join(electron_dir, "out", "win-unpacked")

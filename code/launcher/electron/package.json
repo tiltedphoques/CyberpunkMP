@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:ow-electron": "set ELECTRON_DEV=1 && ow-electron --test-ad .",
-    "build:ow-electron": "ow-electron-builder --publish=never"
+    "start:electron": "set ELECTRON_DEV=1 && ow-electron .",
+    "build:electron": "ow-electron-builder --publish=never"
   },
   "author": {
     "name": "Tilted Phoques SRL"
