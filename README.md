@@ -1,8 +1,18 @@
 # Cyberpunk Multiplayer
 
-**CyberpunkMP** is a multiplayer mod for Cyberpunk 2077, created by Tilted Phoques SRL. This mod brings multiplayer functionality to the game, allowing players to synchronize their appearances, equipment, movements, and basic animations seamlessly. Additionally, vehicles and their passengers are fully synchronized, enabling cooperative or competitive experiences involving the game's dynamic vehicular systems.
+**CyberpunkMP** is a multiplayer mod for Cyberpunk 2077, created by Tilted 
+Phoques SRL. This mod brings multiplayer functionality to the game, allowing 
+players to synchronize their appearances, equipment, movements, and basic 
+animations seamlessly. Additionally, vehicles and their passengers are fully 
+synchronized, enabling cooperative or competitive experiences involving the 
+game's dynamic vehicular systems.
 
-CyberpunkMP also includes powerful tools for developers. We provide a .NET SDK for creating server-side plugins and support client-side plugins through an exposed Redscript SDK. The mod features a robust Remote Procedure Call (RPC) system, allowing plugins to invoke server-side functions from the client and vice versa. This system is completely automatic, requiring no additional code to handle RPC functionality.
+CyberpunkMP also includes powerful tools for developers. We provide a .NET SDK 
+for creating server-side plugins and support client-side plugins through an 
+exposed Redscript SDK. The mod features a robust Remote Procedure Call (RPC) 
+system, allowing plugins to invoke server-side functions from the client and 
+vice versa. This system is completely automatic, requiring no additional code 
+to handle RPC functionality.
 
 ## Building
 
@@ -19,7 +29,8 @@ CyberpunkMP also includes powerful tools for developers. We provide a .NET SDK f
 
 ### Visual Studio
 
-If you want visual studio projects execute `xmake project -k vsxmake` and you will find the sln in the newly created `vsxmake` folder.
+If you want visual studio projects execute `xmake project -k vsxmake` and you 
+will find the sln in the newly created `vsxmake` folder.
 
 ### Additional configuration / troubleshooting
 
@@ -33,4 +44,5 @@ If you want visual studio projects execute `xmake project -k vsxmake` and you wi
 
 ## Running
 
-From visual studio, just start the Client project with the debugger, it will ask you to locate the game, once you have everything should run.
+From visual studio, just start the Client project with the debugger, it will 
+ask you to locate the game, once you have everything should run.
