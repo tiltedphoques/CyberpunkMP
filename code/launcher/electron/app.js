@@ -15,13 +15,15 @@ const createWindow = () => {
     frame: false,
     webPreferences: {
       nodeIntegration: true,
-     // preload: path.join(__dirname, 'preload.js') // for development
-      preload: path.join(process.cwd(), 'resources/preload.js') // for production
+      preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.js') : path.join(process.cwd(), 'resources/preload.js')
     }
   })
 
-  // win.loadURL('http://localhost:5173') // for development
-  win.loadFile('./dist/index.html') // for production
+  if (process.env.ELECTRON_DEV === '1') {
+    win.loadURL('http://localhost:5173')
+  } else {
+    win.loadFile('./dist/index.html')
+  }
 
   win.on('ready-to-show', () => {
   })
