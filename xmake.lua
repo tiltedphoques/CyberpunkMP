@@ -61,7 +61,7 @@ if is_plat("windows") then
 
     xpack("Cyberpunk Multiplayer")
         set_formats("zip")
-        set_title("Cyberpunk Multiplayer")+
+        set_title("Cyberpunk Multiplayer")
         set_filename("CyberpunkMultiplayer.zip")
         set_author("Tilted Phoques SRL")
         set_description("Installer for Cyberpunk Multiplayer Launcher")
