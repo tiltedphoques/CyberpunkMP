@@ -40,7 +40,7 @@ struct GameServer final : Server
 
         static_assert(NetworkMessage<MessageType>, "Handler should take a NetworkMessage as first parameter!");
 
-        return m_dispatcher.sink<PacketEvent<MessageType>>().connect<Func>(std::forward<T>(args)...);
+        return m_dispatcher.sink<PacketEvent<MessageType>>().template connect<Func>(std::forward<T>(args)...);
     }
 
     gsl::not_null<const Config*> GetConfig() const noexcept { return &m_config; }

@@ -28,7 +28,6 @@ if is_plat("windows") then
     add_defines("NOMINMAX")
 end
 
-add_cxxflags("-fno-rtti")
 add_defines("_UNICODE", "RED4EXT_STATIC_LIB", "GLM_ENABLE_EXPERIMENTAL")
 
 set_warnings("all")

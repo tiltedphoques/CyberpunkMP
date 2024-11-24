@@ -14,7 +14,6 @@
 #define MAX_PATH 2048
 #endif
 
-
 namespace
 {
 const auto dotnetType = STR("CyberpunkSdk.Server, CyberpunkSdk");
@@ -108,7 +107,8 @@ GetDotnetLoadAssembly(const char_t* config_path, hostfxr_initialize_for_runtime_
 
     apClose(pContext);
 
-    return std::make_tuple(static_cast<load_assembly_and_get_function_pointer_fn>(pLoadAssemblyAndGetFunctionPointer), static_cast<get_function_pointer_fn>(pGetFunctionPointer));
+    return std::make_tuple(
+        reinterpret_cast<load_assembly_and_get_function_pointer_fn>(pLoadAssemblyAndGetFunctionPointer), reinterpret_cast<get_function_pointer_fn>(pGetFunctionPointer));
 }
 } // namespace
 
@@ -177,13 +177,20 @@ void Scripting::Initialize()
 
 component_entry_point_fn Scripting::GetFunction(const wchar_t* apName) const
 {
+#if TP_PLATFORM_WINDOWS
+    const auto* pName = apName;
+#else
+    const size_t cBufferSize = wcstombs(nullptr, apName, 0) + 1;
+    char pName[cBufferSize];
+    std::wcstombs(pName, apName, cBufferSize);
+#endif
+
     void* out;
-    uint32_t rc = m_pLoadAssembly(m_sdkPath.c_str(), dotnetType, apName, nullptr, nullptr, &out);
+    uint32_t rc = m_pLoadAssembly(m_sdkPath.c_str(), dotnetType, pName, nullptr, nullptr, &out);
     if (rc != 0)
     {
         return nullptr;
     }
 
-    return static_cast<component_entry_point_fn>(out);
+    return reinterpret_cast<component_entry_point_fn>(out);
 }
-
