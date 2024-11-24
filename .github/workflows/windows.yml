@@ -47,3 +47,18 @@ jobs:
     # Build the game
     - name: Build with xmake
       run: xmake -y
+
+    # Install node
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Generate build
+      run: xmake install -o distrib
+
+    - name: Package build
+      run: xmake pack
+
+    
+    
+      
