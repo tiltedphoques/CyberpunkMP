@@ -181,12 +181,12 @@ component_entry_point_fn Scripting::GetFunction(const wchar_t* apName) const
     const auto* pName = apName;
 #else
     const size_t cBufferSize = wcstombs(nullptr, apName, 0) + 1;
-    char pName[apNameWSize];
+    char pName[cBufferSize];
     std::wcstombs(pName, apName, cBufferSize);
 #endif
 
     void* out;
-    uint32_t rc = m_pLoadAssembly(m_sdkPath.c_str(), dotnetType, apName, nullptr, nullptr, &out);
+    uint32_t rc = m_pLoadAssembly(m_sdkPath.c_str(), dotnetType, pName, nullptr, nullptr, &out);
     if (rc != 0)
     {
         return nullptr;
