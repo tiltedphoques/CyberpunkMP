@@ -3,7 +3,16 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 
 export default defineConfig({
   build: {
-    outDir: './electron/dist'
+    outDir: './electron/dist',
+    rollupOptions: {
+      // Hides MUI warning
+      onwarn (warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+        warn(warning)
+      }
+    }
   },
   base: './',
   plugins: [

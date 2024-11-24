@@ -34,8 +34,9 @@ npm run install
 > dependency, or run commands independently. 
 
 ## Production
-1. Go through `Development` first
+1. Go through `Development` first.
 2. Run `npm run build:all` to build:
   - React app
   - Electron app
-3. Output will be in the `electron/out` folder
+3. Output will be in the `electron/out` folder.
+4. You are ready to run `CyberpunkMP.exe` in `win-unpacked/`!

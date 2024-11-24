@@ -9,11 +9,11 @@
     "start": "vite",
     "start:all": "cross-env ELECTRON_DEV=1 npx concurrently --kill-others \"vite\" \"cd electron && npx react-devtools\" \"cd electron && npm run start:electron\"",
     "build": "tsc && vite build",
-    "build:all": "tsc && vite build && cd electron && npm run build:electron",
+    "build:all": "npm run build && npm run build:electron",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start:electron": "cd electron && npm run start:electron",
-    "build:electron": "npm run build && cd electron && npm run build:electron"
+    "build:electron": "cd electron && npm run build:electron"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",

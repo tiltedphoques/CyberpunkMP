@@ -1,6 +1,5 @@
 import Store from 'electron-store'
 import { promises as fs } from 'fs'
-import devtools from 'electron-devtools-installer'
 import decompress from 'decompress'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -8,10 +7,12 @@ import electron from 'electron'
 
 let win = null
 
-const { default: install, REACT_DEVELOPER_TOOLS } = devtools
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const store = new Store()
+
+const isDev = process.env.ELECTRON_DEV === '1'
+const isProd = !isDev
 
 const createWindow = () => {
   win = new electron.BrowserWindow({
@@ -19,13 +20,14 @@ const createWindow = () => {
     height: 850,
     frame: false,
     webPreferences: {
-      webSecurity: process.env.ELECTRON_DEV !== '1',
+      devTools: isDev,
+      webSecurity: isProd,
       nodeIntegration: true,
-      preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.mjs') : path.join(process.cwd(), 'resources/preload.mjs')
+      preload: isDev ? path.join(__dirname, 'preload.mjs') : path.join(process.cwd(), 'resources/preload.mjs')
     }
   })
 
-  if (process.env.ELECTRON_DEV === '1') {
+  if (isDev) {
     win.loadURL('http://localhost:5173')
     win.webContents.openDevTools()
   } else {
@@ -89,10 +91,10 @@ electron.app.whenReady().then(async () => {
     }
   })
 
-  const devTools = process.env.ELECTRON_DEV === '1'
-
-  if (devTools) {
+  if (isDev) {
     try {
+      const { default: install, REACT_DEVELOPER_TOOLS } = await import('electron-devtools-installer')
+
       await install(REACT_DEVELOPER_TOOLS, {
         loadExtensionOptions: {
           allowFileAccess: true
