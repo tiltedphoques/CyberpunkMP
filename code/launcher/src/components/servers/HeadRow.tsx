@@ -23,7 +23,7 @@ const headCells: readonly HeadCell[] = [
     id: 'players',
     head: false,
     disablePadding: false,
-    label: 'Player Count'
+    label: 'Players'
   },
   {
     id: 'tags',
