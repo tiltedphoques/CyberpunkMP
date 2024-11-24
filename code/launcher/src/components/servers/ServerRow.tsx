@@ -21,11 +21,11 @@ export default function ServerRow (props: Props) {
       tabIndex={-1}
       key={row.ip}
     >
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} component="th" id={labelId} scope="row" padding="none" width='25%'><div className="textContainer">{row.name}</div></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><div className="textContainer">{row.players}</div></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><div className="textContainer">{row.tags}</div></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><div className="textContainer">{row.ip}</div></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><div className="textContainer">{row.version}</div></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} component="th" id={labelId} scope="row" padding="none" width='25%'><Box className="textContainer">{row.name}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.players}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.tags}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.ip}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.version}</Box></TableCell>
       <TableCell sx={{ p: 2 }} align="right" width='15%'>
         <Box className="textContainer">
           <IconButton sx={{ zIndex: 10 }}

@@ -8,7 +8,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
+  TableFooter, TableHead,
   TablePagination,
   TableRow,
   TextField,
@@ -194,7 +194,7 @@ export default function ServerList () {
   }, [servers])
 
   return (
-    <div>
+    <Box>
       <Card>
         <CardContent>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -246,12 +246,15 @@ export default function ServerList () {
               aria-labelledby="tableTitle"
               size='medium'
             >
-              <HeadRow
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={servers.length}
-              />
+              <TableHead>
+                <HeadRow
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={servers.length}
+                />
+              </TableHead>
+
               <TableBody>
                 {visibleRows
                   .map((row, index) =>
@@ -309,6 +312,6 @@ export default function ServerList () {
         }}
         serverData={openedServerModal}
       />
-    </div>
+    </Box>
   )
 }
