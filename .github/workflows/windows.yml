@@ -20,6 +20,7 @@ jobs:
 
     - name: Checkout submodules
       run: |
+        git config --global url."https://github.com/".insteadOf "git@github.com:"
         git submodule sync --recursive
         git submodule update --init --force --recursive --depth=1
 
