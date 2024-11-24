@@ -1,9 +1,10 @@
-const { contextBridge, ipcRenderer } = require('electron')
-const fs = require('fs')
-const path = require('path')
-const exec = require('child_process').execFile
+import { contextBridge, ipcRenderer } from 'electron'
 
-function getRemoteFile (file, url, onFinish) {
+import fs from 'fs'
+import path from 'path'
+import { execFile as exec } from 'child_process'
+
+export function getRemoteFile (file, url, onFinish) {
   fetch(url).then(async response => {
     const tempPath = file + '.tmp'
     const hash = path.parse(file).name
@@ -25,24 +26,24 @@ function getRemoteFile (file, url, onFinish) {
   })
 }
 
-async function selectGameDialog () {
+export async function selectGameDialog () {
   return await ipcRenderer.invoke('select-game-dialog')
 }
 
-function getGamePath () {
+export function getGamePath () {
   return ipcRenderer.invoke('get-game-path')
 }
 
-function setGamePath (path) {
+export function setGamePath (path) {
   ipcRenderer.invoke('set-game-path', path)
 }
 
-async function _getModPath () {
+export async function _getModPath () {
   const userPath = await ipcRenderer.invoke('get-user-path')
   return path.join(userPath, 'downloads', 'mods')
 }
 
-async function isModInstalled (hash) {
+export async function isModInstalled (hash) {
   const modPath = await _getModPath()
   const filePath = path.join(modPath, hash)
   return fs.existsSync(filePath)
