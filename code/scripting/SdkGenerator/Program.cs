@@ -80,15 +80,20 @@ internal class Program
         try
         {
             string root = GetGitRoot();
-            string output = Path.Combine(root, @"code\scripting\CyberpunkSdk");
-            string source = Path.Combine(root, @"code\server\Scripting");
+            string output = Path.Combine(root, @"code/scripting/CyberpunkSdk");
+            string source = Path.Combine(root, @"code/server/Scripting");
 
             ConsoleDriver.Run(new CyberpunkSdk(output, source, fileNames));
 
             string sdkFile = Path.Combine(output, "CyberpunkSdk.Internal.cs");
 
             string text = File.ReadAllText(sdkFile);
-            text = text.Replace("Server.exe.dll", "Server.exe");
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                text = text.Replace("Server.exe.dll", "Server.exe");
+            else
+                text = text.Replace("DllImport(\"Server\"", "DllImport(\"../Server\"");
+           
             File.WriteAllText(sdkFile, text);
         }
         catch(Exception e)

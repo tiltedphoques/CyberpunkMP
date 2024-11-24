@@ -340,7 +340,7 @@ void GenerateHeader(std::filesystem::path aPath, const google::protobuf::FileDes
     {
         const auto str = HashProtocol(apFile, ctx);
         out << "static std::string kProtocolString = \"" << str << "\";" << std::endl;
-        out << "static size_t kIdentifier = 0x" << std::hex << FHash::FNV1a64(str.c_str()) << "ULL;" << std::endl << std::endl;
+        out << "inline constexpr size_t kIdentifier = 0x" << std::hex << FHash::FNV1a64(str.c_str()) << "ULL;" << std::endl << std::endl;
         GenerateProtocolHeader(*protocol, out);
     }
 
