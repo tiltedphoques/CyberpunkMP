@@ -1,6 +1,7 @@
 set_xmakever("2.8.0")
 set_policy("build.ccache", false)
 set_policy("package.requires_lock", false)
+add_repositories("test-repo https://github.com/maximegmd/xmake-repo.git")
 
 -- c code will use c99,
 set_languages("c99", "cxx20")
@@ -42,13 +43,13 @@ if is_mode("debug") then
 end
 
 includes('tools/codegen')
+includes('tools/csharp')
 
 -- add projects
 includes("code/netpack")
 includes("code/common")
 includes("code/protocol")
 includes("code/server")
-includes("code/scripting")
 
 if is_plat("windows") then
     includes("code/assets")

@@ -1,0 +1,6 @@
+.vs/
+bin/
+obj/
+CyberpunkMp.cs
+CyberpunkMp-symbols.cpp
+Std.cs
