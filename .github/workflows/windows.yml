@@ -1,4 +1,4 @@
-name: Build windows
+name: 'Build windows'
 
 on:
   pull_request:
@@ -21,31 +21,31 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Checkout submodules
+    - name: 'Checkout submodules'
       run: |
         git config --global url."https://github.com/".insteadOf "git@github.com:"
         git submodule sync --recursive
         git submodule update --init --force --recursive --depth=1
 
-    - name: Cache xmake dependencies
+    - name: 'Cache xmake dependencies'
       uses: actions/cache@v4
       with:
         path: ~/AppData/Local/.xmake/packages
         key: ${{ runner.os }}-xmake-${{ hashFiles('**/xmake.lua') }}
         
     # Install xmake
-    - name: Setup xmake
+    - name: 'Setup xmake'
       uses: xmake-io/github-action-setup-xmake@v1
       with:
         xmake-version: 2.9.5
         actions-cache-folder: '.xmake-cache' # This doesn't cache dependencies, only xmake itself
         actions-cache-key: ${{ matrix.os }}
 
-    - name: Configure xmake and install dependencies
+    - name: 'Configure xmake and install dependencies'
       run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes -vD
 
     # Build the game
-    - name: Build with xmake
+    - name: 'Build with xmake'
       run: xmake -y
 
     # Install node
@@ -53,11 +53,17 @@ jobs:
       with:
         node-version: 20
 
-    - name: Generate build
+    - name: 'Generate build'
       run: xmake install -o distrib
 
-    - name: Package build
+    - name: 'Package build'
       run: xmake pack
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        path: build/xpack/Cyberpunk Multiplayer/CyberpunkMultiplayer.zip
 
     
     
