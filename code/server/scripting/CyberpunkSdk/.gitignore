@@ -3,3 +3,6 @@ obj/
 CyberpunkSdk.cs
 Std.cs
 *.cpp
+CyberpunkSdk.Internal.cs
+CyberpunkSdk.Internal-symbols.cpp
+Std.cs
