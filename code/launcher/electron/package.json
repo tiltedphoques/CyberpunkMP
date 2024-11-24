@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:electron": "cross-env ELECTRON_DEV=1 ow-electron .",
@@ -34,10 +35,12 @@
   "private": true,
   "devDependencies": {
     "@overwolf/ow-electron": "^31.4.0",
-    "@overwolf/ow-electron-builder": "^24.7.0"
+    "@overwolf/ow-electron-builder": "^25.0.6",
+    "electron-devtools-installer": "^3.2.0",
+    "react-devtools": "^6.0.1"
   },
   "dependencies": {
     "decompress": "^4.2.1",
-    "electron-store": "^7.0.0"
+    "electron-store": "^10.0.0"
   }
 }

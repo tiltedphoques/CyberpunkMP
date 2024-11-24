@@ -1,11 +1,16 @@
-const electron = require('electron')
-const path = require('path')
-const decompress = require('decompress')
-const Store = require('electron-store')
-const fs = require('fs').promises
+import Store from 'electron-store'
+import { promises as fs } from 'fs'
+import devtools from 'electron-devtools-installer'
+import decompress from 'decompress'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import electron from 'electron'
 
 let win = null
 
+const { default: install, REACT_DEVELOPER_TOOLS } = devtools
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const store = new Store()
 
 const createWindow = () => {
@@ -16,12 +21,13 @@ const createWindow = () => {
     webPreferences: {
       webSecurity: process.env.ELECTRON_DEV !== '1',
       nodeIntegration: true,
-      preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.js') : path.join(process.cwd(), 'resources/preload.js')
+      preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.mjs') : path.join(process.cwd(), 'resources/preload.mjs')
     }
   })
 
   if (process.env.ELECTRON_DEV === '1') {
     win.loadURL('http://localhost:5173')
+    win.webContents.openDevTools()
   } else {
     win.loadFile('./dist/index.html')
   }
@@ -32,7 +38,7 @@ const createWindow = () => {
   })
 }
 
-electron.app.whenReady().then(() => {
+electron.app.whenReady().then(async () => {
   electron.ipcMain.handle('get-game-path', () => store.get('game_path'))
   electron.ipcMain.handle('set-game-path', (event, path) => store.set('game_path', path))
   electron.ipcMain.handle('get-user-path', () => electron.app.getPath('userData'))
@@ -45,7 +51,10 @@ electron.app.whenReady().then(() => {
   electron.ipcMain.handle('select-game-dialog', async () => {
     const result = await electron.dialog.showOpenDialog({
       properties: ['openFile'],
-      filters: [{ name: 'Executable', extensions: ['exe'] }],
+      filters: [{
+        name: 'Executable',
+        extensions: ['exe']
+      }],
       title: 'Select Cyberpunk2077.exe',
       message: 'Please select the Cyberpunk2077.exe file. This file is typically located in bin/x64 of the game\'s installation directory.'
     })
@@ -80,11 +89,19 @@ electron.app.whenReady().then(() => {
     }
   })
 
-  const devTools = false
+  const devTools = process.env.ELECTRON_DEV === '1'
+
   if (devTools) {
-    // install([REACT_DEVELOPER_TOOLS], { allowFileAccess: true })
-    //   .then((name) => console.log(`Added Extension:  ${name}`))
-    //   .catch((err) => console.log('An error occurred: ', err))
+    try {
+      await install(REACT_DEVELOPER_TOOLS, {
+        loadExtensionOptions: {
+          allowFileAccess: true
+        },
+        forceDownload: true
+      })
+    } catch (error) {
+      console.log('Failed to install react-devtools: ', error)
+    }
   }
 
   // createMenu()
