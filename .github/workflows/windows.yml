@@ -42,7 +42,7 @@ jobs:
         actions-cache-key: ${{ matrix.os }}
 
     - name: 'Configure xmake and install dependencies'
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes -vD
+      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes
 
     # Build the game
     - name: 'Build with xmake'
@@ -60,6 +60,7 @@ jobs:
       run: xmake pack
 
     - name: 'Upload Artifact'
+      if: github.event_name == 'push'
       uses: actions/upload-artifact@v4
       with:
         name: build
