@@ -61,6 +61,7 @@ if is_plat("windows") then
     xpack("Cyberpunk Multiplayer")
         set_formats("zip")
         set_title("Cyberpunk Multiplayer")
+        set_basename("Artifacts")
         set_author("Tilted Phoques SRL")
         set_description("Installer for Cyberpunk Multiplayer Launcher")
         --set_homepage("https://your-project-homepage.com")
@@ -73,7 +74,7 @@ if is_plat("windows") then
             end
         end
     
-        add_files_recursively("distrib/launcher", "distrib/launcher")
+        add_files_recursively("distrib/launcher")
 
         set_version("0.1.0.0")
 end
