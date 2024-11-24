@@ -1,69 +1,97 @@
-import Owadview from './components/Owadview.tsx'
 import ServerList from './components/servers/ServerList.tsx'
-import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { Box, Button, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import WindowFrame from './components/WindowFrame.tsx'
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react'
+import { FindInPage } from '@mui/icons-material'
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark'
+  },
+  components: {
+    // Actions & Inputs
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          lineHeight: 'normal'
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          width: '100%',
+          margin: '12px 0'
+        }
+      }
+    },
+    // Display data
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          paddingTop: '12px!important'
+        }
+      }
+    }
   }
 })
 
 export default function App () {
-  const [_selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
-  const [_error, setError] = useState<string>('');
+  const [_selectedFilePath, setSelectedFilePath] = useState<string | null>(null)
+  const [_error, setError] = useState<string>('')
 
   const handleSelectFile = async () => {
     try {
-      const result = await window.electronAPI.selectGameDialog();
+      const result = await window.electronAPI.selectGameDialog()
       if (result.canceled) {
-        return;
+        return
       }
 
-      const filePath = result.filePaths[0];
+      const filePath = result.filePaths[0]
 
       if (filePath.endsWith('Cyberpunk2077.exe')) {
-        setSelectedFilePath(filePath);
-        setError('');
-        window.electronAPI.setGamePath(filePath);
+        setSelectedFilePath(filePath)
+        setError('')
+        window.electronAPI.setGamePath(filePath)
       } else {
-        setError('Please select a file named "Cyberpunk2077.exe"');
+        setError('Please select a file named "Cyberpunk2077.exe"')
       }
     } catch (err) {
-      console.error('Error selecting file:', err);
-      setError('Exception: "' + err + '"');
+      console.error('Error selecting file:', err)
+      setError('Exception: "' + err + '"')
     }
-  };
+  }
 
   useEffect(() => {
-    
     // Load the saved file path from electron-store
     window.electronAPI.getGamePath().then((storedPath: any) => {
       if (storedPath && window.electronAPI.pathExists(storedPath)) {
-        setSelectedFilePath(storedPath);
+        setSelectedFilePath(storedPath)
       } else {
-        handleSelectFile();
+        handleSelectFile()
       }
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
       <WindowFrame/>
-      <Box sx={{ height: 'calc(100vh - 50px)', display: 'flex', flexDirection: 'column', pt: '50px' }}>
-        <Box
-          sx={{
-            width: '100%',
-            overflow: 'auto',
-            flex: 1
-          }}
-        >
+      <Box sx={{ display: 'flex', flexDirection: 'column', p: '12px' }}>
+        <Box sx={{ display: 'flex', pt: '50px', mb: '12px' }}>
+          <Button variant="outlined"
+                  startIcon={<FindInPage />}
+                  onClick={handleSelectFile}
+          >
+            Select game executable
+          </Button>
+        </Box>
+
+        <Box sx={{ width: '100%', overflow: 'auto', flex: 1 }}>
           <ServerList/>
         </Box>
-        <button onClick={handleSelectFile}>Reselect Cyberpunk2077.exe</button>
-        <Owadview style={{ width: '100%', height: '120px' }}/>
+
+        { /* <Owadview style={{ width: '100%', height: '120px' }}/> */ }
       </Box>
     </ThemeProvider>
   )

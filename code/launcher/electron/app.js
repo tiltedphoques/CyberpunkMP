@@ -1,12 +1,12 @@
-const electron = require('electron');
+const electron = require('electron')
 const path = require('path')
 const decompress = require('decompress')
 const Store = require('electron-store')
-const fs = require('fs').promises;
+const fs = require('fs').promises
 
 let win = null
 
-const store = new Store();
+const store = new Store()
 
 const createWindow = () => {
   win = new electron.BrowserWindow({
@@ -15,12 +15,15 @@ const createWindow = () => {
     frame: false,
     webPreferences: {
       nodeIntegration: true,
-     // preload: path.join(__dirname, 'preload.js') // for development
-      preload: path.join(process.cwd(), 'resources/preload.js') // for production
+      preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.js') : path.join(process.cwd(), 'resources/preload.js')
     }
   })
 
-  win.loadFile('./dist/index.html')
+  if (process.env.ELECTRON_DEV === '1') {
+    win.loadURL('http://localhost:5173')
+  } else {
+    win.loadFile('./dist/index.html')
+  }
 
   win.on('ready-to-show', () => {
   })
@@ -44,37 +47,37 @@ electron.app.whenReady().then(() => {
       filters: [{ name: 'Executable', extensions: ['exe'] }],
       title: 'Select Cyberpunk2077.exe',
       message: 'Please select the Cyberpunk2077.exe file. This file is typically located in bin/x64 of the game\'s installation directory.'
-    });
-    return result;
-  });
+    })
+    return result
+  })
 
   electron.ipcMain.handle('create-mod-symlink', async (event, gamePath) => {
-    const sourceDir = path.join(path.dirname(path.dirname(electron.app.getAppPath())), 'mod');
-    const targetDir = path.join(path.dirname(path.dirname(path.dirname(gamePath))), 'red4ext', 'plugins', 'zzzCyberpunkMP');
+    const sourceDir = path.join(path.dirname(path.dirname(electron.app.getAppPath())), 'mod')
+    const targetDir = path.join(path.dirname(path.dirname(path.dirname(gamePath))), 'red4ext', 'plugins', 'zzzCyberpunkMP')
 
-    console.log(`Creating symlink from ${sourceDir} to ${targetDir}`);
-  
+    console.log(`Creating symlink from ${sourceDir} to ${targetDir}`)
+
     try {
-      await fs.unlink(targetDir);
-      console.log(`Existing symlink at ${targetDir} has been deleted.`);
+      await fs.unlink(targetDir)
+      console.log(`Existing symlink at ${targetDir} has been deleted.`)
     } catch (error) {
       if (error.code !== 'ENOENT') {
-        throw error;
+        throw error
       }
     }
 
     try {
-      await fs.mkdir(path.dirname(targetDir), { recursive: true });
-      await fs.symlink(sourceDir, targetDir, 'junction');
-      return `Symlink created from ${sourceDir} to ${targetDir}`;
+      await fs.mkdir(path.dirname(targetDir), { recursive: true })
+      await fs.symlink(sourceDir, targetDir, 'junction')
+      return `Symlink created from ${sourceDir} to ${targetDir}`
     } catch (error) {
       if (error.code === 'EEXIST') {
-        return 'Symlink already exists';
+        return 'Symlink already exists'
       } else {
-        throw error;
+        throw error
       }
     }
-  });
+  })
 
   const devTools = false
   if (devTools) {
