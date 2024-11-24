@@ -11,7 +11,7 @@ ServerListSystem::ServerListSystem(gsl::not_null<World*> apWorld)
     : m_pWorld(apWorld)
     , m_nextAnnounce{}
 {
-    m_updateSystem = apWorld->system("Server list Update").kind(flecs::OnUpdate).iter([this](flecs::iter& iter) { Tick(); });
+    m_updateSystem = apWorld->system("Server list Update").kind(flecs::OnUpdate).run([this](flecs::iter& iter) { Tick(); });
 
     m_serverListObserver = apWorld->observer<PlayerComponent>("Server list player Observer")
                                .event(flecs::OnSet)

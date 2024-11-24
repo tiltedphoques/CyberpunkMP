@@ -24,7 +24,7 @@ void WorldScriptInstance::Initialize()
 
     m_updateSystem = GServer->GetWorld()->system("Script Update")
     .kind(flecs::OnUpdate)
-    .iter([this](flecs::iter& iter)
+    .run([this](flecs::iter& iter)
     {
         float delta = iter.delta_time();
         if (m_callback != nullptr)

@@ -23,7 +23,7 @@ World::World()
     set<flecs::Rest>({});
 
     this->import<flecs::units>();
-    this->import<flecs::monitor>();
+    this->import<flecs::stats>();
 
     component<std::string>()
         .opaque(flecs::String)

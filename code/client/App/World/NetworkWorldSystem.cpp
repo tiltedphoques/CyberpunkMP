@@ -54,7 +54,7 @@ bool NetworkWorldSystem::Spawn(uint64_t aServerId, const Red::Vector4& aPosition
     if (!id.IsDynamic())
         return false;
 
-    ensure(aServerId).emplace<SpawningComponent>(id);
+    make_alive(aServerId).emplace<SpawningComponent>(id);
 
     return true;
 }
@@ -408,7 +408,7 @@ void NetworkWorldSystem::OnConnected()
     m_updatePlayerLocation = system("Update player location")
         .kind(flecs::OnUpdate)
         .interval(1.f / pNetworkService->GetServerSettings().get_update_rate())
-        .iter([this](flecs::iter& it)
+        .run([this](flecs::iter& it)
         {
             UpdatePlayerLocation();
         });

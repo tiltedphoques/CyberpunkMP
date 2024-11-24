@@ -17,7 +17,7 @@ add_requires(
     "zlib",
     "nlohmann_json",
     "dotnet",
-    "flecs 3.2.11",
+    "flecs v4.0.3",
     "protobuf-cpp",
     "entt",
     "microsoft-gsl")

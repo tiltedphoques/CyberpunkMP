@@ -136,7 +136,7 @@ bool VehicleSystem::HandleVehicleLoadMessage(const PacketEvent<server::NotifyVeh
 
     // spdlog::info("[VehicleSystem] * Spawned: {}, {}", aMessage.get_id(), id.hash);
     const auto worldSystem = Red::GetGameSystem<NetworkWorldSystem>();
-    worldSystem->ensure(aMessage.get_id()).emplace<SpawningComponent>(id);
+    worldSystem->make_alive(aMessage.get_id()).emplace<SpawningComponent>(id);
 
     return true;
 }
