@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "9YoMhGXMjiw=",
+  "success": true,
+  "projectFilePath": "/mnt/f/Dev/CyberpunkMP/code/server/loader/Server.Loader.csproj",
+  "expectedPackageFiles": [
+    "/home/yamashi/.nuget/packages/cppsharp.runtime/1.1.5.3168/cppsharp.runtime.1.1.5.3168.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/curseforge.apiclient/2.2.0/curseforge.apiclient.2.2.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/embedio/3.5.2/embedio.3.5.2.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.dependencyinjection/7.0.0/microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/7.0.0/microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.http/7.0.0/microsoft.extensions.http.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.logging/7.0.0/microsoft.extensions.logging.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.0/microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.options/7.0.0/microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.extensions.primitives/7.0.0/microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/newtonsoft.json/13.0.2/newtonsoft.json.13.0.2.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/system.valuetuple/4.5.0/system.valuetuple.4.5.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/unosquare.swan.lite/3.1.0/unosquare.swan.lite.3.1.0.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.netcore.app.ref/8.0.11/microsoft.netcore.app.ref.8.0.11.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.11/microsoft.aspnetcore.app.ref.8.0.11.nupkg.sha512",
+    "/home/yamashi/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.11/microsoft.netcore.app.host.linux-x64.8.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}

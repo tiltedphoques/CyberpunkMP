@@ -42,13 +42,16 @@ if is_mode("debug") then
 end
 
 includes('tools/codegen')
+includes('tools/csharp')
+
+add_cxxflags("-fPIC")
+add_cflags("-fPIC")
 
 -- add projects
 includes("code/netpack")
 includes("code/common")
 includes("code/protocol")
 includes("code/server")
-includes("code/scripting")
 
 if is_plat("windows") then
     includes("code/assets")
