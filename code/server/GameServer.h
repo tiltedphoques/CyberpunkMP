@@ -2,7 +2,6 @@
 
 #include "System/Path.h"
 #include "System/Log.h"
-#include "PlayerManager.h"
 #include "Config.h"
 #include "Scripting/Scripting.h"
 #include "Game/World.h"

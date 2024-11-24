@@ -3,6 +3,9 @@
 #include <iostream>
 #include <filesystem>
 #include <bitset>
+#include <fstream>
+
+#include <flecs.h>
 
 #include <Core/Platform.h>
 #include <Core/Stl.h>
@@ -36,8 +39,6 @@
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
-
-#include <flecs.h>
 
 #include <client.gen.h>
 #include <server.gen.h>

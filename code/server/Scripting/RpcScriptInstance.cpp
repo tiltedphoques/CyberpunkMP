@@ -3,6 +3,8 @@
 
 #include "Components/PlayerComponent.h"
 
+#include "PlayerManager.h"
+
 
 RpcScriptInstance::RpcScriptInstance()
 {

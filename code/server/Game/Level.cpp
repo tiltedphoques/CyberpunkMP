@@ -11,6 +11,7 @@
 
 #include "GameServer.h"
 #include "World.h"
+#include "PlayerManager.h"
 
 
 constexpr static float sCellSize = 60 * 100;

@@ -3,6 +3,8 @@
 #include "GameServer.h"
 #include "Components/PlayerComponent.h"
 
+#include "PlayerManager.h"
+
 ChatSystem::ChatSystem(gsl::not_null<World*> apWorld)
     : m_pWorld(apWorld)
 {

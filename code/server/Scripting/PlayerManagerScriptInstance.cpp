@@ -2,6 +2,8 @@
 #include "PlayerScriptInstance.h"
 #include "Components/PlayerComponent.h"
 
+#include "PlayerManager.h"
+
 #include "GameServer.h"
 
 TP_EXPORT IPlayerManager* IPlayerManager::Get()

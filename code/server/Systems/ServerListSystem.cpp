@@ -2,6 +2,7 @@
 
 #include "GameServer.h"
 #include "Components/PlayerComponent.h"
+#include "PlayerManager.h"
 
 static constexpr char kMasterServerEndpoint[] =
     //"http://127.0.0.1:8000";
