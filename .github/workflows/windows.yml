@@ -42,7 +42,7 @@ jobs:
         actions-cache-key: ${{ matrix.os }}
 
     - name: Configure xmake and install dependencies
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --yes -vD
+      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes -vD
 
     # Build the game
     - name: Build with xmake
