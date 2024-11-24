@@ -45,9 +45,6 @@ end
 includes('tools/codegen')
 includes('tools/csharp')
 
-add_cxxflags("-fPIC")
-add_cflags("-fPIC")
-
 -- add projects
 includes("code/netpack")
 includes("code/common")
