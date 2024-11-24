@@ -14,6 +14,7 @@ const createWindow = () => {
     height: 850,
     frame: false,
     webPreferences: {
+      webSecurity: process.env.ELECTRON_DEV !== '1',
       nodeIntegration: true,
       preload: (process.env.ELECTRON_DEV === '1') ? path.join(__dirname, 'preload.js') : path.join(process.cwd(), 'resources/preload.js')
     }
