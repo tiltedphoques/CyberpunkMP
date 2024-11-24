@@ -175,14 +175,14 @@ void Scripting::Initialize()
     spdlog::get("Scripting")->debug("Done loading plugins.");
 }
 
-component_entry_point_fn Scripting::GetFunction(const wchar_t* apNameW) const
+component_entry_point_fn Scripting::GetFunction(const wchar_t* apName) const
 {
 #if TP_PLATFORM_WINDOWS
-    const wchar_t* apName = apNameW;
+    const auto* pName = apName;
 #else
-    const size_t apNameWSize = std::wcslen(apNameW) + 1;
-    char apName[apNameWSize];
-    std::wcstombs(apName, apNameW, apNameWSize);
+    const size_t cBufferSize = wcstombs(nullptr, apName, 0) + 1;
+    char pName[apNameWSize];
+    std::wcstombs(pName, apName, cBufferSize);
 #endif
 
     void* out;
