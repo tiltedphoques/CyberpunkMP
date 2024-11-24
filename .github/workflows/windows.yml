@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build
-        path: build/xpack/Cyberpunk Multiplayer/CyberpunkMultiplayer.zip
+        path: build/xpack/Cyberpunk Multiplayer/Artifacts.zip
 
     
     
