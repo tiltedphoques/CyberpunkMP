@@ -1,4 +1,4 @@
-﻿namespace CyberpunkSdk.Systems
+﻿namespace Server.Loader.Systems
 {
     internal class Statistics
     {

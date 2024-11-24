@@ -2,11 +2,11 @@
 using System.Reflection;
 using System.Text.Json;
 using CurseForge.APIClient.Models.Mods;
-
+using CyberpunkSdk.Systems;
 using File = System.IO.File;
 
 
-namespace CyberpunkSdk.Systems
+namespace Server.Loader.Systems
 {
     internal class Artifact
     {
@@ -259,13 +259,13 @@ namespace CyberpunkSdk.Systems
             // Get the location of the current assembly and its containing directory
             string currentAssemblyLocation = Assembly.GetExecutingAssembly().Location;
             string baseDirectory = Path.GetDirectoryName(currentAssemblyLocation)!;
-            string exeRoot = Path.Combine(baseDirectory, "..");
+            string exeRoot = baseDirectory;
 
             LoadConfiguration(exeRoot);
             DownloadMods(exeRoot);
 
             // Get all subdirectories in the base directory
-            string[] subDirectories = Directory.GetDirectories(baseDirectory);
+            string[] subDirectories = Directory.GetDirectories(Path.Combine(baseDirectory, "Plugins"));
 
             foreach (string directory in subDirectories)
             {

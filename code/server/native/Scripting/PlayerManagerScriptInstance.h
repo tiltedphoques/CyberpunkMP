@@ -13,6 +13,9 @@ struct PlayerManagerScriptInstance final : IPlayerManager
     ~PlayerManagerScriptInstance() override;
     IPlayer* GetPlayer(uint64_t Id) override;
 
+    void SetPlayerJoinCallback(TPlayerCallback callback);
+    void SetPlayerLeftCallback(TPlayerCallback callback);
+
 protected:
 
     void PlayerJoin(uint64_t aId) const;

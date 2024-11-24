@@ -1,7 +1,8 @@
 ﻿using EmbedIO.Actions;
 using EmbedIO;
+using CyberpunkSdk.Internal;
 
-namespace CyberpunkSdk.Systems
+namespace Server.Loader.Systems
 {
     internal class WebApi
     {
@@ -18,7 +19,7 @@ namespace CyberpunkSdk.Systems
             Statistics = statistics;
             Plugins = plugins;
 
-            var port = Internal.IConfig.Get().Port;
+            var port = IConfig.Get().Port;
             var url = $"http://+:{port}";
 
             ServerTask = CreateWebServer(url).RunAsync();

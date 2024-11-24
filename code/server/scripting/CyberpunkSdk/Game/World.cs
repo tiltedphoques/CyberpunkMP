@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace CyberpunkSdk.Game
 {
-    public class World
+    public abstract class World
     {
         public delegate void UpdateDelegate(float Delta);
 
         public event UpdateDelegate? UpdateEvent;
 
-        internal World()
-        {
-        }
-
-        internal void Update(float Delta)
+        protected void OnUpdate(float Delta)
         {
             UpdateEvent?.Invoke(Delta);
         }

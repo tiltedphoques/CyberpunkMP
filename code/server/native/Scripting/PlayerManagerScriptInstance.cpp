@@ -20,6 +20,16 @@ IPlayer* PlayerManagerScriptInstance::GetPlayer(uint64_t Id)
     return it.value().get();
 }
 
+void PlayerManagerScriptInstance::SetPlayerJoinCallback(TPlayerCallback callback)
+{
+    m_joinCallback = callback;
+}
+
+void PlayerManagerScriptInstance::SetPlayerLeftCallback(TPlayerCallback callback)
+{
+    m_leftCallback = callback;
+}
+
 
 void PlayerManagerScriptInstance::PlayerJoin(uint64_t aId) const
 {
@@ -40,14 +50,6 @@ void PlayerManagerScriptInstance::PlayerLeft(uint64_t aId) const
 PlayerManagerScriptInstance::PlayerManagerScriptInstance(PlayerManager* apPlayerManager)
     : m_pPlayerManager(apPlayerManager)
 {
-    /*m_joinCallback = GServer->GetScripting()->GetFunction(L"PlayerJoin");
-    if (!m_joinCallback)
-        spdlog::error("Unable to find PlayerJoin function in Sdk, server will crash!!!");
-
-    m_leftCallback = GServer->GetScripting()->GetFunction(L"PlayerLeft");
-    if (!m_leftCallback)
-        spdlog::error("Unable to find PlayerLeft function in Sdk, server will crash!!!");*/
-
     auto observer = m_pPlayerManager->GetWorld()->observer<PlayerComponent>("Player Manager Script Observer")
         .event(flecs::OnSet)
         .event(flecs::OnRemove)
