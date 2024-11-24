@@ -13,7 +13,8 @@ target("Server.Scripting")
         local dependfile = target:dependfile("scripting")
 
         --depend.on_changed(function ()
-			local output = path.join(target:targetdir(), "plugins")
+            local output = path.join(target:targetdir(), "plugins")
+            local sdk_output = path.join(target:targetdir(), "sdk")
             local script = target:scriptdir()
             local sdk_gen_proj = path.join(script, "SdkGenerator", "SdkGenerator.csproj")
             local sdk_proj = path.join(script, "CyberpunkSdk", "CyberpunkSdk.csproj")
@@ -32,7 +33,7 @@ target("Server.Scripting")
             progress.show(opt.progress, "${color.build.target}codegen sdk")
             os.run("dotnet run --project " .. sdk_gen_proj .. " -- " .. files)
             progress.show(opt.progress, "${color.build.target}build sdk")
-            os.run("dotnet publish " .. sdk_proj .. " -o " .. output)
+            os.run("dotnet publish " .. sdk_proj .. " -o " .. sdk_output)
             progress.show(opt.progress, "${color.build.target}build emote")
             os.run("dotnet publish " .. emote_proj .. " -o " .. path.join(output, "EmoteSystem"))
             progress.show(opt.progress, "${color.build.target}build job")
@@ -56,6 +57,7 @@ target("Server.Scripting")
         end
 
         os.cp(src_plugins, dest_plugins)
+        os.cp(path.join(target:targetdir(), "sdk", "*"), path.join(target:installdir("launcher"), "server"))
         
         -- Iterate over subdirectories in the destination plugins folder
         for _, dir in ipairs(os.dirs(path.join(dest_plugins, "*"))) do

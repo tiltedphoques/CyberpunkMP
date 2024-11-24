@@ -6,3 +6,20 @@ target("Server.Loader")
     add_extrafiles("**.cs")
 
     add_deps("Server.Scripting", "Server.Native")
+
+    after_install(function (target)
+        os.cp(path.join(target:installdir("bin"), "Server.Loader.dll"), path.join(target:installdir("launcher"), "server", "Server.Loader.dll"))
+        os.cp(path.join(target:installdir("bin"), "Server.Loader.exe"), path.join(target:installdir("launcher"), "server", "Server.Loader.exe"))
+        os.cp(path.join(target:installdir("bin"), "Server.Loader.runtimeconfig.json"), path.join(target:installdir("launcher"), "server", "Server.Loader.runtimeconfig.json"))
+        os.cp(path.join(target:installdir("bin"), "Server.Loader.deps.json"), path.join(target:installdir("launcher"), "server", "Server.Loader.deps.json"))
+    end)
+
+    on_install(function (target)
+        local src_plugins = target:targetdir()
+        local dest_plugins = target:installdir("bin")
+        
+        os.cp(path.join(src_plugins, "Server.Loader.dll"), path.join(target:installdir("bin"), "Server.Loader.dll"))
+        os.cp(path.join(src_plugins, "Server.Loader.exe"), path.join(target:installdir("bin"), "Server.Loader.exe"))
+        os.cp(path.join(src_plugins, "Server.Loader.runtimeconfig.json"), path.join(target:installdir("bin"), "Server.Loader.runtimeconfig.json"))
+        os.cp(path.join(src_plugins, "Server.Loader.deps.json"), path.join(target:installdir("bin"), "Server.Loader.deps.json"))
+    end)
