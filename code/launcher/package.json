@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "cd electron && npm install",
     "dev": "vite",
     "start": "vite",
     "start:all": "cross-env ELECTRON_DEV=1 npx concurrently --kill-others \"vite\" \"cd electron && npx react-devtools\" \"cd electron && npm run start:electron\"",
