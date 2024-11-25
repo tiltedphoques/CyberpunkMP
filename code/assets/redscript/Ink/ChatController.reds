@@ -18,10 +18,10 @@ public class ChatController extends inkHUDGameController {
     private let m_lastMessageData: ref<ChatMessageData>;
 
     protected cb func OnInitialize() -> Bool {
-        LogChannel(n"DEBUG", s"[ChatController] OnInitialize");
+        CMPLog(s"");
         this.m_player = this.GetPlayerControlledObject() as PlayerPuppet;
         if !IsDefined(this.m_player) {
-            LogChannel(n"DEBUG", s"[ChatController] NO PLAYER");
+            CMPLog(s"NO PLAYER");
         }
         this.m_uiSystem = GameInstance.GetUISystem(this.m_player.GetGame());
         this.m_messageController = inkWidgetRef.GetController(this.m_messagesRef) as ListController;
@@ -39,7 +39,7 @@ public class ChatController extends inkHUDGameController {
     }
 
     protected cb func OnUninitialize() -> Bool {
-        LogChannel(n"DEBUG", s"[ChatController] OnUninitialize");
+        CMPLog(s"");
         this.m_player.UnregisterInputListener(this, n"UIEnterChatMessage");
     }
 
@@ -57,7 +57,7 @@ public class ChatController extends inkHUDGameController {
     }
 
     protected cb func OnChatMessageUIEvent(evt: ref<ChatMessageUIEvent>) -> Bool {
-        LogChannel(n"DEBUG", s"[ChatController] OnChatMessageUIEvent");
+        CMPLog(s"");
         let messageData = new ChatMessageData();
         messageData.m_author = evt.author;
         messageData.m_message = evt.message;
@@ -125,7 +125,7 @@ public class ChatController extends inkHUDGameController {
     private final func SendChat() -> Void {
         let textEntered: String = this.m_input.GetText();
         if NotEquals(textEntered, "") {
-            LogChannel(n"DEBUG", s"[ChatController] SendChat \"\(textEntered)\"");
+            CMPLog(s"\"\(textEntered)\"");
 
             GameInstance.GetNetworkWorldSystem().GetChatSystem().Send(textEntered);
         };
