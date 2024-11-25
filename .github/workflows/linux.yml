@@ -49,8 +49,8 @@ jobs:
     # Setup compilation mode and install project dependencies
     - name: 'Configure xmake and install dependencies'
       continue-on-error: true
-      run: timeout 30m xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --yes -vD
+      run: timeout 30m xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --yes
 
     # Build the server
     - name: Build
-      run: xmake -y -vD
+      run: xmake -y
