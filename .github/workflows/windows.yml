@@ -6,7 +6,10 @@ on:
     branches:
       - main
       - dev
-  
+
+env:
+  IS_CI: true
+
 jobs:
   build:
     strategy:
@@ -52,6 +55,10 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 20
+        cache: 'npm'
+        cache-dependency-path: |
+          code/launcher/package-lock.json
+          code/launcher/electron/package-lock.json
 
     - name: 'Generate build'
       run: xmake install -o distrib
