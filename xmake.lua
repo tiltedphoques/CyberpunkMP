@@ -18,7 +18,6 @@ add_requires(
     "openssl",
     "zlib",
     "nlohmann_json",
-    "dotnet",
     "flecs v4.0.3",
     "protobuf-cpp",
     "entt",
