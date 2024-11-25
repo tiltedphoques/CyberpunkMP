@@ -25,7 +25,7 @@ public native class JobsServer extends ServerRpc {
 public class JobsClient extends ClientRpc {
 
     public func SetActiveJob(job: CName) -> Void {
-        LogChannel(n"DEBUG", s"[JobsClient] SetActiveJob");
+        CMPLog(s"");
 
         // Set the current active job of the player
         if (Equals(job, n"Delivery Driver")) {

@@ -59,9 +59,9 @@ public native class AppearanceSystem extends IScriptable {
         // if IsDefined(this.m_callbackSystem) {
         this.m_callbackSystem.RegisterCallback(n"Entity/Attached", this, n"OnEntityAttached")
             .AddTarget(DynamicEntityTarget.Tag(n"CyberpunkMP.Puppet"));
-        //     LogChannel(n"DEBUG", s"[AppearanceSystem] Entity/Attached callback registered");
+        //     CMPLog(s"Entity/Attached callback registered");
         // } else {            
-        //     LogChannel(n"DEBUG", s"[AppearanceSystem] No CallbackSystem");
+        //     CMPLog(s"No CallbackSystem");
         // }
         
         this.m_callbackSystem.RegisterCallback(n"Entity/Attached", this, n"OnAnimationEntityAttached")
@@ -88,7 +88,7 @@ public native class AppearanceSystem extends IScriptable {
             let tdbid = ItemID.GetTDBID(item);
             if TDBID.IsValid(tdbid) {
                 let str = TDBID.ToStringDEBUG(ItemID.GetTDBID(item));
-                LogChannel(n"DEBUG", "Getting: " + str);
+                CMPLog("Getting: " + str);
                 ArrayPush(items, str);
             }
             i += 1;
@@ -99,12 +99,12 @@ public native class AppearanceSystem extends IScriptable {
     public let selected_entity_id: EntityID;
     
     public func HandleEmote(id: EntityID, name: String) -> Void {    
-        LogChannel(n"DEBUG", s"Handling Emote: \(name)");
+        CMPLog(s"Handling Emote: \(name)");
         this.selected_entity_id = id;
         let entity = GameInstance.FindEntityByID(GetGameInstance(), id) as GameObject;
 
         if !IsDefined(entity) {
-            LogChannel(n"DEBUG", s"Could not find entity.");
+            CMPLog(s"Could not find entity.");
             return;
         }
 
@@ -150,7 +150,7 @@ public native class AppearanceSystem extends IScriptable {
     }
 
     private cb func OnAnimationEntityAttached(event: ref<EntityLifecycleEvent>) {
-        LogChannel(n"DEBUG", s"Emote Entity Attached \(EntityID.GetHash(event.GetEntity().GetEntityID()))");
+        CMPLog(s"Emote Entity Attached \(EntityID.GetHash(event.GetEntity().GetEntityID()))");
         let workspotSystem: ref<WorkspotGameSystem> = GameInstance.GetWorkspotSystem(GetGameInstance());
         let entity = GameInstance.FindEntityByID(GetGameInstance(), this.selected_entity_id) as GameObject;
 
@@ -167,7 +167,7 @@ public native class AppearanceSystem extends IScriptable {
         let entity = event.GetEntity() as GameObject;
 
         if IsDefined(entity) { // && entity.HasTag(n"CyberpunkMP.Puppet") {
-            // LogChannel(n"DEBUG", s"[AppearanceSystem] OnEntityAssemble our muppet");
+            // CMPLog(s"OnEntityAssemble our muppet");
             if this.ApplyAppearance(entity) {
                 ArrayPush(this.m_entities, entity);
             }
@@ -188,7 +188,7 @@ public native class AppearanceSystem extends IScriptable {
 
             // this.SetMorphWeights(entity);
         } else {
-            // LogChannel(n"DEBUG", s"[AppearanceSystem] not our muppet");
+            // CMPLog(s"not our muppet");
         }
     }
 
@@ -210,14 +210,14 @@ public native class AppearanceSystem extends IScriptable {
     // }
 
     private func AddItems(entity: ref<GameObject>) {
-        LogChannel(n"DEBUG", s"[AppearanceSystem] AddItems");
+        CMPLog(s"");
         let i: Int32;
         let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(entity.GetGame());
 
         let equipment = this.GetEntityItems(entity.GetEntityID());
         i = 0;
         while i < ArraySize(equipment) {
-            LogChannel(n"DEBUG", "Setting: " + TDBID.ToStringDEBUG(equipment[i]));
+            CMPLog("Setting: " + TDBID.ToStringDEBUG(equipment[i]));
             let item = ItemID.FromTDBID(equipment[i]);
             let placementSlot = EquipmentSystem.GetPlacementSlot(item);
 
