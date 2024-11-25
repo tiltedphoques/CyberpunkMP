@@ -12,9 +12,12 @@ git clone https://github.com/tiltedphoques/CyberpunkMP.git
 ```shell
 cd code/launcher
 ```
-3. Install dependencies, it will also run command in `electron/`:
+3. Install dependencies:
 ```shell
-npm run install
+npm install
+cd electron/
+npm install
+cd ..
 ```
 
 ## Development
