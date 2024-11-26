@@ -51,7 +51,3 @@ Studio you will then have a project named `Cyberpunk2077`, debug this target in
 - [Codeware](https://github.com/psiberx/cp2077-codeware/releases/)
 - [Input Loader](https://github.com/jackhumbert/cyberpunk2077-input-loader/releases)
 
-## Running
-
-From visual studio, just start the Client project with the debugger, it will 
-ask you to locate the game, once you have everything should run.
