@@ -32,6 +32,11 @@ to handle RPC functionality.
 If you want visual studio projects execute `xmake project -k vsxmake` and you 
 will find the sln in the newly created `vsxmake` folder.
 
+In addition, if you want to debug the project directly from with Visual Studio
+you can set the game path `xmake f --game="C:/.../Cyberpunk2077.exe"`. In Visual
+Studio you will then have a project named `Cyberpunk2077`, debug this target in
+`Debug` only, it will not work in other modes.
+
 > [!IMPORTANT]
 > On Windows, you'll need to use Windows SDK **below** v10.0.26100.0. An issue
 > is currently breaking the build due to package `protobuf-cpp`.
@@ -46,19 +51,14 @@ will find the sln in the newly created `vsxmake` folder.
 - [Codeware](https://github.com/psiberx/cp2077-codeware/releases/)
 - [Input Loader](https://github.com/jackhumbert/cyberpunk2077-input-loader/releases)
 
-## Running
-
-From visual studio, just start the Client project with the debugger, it will 
-ask you to locate the game, once you have everything should run.
-
-## Docker
+### Docker
 
 To build and run a Docker image of the server 
 1. Follow [build steps 1 to 3](#build)
 2. Build the image with `docker build . -tag cyberpunkmp`
 3. Run it with `docker run -p 11778:11778 cyberpunkmp`
 
-### Paths you might want to bind
+#### Paths you might want to bind
 - **Config**, so you can configure the server.  
   Example argument: `-v $(pwd)/config:/app/config`
 - **Plugins** if you want to add custom ones.  

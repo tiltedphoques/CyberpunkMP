@@ -39,7 +39,7 @@ struct NetworkWorldSystem : RED4ext::IGameSystem, Core::HookingAgent, flecs::wor
 
     void OnInitialize(const RED4ext::JobHandle& aJob) override;
 
-    void Connect(const Red::CString& aAddress);
+    void Connect();
     void Disconnect();
     void OnConnected();
     void OnDisconnected(Client::EDisconnectReason);

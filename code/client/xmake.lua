@@ -5,18 +5,7 @@ target("Client")
     set_kind("shared")
     set_symbols("debug", "hidden")
     add_defines("_CRTDBG_MAP_ALLOC")
-    set_runargs("--online")
-    add_ldflags(
-        "/FORCE:MULTIPLE",
-        "/IGNORE:4254,4006",
-        --"/DYNAMICBASE:NO",
-        "/SAFESEH:NO",
-        "/LARGEADDRESSAWARE",
-        "/INCREMENTAL:NO",
-        "/LAST:.zdata"
-        --"/SUBSYSTEM:WINDOWS",
-        --"/ENTRY:mainCRTStartup", { force = true }
-        )
+    add_ldflags("/LARGEADDRESSAWARE")
     add_includedirs(
         ".",
         "../",
@@ -24,10 +13,7 @@ target("Client")
         "../../vendor/")
     set_pcxxheader("stdafx.h")
     add_headerfiles("**.h", "**.hpp", "**.inl")
-    add_files(
-        "**.cpp",
-        "launcher.rc")
-    add_links("ntdll_x64")
+    add_files("**.cpp")
     add_linkdirs(".")
     add_syslinks(
         "user32",
