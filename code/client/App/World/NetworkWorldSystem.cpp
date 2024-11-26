@@ -1,5 +1,7 @@
 #include "NetworkWorldSystem.h"
 
+#include <App/Settings.h>
+
 #include "App/Network/NetworkService.h"
 #include "RED4ext/Scripting/Natives/Generated/game/Puppet.hpp"
 #include "RED4ext/Scripting/Natives/Generated/vehicle/BaseObject.hpp"
@@ -14,7 +16,6 @@
 #include "App/Components/InterpolationComponent.h"
 #include "Game/Utils.h"
 #include "Game/CharacterCustomizationSystem.h"
-#include <Launcher/Launcher.h>
 
 #include "ChatSystem.h"
 
@@ -364,6 +365,9 @@ void NetworkWorldSystem::OnInitialize(const RED4ext::JobHandle& aJob)
 
     IGameSystem::OnInitialize(aJob);
 
+    if (!Settings::Get().enabled)
+        return;
+
     const auto pNetworkService = Core::Container::Get<NetworkService>();
     pNetworkService->RegisterHandler<&NetworkWorldSystem::HandleCharacterLoad>(this);
     pNetworkService->RegisterHandler<&NetworkWorldSystem::HandleEntityUnload>(this);
@@ -387,9 +391,9 @@ void NetworkWorldSystem::OnInitialize(const RED4ext::JobHandle& aJob)
     m_vehicleSystem->OnInitialize(aJob);
 }
 
-void NetworkWorldSystem::Connect(const Red::CString& aAddress)
+void NetworkWorldSystem::Connect()
 {
-    auto address = fmt::format("{}:{}", launcher::GetLaunchContext()->ip, launcher::GetLaunchContext()->port);
+    auto address = fmt::format("{}:{}", Settings::Get().ip, Settings::Get().port);
     Core::Container::Get<NetworkService>()->Connect(address);
 }
 

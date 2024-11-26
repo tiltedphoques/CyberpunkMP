@@ -9,7 +9,6 @@
 
 #include "NetworkWorldSystem.h"
 #include "Game/Utils.h"
-#include <Launcher/Launcher.h>
 #include "App/Components/EntityComponent.h"
 #include "App/Components/AttachedComponent.h"
 #include "App/Components/SpawningComponent.h"

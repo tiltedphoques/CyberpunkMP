@@ -412,7 +412,7 @@ public class MultiplayerGameController extends inkGameController {
                             if serverData.m_test {
                                 this.GetUIBlackboard().SetBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerConnectedToServer, true, true);
                             } else {
-                                GameInstance.GetNetworkWorldSystem().Connect(serverData.m_name);
+                                GameInstance.GetNetworkWorldSystem().Connect();
                             }
                         } else { 
                             CMPLog(s"No server selected");
@@ -957,7 +957,7 @@ public class MultiplayerGameController extends inkGameController {
             if !this.m_serverListOpen {
                 if Equals(actionName, n"UIConnectToServer") && Equals(actionType, gameinputActionType.BUTTON_HOLD_COMPLETE) {
                     // this.ShowServerList(true);                    
-                    GameInstance.GetNetworkWorldSystem().Connect(s"");
+                    GameInstance.GetNetworkWorldSystem().Connect();
                     return true;
                 } else {
                     return false;

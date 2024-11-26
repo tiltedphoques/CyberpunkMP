@@ -44,7 +44,7 @@ export default function ModDownloadPanel (props: Props) {
     setIsGameStarted(true)
     setError(null)
 
-    const params = ['--online', '--ip', `${serverData._ip}`, '--port', serverData._port]
+    const params = ['--online', '--ip=' + serverData._ip, '--port=' + serverData._port]
 
     try {
       const gamePath = await window.electronAPI.getGamePath()
