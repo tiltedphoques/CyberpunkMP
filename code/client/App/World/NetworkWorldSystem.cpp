@@ -365,6 +365,9 @@ void NetworkWorldSystem::OnInitialize(const RED4ext::JobHandle& aJob)
 
     IGameSystem::OnInitialize(aJob);
 
+    if (!Settings::Get().enabled)
+        return;
+
     const auto pNetworkService = Core::Container::Get<NetworkService>();
     pNetworkService->RegisterHandler<&NetworkWorldSystem::HandleCharacterLoad>(this);
     pNetworkService->RegisterHandler<&NetworkWorldSystem::HandleEntityUnload>(this);
