@@ -50,3 +50,18 @@ will find the sln in the newly created `vsxmake` folder.
 
 From visual studio, just start the Client project with the debugger, it will 
 ask you to locate the game, once you have everything should run.
+
+## Docker
+
+To build and run a Docker image of the server 
+1. Follow [build steps 1 to 3](#build)
+2. Build the image with `docker build . -tag cyberpunkmp`
+3. Run it with `docker run -p 11778:11778 cyberpunkmp`
+
+### Paths you might want to bind
+- **Config**, so you can configure the server.  
+  Example argument: `-v $(pwd)/config:/app/config`
+- **Plugins** if you want to add custom ones.  
+  Example argument: `-v $(pwd)/plugins:/app/plugins`
+
+**NOTE:** If you change the port in the config, don't forget to expose it.
