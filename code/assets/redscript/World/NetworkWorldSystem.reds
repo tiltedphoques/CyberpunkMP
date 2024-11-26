@@ -4,7 +4,7 @@ import Codeware.*
 import CyberpunkMP.*
 
 public native class NetworkWorldSystem extends IGameSystem {
-    public native func Connect(address: String) -> Void;
+    public native func Connect() -> Void;
     public native func Disconnect() -> Void;
     public native func GetEntityIdByServerId(serverId: Uint64) -> EntityID;
     public native func GetAppearanceSystem() -> ref<AppearanceSystem>;

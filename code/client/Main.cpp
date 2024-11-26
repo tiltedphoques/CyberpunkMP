@@ -1,10 +1,8 @@
-#include "Launcher/launcher.h"
-#include "Launcher/utils/ComUtils.h"
-#include "Launcher/oobe/AuthenticationProcess.h"
-
 #include <shellapi.h>
 #include <ArchiveXL/support/red4ext/ArchiveXL.hpp>
 #include <TweakXL/support/red4ext/TweakXL.hpp>
+#include <App/Settings.h>
+#include <RED4ext/LaunchParameters.hpp>
 
 #include "RED4ext/Api/EMainReason.hpp"
 
@@ -12,16 +10,10 @@ extern void CoreStubsInit();
 
 std::filesystem::path GCyberpunkMpLocation;
 
-namespace launcher
-{
-extern oobe::LoginData g_loginData;
-} // namespace launcher
-
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
-int FakeMain(int argc, char** argv)
+void Initialize()
 {
-    // get the exe location before module hooks are installed
     namespace fs = std::filesystem;
 
     constexpr auto pathLength = MAX_PATH + 1;
@@ -44,52 +36,6 @@ int FakeMain(int argc, char** argv)
     }
 
     GCyberpunkMpLocation = path.parent_path();
-
-#ifndef DEBUG
-
-    const auto result = oobe::StartLogin();
-    if (!result)
-        return 0;
-
-    launcher::g_loginData = result.value();
-
-#endif
-
-    return launcher::StartUp(argc, argv);
-}
-
-void GetCommandLineArgs(int* argc, char*** argv)
-{
-    // Get the command line arguments as wchar_t strings
-    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), argc);
-    if (!wargv)
-    {
-        *argc = 0;
-        *argv = NULL;
-        return;
-    }
-
-    // Count the number of bytes necessary to store the UTF-8 versions of those strings
-    int n = 0;
-    for (int i = 0; i < *argc; i++)
-        n += WideCharToMultiByte(CP_UTF8, 0, wargv[i], -1, NULL, 0, NULL, NULL) + 1;
-
-    // Allocate the argv[] array + all the UTF-8 strings
-    *argv = (char**)malloc((*argc + 1) * sizeof(char*) + n);
-    if (!*argv)
-    {
-        *argc = 0;
-        return;
-    }
-
-    // Convert all wargv[] --> argv[]
-    char* arg = (char*)&((*argv)[*argc + 1]);
-    for (int i = 0; i < *argc; i++)
-    {
-        (*argv)[i] = arg;
-        arg += WideCharToMultiByte(CP_UTF8, 0, wargv[i], -1, arg, n, NULL, NULL) + 1;
-    }
-    (*argv)[*argc] = NULL;
 }
 
 #include "App/Application.h"
@@ -101,15 +47,11 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
     {
     case RED4ext::EMainReason::Load:
     {
-        int argc;
-        char** argv;
-        GetCommandLineArgs(&argc, &argv);
+        Settings::Load();
 
-        FakeMain(argc, argv);
+        Initialize();
 
-        free(argv);
-
-        if (!launcher::GetLaunchContext()->enabled)
+        if (!Settings::Get().enabled)
             return false;
 
         App::GApplication = MakeUnique<App::Application>(aHandle, aSdk);
@@ -138,7 +80,7 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
             return false;
         }
 
-        for (auto& mod : launcher::GetLaunchContext()->mods)
+        for (auto& mod : Settings::Get().mods)
         {
             aSdk->scripts->Add(aHandle, mod.wstring().c_str());
             ArchiveXL::RegisterArchives(mod);
@@ -150,7 +92,7 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
     }
     case RED4ext::EMainReason::Unload:
     {
-        if (!launcher::GetLaunchContext()->enabled)
+        if (!Settings::Get().enabled)
             return false;
 
         App::GApplication->Shutdown();
