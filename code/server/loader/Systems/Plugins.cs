@@ -265,7 +265,7 @@ namespace Server.Loader.Systems
             DownloadMods(exeRoot);
 
             // Get all subdirectories in the base directory
-            string[] subDirectories = Directory.GetDirectories(Path.Combine(baseDirectory, "Plugins"));
+            string[] subDirectories = Directory.GetDirectories(Path.Combine(baseDirectory, "plugins"));
 
             foreach (string directory in subDirectories)
             {
