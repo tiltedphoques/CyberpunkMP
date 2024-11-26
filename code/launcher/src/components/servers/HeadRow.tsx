@@ -8,6 +8,7 @@ interface HeadCell {
   id: keyof ServerData;
   label: string;
   head: boolean;
+  width?: string;
 }
 
 type Order = 'asc' | 'desc';
@@ -17,13 +18,14 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     head: true,
     disablePadding: true,
-    label: 'Server Name'
+    label: 'Server Name',
   },
   {
     id: 'players',
     head: false,
     disablePadding: false,
-    label: 'Players'
+    label: 'Players',
+    width: '112px',
   },
   {
     id: 'tags',
@@ -35,19 +37,22 @@ const headCells: readonly HeadCell[] = [
     id: 'ip',
     head: false,
     disablePadding: false,
-    label: 'Address'
+    label: 'Address',
+    width: '190px',
   },
   {
     id: 'version',
     head: false,
     disablePadding: false,
-    label: 'Version'
+    label: 'Version',
+    width: '112px',
   },
   {
     id: 'favorite',
     head: false,
     disablePadding: false,
-    label: 'Favorite'
+    label: 'Favorite',
+    width: '112px',
   }
 ]
 
@@ -67,6 +72,7 @@ export default function HeadRow (props: HeadRowProps) {
         <TableCell
           key={headCell.id}
           sx={{ p: 2 }}
+          width={headCell.width}
           align={headCell.head ? 'left' : 'right'}
           padding={headCell.disablePadding ? 'none' : 'normal'}
           sortDirection={orderBy === headCell.id ? order : false}
