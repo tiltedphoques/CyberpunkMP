@@ -1,8 +1,13 @@
+if not os.isfile(get_config("gamedir")) then
+    print("Please set the path to Cyberpunk2077.exe using the --gamedir=<path> argument")
+end
+
 target("Cyberpunk2077")
     set_kind("binary")
     set_basename("Cyberpunk2077")
+    add_options("gamedir")
     set_runargs("--online", "--skipStartMenu", "--ip 127.0.0.1")
-    set_targetdir("F:\\Games\\SteamLibrary\\steamapps\\common\\Cyberpunk 2077\\bin\\x64\\")
+    set_targetdir(get_config("gamedir"))
     on_build(function(target) end)
     on_clean(function(target) end)
     on_link(function(target) end)
@@ -33,3 +38,4 @@ target("Cyberpunk2077")
     end)
 
     add_deps("Client")
+

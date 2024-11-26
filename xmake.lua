@@ -51,6 +51,11 @@ includes("code/common")
 includes("code/protocol")
 includes("code/server")
 
+option("gamedir")
+    set_showmenu(true)
+    set_default("Cyberpunk2077.exe")
+    set_description("Set the path to Cyberpunk2077.exe for easy debugging")
+
 if is_plat("windows") then
     includes("code/assets")
     includes("code/client")
