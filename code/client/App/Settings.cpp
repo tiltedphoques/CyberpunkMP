@@ -24,7 +24,7 @@ void Settings::Load()
 
     if (const auto mods = launchParameters.Get("-mod"); mods)
     {
-        for (auto mod : *mods)
+        for (const auto& mod : *mods)
             settings.mods.push_back(mod.c_str());
     }
 }
