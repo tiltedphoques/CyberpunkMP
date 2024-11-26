@@ -2,6 +2,7 @@
 
 #include <Components/PlayerComponent.h>
 
+#include "Core/Filesystem.h"
 #include "Game/Level.h"
 #include "Scripting/IRpc.h"
 #include "Scripting/RpcScriptInstance.h"
@@ -22,20 +23,22 @@ GameServer::GameServer()
 
     try
     {
-        std::ifstream f("config/server.json");
-        if (!f.is_open())
-        {
-            std::error_code ec;
-            std::filesystem::create_directory("config/", ec);
+        auto serverPath = GetPath();
 
-            std::ofstream of("config/server.json");
+        std::ifstream config(serverPath / "config" / "server.json");
+        if (!config.is_open())
+        {
+            spdlog::info("No configuration file found, creating config/server.json");
+            std::error_code ec;
+            std::filesystem::create_directory(serverPath / "config", ec);
+
+            std::ofstream of(serverPath / "config" / "server.json");
             json data = m_config;
             of << std::setw(4) << data;
-            spdlog::info("Creating config.json as it could not be found!");
         }
         else
         {
-            json data = json::parse(f);
+            json data = json::parse(config);
             m_config = data.get<Config>();
         }
     }
