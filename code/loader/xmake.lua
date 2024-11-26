@@ -29,7 +29,6 @@ else
 
             os.mkdir(modPath)
             
-            -- Define paths for the Client.dll and symlink
             local client_dll_path = path.join(clientdir, "CyberpunkMP.dll")
             local symlink_path = path.join(modPath, "CyberpunkMP.dll")
 
