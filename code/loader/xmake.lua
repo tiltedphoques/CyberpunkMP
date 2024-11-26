@@ -10,6 +10,7 @@ else
         on_build(function(target) end)
         on_clean(function(target) end)
         on_link(function(target) end)
+        on_install(function(target) end)
         after_build(function(target) 
             local targetdir = target:targetdir()
             local clientdir = path.join(os.projectdir(), target:dep("Client"):targetdir())
