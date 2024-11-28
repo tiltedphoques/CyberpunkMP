@@ -21,27 +21,24 @@ export default function ServerRow (props: Props) {
       tabIndex={-1}
       key={row.ip}
     >
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} component="th" id={labelId} scope="row" padding="none" width='25%'><Box className="textContainer">{row.name}</Box></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.players}</Box></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.tags}</Box></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.ip}</Box></TableCell>
-      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right" width='15%'><Box className="textContainer">{row.version}</Box></TableCell>
-      <TableCell sx={{ p: 2 }} align="right" width='15%'>
-        <Box className="textContainer">
-          <IconButton sx={{ zIndex: 10 }}
-                      color="primary"
-                      onClick={() => {
-                        setServers(produce(lastServers => {
-                          lastServers.forEach((lastServer) => {
-                            if (row.ip === lastServer.ip) {
-                              lastServer.favorite = +!lastServer.favorite
-                            }
-                          })
-                        }))
-                      }}>
-            {row.favorite ? <FavoriteIcon/> : <FavoriteIconEmpty/>}
-          </IconButton>
-        </Box>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} component="th" id={labelId} scope="row" padding="none"><Box className="textContainer">{row.name}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right"><Box className="textContainer">{row.players}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right"><Box className="textContainer">{row.tags}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right"><Box className="textContainer">{row.ip}</Box></TableCell>
+      <TableCell onClick={() => onStart(row)} sx={{ p: 2, cursor: 'pointer' }} align="right"><Box className="textContainer">{row.version}</Box></TableCell>
+      <TableCell sx={{ p: 2 }} align="right">
+        <IconButton color="primary"
+                    onClick={() => {
+                      setServers(produce(lastServers => {
+                        lastServers.forEach((lastServer) => {
+                          if (row.ip === lastServer.ip) {
+                            lastServer.favorite = +!lastServer.favorite
+                          }
+                        })
+                      }))
+                    }}>
+          {row.favorite ? <FavoriteIcon/> : <FavoriteIconEmpty/>}
+        </IconButton>
       </TableCell>
     </TableRow>
   )

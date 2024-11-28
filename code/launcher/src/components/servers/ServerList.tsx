@@ -79,6 +79,9 @@ function stableSort<T> (array: readonly T[], comparator: (a: T, b: T) => number)
 const ipv6Regex = /^(?:(?:[a-fA-F\d]{1,4}:){7}(?:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){6}(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){5}(?::(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,2}|:)|(?:[a-fA-F\d]{1,4}:){4}(?:(?::[a-fA-F\d]{1,4}){0,1}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,3}|:)|(?:[a-fA-F\d]{1,4}:){3}(?:(?::[a-fA-F\d]{1,4}){0,2}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,4}|:)|(?:[a-fA-F\d]{1,4}:){2}(?:(?::[a-fA-F\d]{1,4}){0,3}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,5}|:)|(?:[a-fA-F\d]{1,4}:){1}(?:(?::[a-fA-F\d]{1,4}){0,4}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,6}|:)|(?::(?:(?::[a-fA-F\d]{1,4}){0,5}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,7}|:)))(?:%[0-9a-zA-Z]{1,})?$/gm
 
 export default function ServerList () {
+  // Keep in sync with the number of cells from HeadRow/ServerRow
+  const columns: number = 6;
+
   const [servers, setServers] = useState<ServerData[]>([])
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<keyof ServerData>('name')
@@ -244,7 +247,7 @@ export default function ServerList () {
             <Table
               sx={{ minWidth: 750, tableLayout: 'fixed' }}
               aria-labelledby="tableTitle"
-              size='medium'
+              size="small"
             >
               <TableHead>
                 <HeadRow
@@ -268,13 +271,27 @@ export default function ServerList () {
                       }}
                     />
                   )}
+                {visibleRows.length === 0 && servers.length > 0 && (
+                  <TableRow>
+                    <TableCell colSpan={columns} sx={{ height: '53px', textAlign: 'center' }}>
+                      Your search did not return any matching servers.
+                    </TableCell>
+                  </TableRow>
+                )}
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
                       height: (53) * emptyRows
                     }}
                   >
-                    <TableCell colSpan={6}/>
+                    <TableCell colSpan={columns}/>
+                  </TableRow>
+                )}
+                {servers.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={columns} sx={{ height: '53px', textAlign: 'center' }}>
+                      There are currently no servers available.
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>
