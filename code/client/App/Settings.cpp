@@ -19,7 +19,7 @@ void Settings::Load()
     if (const auto port = launchParameters.Get("-port"); port)
     {
         if (port->size > 0)
-            settings.port = (*port)[0].c_str();
+            settings.port = std::strtoul((*port)[0].c_str(), nullptr, 10) & 0xFFFF;
     }
 
     if (const auto mods = launchParameters.Get("-mod"); mods)
