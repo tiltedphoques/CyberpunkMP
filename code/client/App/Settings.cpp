@@ -19,7 +19,7 @@ void Settings::Load()
     if (const auto port = launchParameters.Get("-port"); port)
     {
         if (port->size > 0)
-            settings.ip = (*port)[0].c_str();
+            settings.port = (*port)[0].c_str();
     }
 
     if (const auto mods = launchParameters.Get("-mod"); mods)
