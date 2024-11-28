@@ -121,14 +121,16 @@ public class ChatController extends inkHUDGameController {
         this.m_chatInputOpen = show;
         this.UpdateInputHints();
     }
-    
-    private final func SendChat() -> Void {
-        let textEntered: String = this.m_input.GetText();
-        if NotEquals(textEntered, "") {
-            CMPLog(s"\"\(textEntered)\"");
 
-            GameInstance.GetNetworkWorldSystem().GetChatSystem().Send(textEntered);
-        };
+    private final func SendChat() -> Void {
+        let text: String = this.m_input.GetText();
+
+        text = UTF8StrTrim(text);
+        if UTF8StrEmpty(text) {
+            return;
+        }
+        CMPLog(s"\"\(text)\"");
+        GameInstance.GetNetworkWorldSystem().GetChatSystem().Send(text);
     }
 
     private func Scroll(up: Bool) {
