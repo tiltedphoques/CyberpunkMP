@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Config.h"
 #include "Scripting/WorldScriptInstance.h"
 
 struct World : flecs::world
 {
     TP_NOCOPYMOVE(World);
 
-    World();
+    World(const FlecsConfig& acFlecsConfig);
     ~World();
 
     void Update(float aDelta);
