@@ -7,6 +7,17 @@ target("Server.Loader")
 
     add_deps("Server.Scripting", "Server.Native")
 
+    on_build(function (target, opt)
+        import("utils.progress")
+        
+        local script = target:scriptdir()
+        local proj = path.join(script, "Server.Loader.csproj")
+        local sdk_output = path.join(target:targetdir(), "server")
+        progress.show(opt.progress, "${color.build.target}build Server.Loader")
+        os.run("dotnet build " .. proj)
+        os.run("dotnet publish " .. proj .. " -o " .. target:targetdir())
+    end)
+
     after_install(function (target)
         os.cp(path.join(target:installdir("bin"), "Server.Loader.dll"), path.join(target:installdir("launcher"), "server", "Server.Loader.dll"))
         os.cp(path.join(target:installdir("bin"), "Server.Loader.exe"), path.join(target:installdir("launcher"), "server", "Server.Loader.exe"))

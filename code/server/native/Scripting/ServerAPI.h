@@ -7,7 +7,7 @@ using TPlayerEvent = void(*)(uint64_t);
 
 struct ServerAPI
 {
-    TP_EXPORT static void Initialize();
+    TP_EXPORT static bool Initialize();
     TP_EXPORT static void Run();
     TP_EXPORT static void Exit();
     TP_EXPORT static void SetUpdateCallback(TUpdateCallback callback);

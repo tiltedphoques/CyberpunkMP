@@ -22,15 +22,20 @@ internal class Program
     {
         try
         {
-            CyberpunkMp.ServerAPI.Initialize();
+            if (CyberpunkMp.ServerAPI.Initialize())
+            {
+                SetupCallbacks();
 
-            SetupCallbacks();
-
-            CyberpunkMp.ServerAPI.Run();
+                CyberpunkMp.ServerAPI.Run();
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+        finally
+        {
+            CyberpunkMp.ServerAPI.Exit();
         }
     }
 }

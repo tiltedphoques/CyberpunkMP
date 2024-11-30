@@ -7,9 +7,13 @@
 
 static UniquePtr<GameServer> s_server;
 
-void ServerAPI::Initialize()
+bool ServerAPI::Initialize()
 {
     s_server = MakeUnique<GameServer>();
+
+    std::atexit(&ServerAPI::Exit);
+
+    return s_server->IsListening();
 }
 
 void ServerAPI::Run()

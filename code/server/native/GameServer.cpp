@@ -30,7 +30,7 @@ GameServer::GameServer()
         {
             spdlog::info("No configuration file found, creating config/server.json");
             std::error_code ec;
-            std::filesystem::create_directory(serverPath / "config", ec);
+            create_directory(serverPath / "config", ec);
 
             std::ofstream of(serverPath / "config" / "server.json");
             json data = m_config;
@@ -46,6 +46,7 @@ GameServer::GameServer()
     {
         spdlog::error("Error parsing config.json: {}", e.what());
         m_run = false;
+        return;
     }
 
     uint16_t port = m_config.Port;
@@ -55,14 +56,10 @@ GameServer::GameServer()
         port++;
     }
 
-    //m_scripting.LoadPlugins();
-
     m_pWorld = MakeUnique<World>(m_config.GetFlecsConfig());
     m_pWorld->GetScriptInstance()->Initialize();
 
     RegisterHandler<&GameServer::HandleAuthentication>(this);
-
-    //m_scripting.Initialize();
 
     spdlog::info("Server started on port {}", GetPort());
 }

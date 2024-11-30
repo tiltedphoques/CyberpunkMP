@@ -31,6 +31,8 @@ Server::Server(uint64_t aClientIdentifier, uint64_t aServerIdentifier) noexcept
 
 Server::~Server()
 {
+    Close();
+
     SteamInterface::Release();
 }
 
@@ -118,13 +120,19 @@ void Server::Update() noexcept
         SynchronizeClientClocks();
     }
 
-    if (m_currentTick - m_lastUpdateTime >= m_timeBetweenUpdates)
-    {
-        m_lastUpdateTime = m_currentTick;
-        OnUpdate();
-    }
+    OnUpdate();
 
-    std::this_thread::sleep_for(2ms);
+    const auto cFrameTime = m_currentTick - m_lastUpdateTime;
+    const auto cSleepTime = m_timeBetweenUpdates - cFrameTime;
+
+    if (cSleepTime > 0ns)
+        std::this_thread::sleep_for(cSleepTime);
+
+    // If no client is connected, sleep
+    if (m_queuedConnections.empty() && m_connections.empty())
+        std::this_thread::sleep_for(200ms);
+
+    m_lastUpdateTime = m_currentTick;
 }
 
 void Server::SendToAll(Packet* apPacket, const EPacketFlags aPacketFlags) noexcept
@@ -188,10 +196,10 @@ uint32_t Server::GetTickRate() const noexcept
     return m_tickRate;
 }
 
-    uint64_t Server::GetTick() const noexcept
-    {
-	    return std::chrono::duration_cast<std::chrono::milliseconds>(m_currentTick.time_since_epoch()).count();
-    }
+uint64_t Server::GetTick() const noexcept
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(m_currentTick.time_since_epoch()).count();
+}
 
 SteamNetConnectionInfo_t Server::GetConnectionInfo(ConnectionId aConnectionId) const noexcept
 {

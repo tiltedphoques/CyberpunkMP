@@ -6,7 +6,7 @@ struct FlecsConfig
 {
     bool Enabled{true};
     uint16_t Port{27750};
-    std::string IpAddress{"0.0.0.0"};
+    std::string IpAddress{"127.0.0.1"};
 
     bool IsEnabled() const { return Enabled; }
     uint16_t GetPort() const { return Port; }
