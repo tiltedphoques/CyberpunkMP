@@ -34,15 +34,17 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/AppData/Local/.xmake/packages
-        key: ${{ runner.os }}-xmake-${{ hashFiles('**/xmake.lua') }}
-        
+        key: ${{ runner.os }}-xmake-packages-${{ hashFiles('**/xmake.lua') }}
+        restore-keys: |
+          ${{ runner.os }}-xmake-packages-
+
     # Install xmake
     - name: 'Setup xmake'
       uses: xmake-io/github-action-setup-xmake@v1
       with:
-        xmake-version: 2.9.5
+        xmake-version: 2.9.6 # Sync with cache key too
         actions-cache-folder: '.xmake-cache' # This doesn't cache dependencies, only xmake itself
-        actions-cache-key: ${{ matrix.os }}
+        actions-cache-key: ${{ runner.os }}-xmake-cache-2.9.6
 
     - name: 'Configure xmake and install dependencies'
       run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes
@@ -72,7 +74,3 @@ jobs:
       with:
         name: build
         path: build/xpack/Cyberpunk Multiplayer/Artifacts.zip
-
-    
-    
-      
