@@ -57,7 +57,7 @@ GameServer::GameServer()
 
     //m_scripting.LoadPlugins();
 
-    m_pWorld = MakeUnique<World>();
+    m_pWorld = MakeUnique<World>(m_config.GetFlecsConfig());
     m_pWorld->GetScriptInstance()->Initialize();
 
     RegisterHandler<&GameServer::HandleAuthentication>(this);

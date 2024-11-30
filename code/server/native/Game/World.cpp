@@ -1,5 +1,6 @@
 #include "World.h"
 
+#include "Config.h"
 #include "PlayerManager.h"
 #include "Level.h"
 
@@ -11,7 +12,7 @@
 #include "Systems/ChatSystem.h"
 #include "Systems/ServerListSystem.h"
 
-World::World()
+World::World(const FlecsConfig& acFlecsConfig)
 {
     set_entity_range(1, 5'000'000);
 
@@ -20,7 +21,15 @@ World::World()
     emplace<ChatSystem>(this);
     emplace<ServerListSystem>(this);
 
-    set<flecs::Rest>({});
+    if (acFlecsConfig.IsEnabled())
+    {
+        set<flecs::Rest>({
+            .port = acFlecsConfig.GetPort(),
+            .ipaddr = const_cast<char*>(acFlecsConfig.GetIpAddress()),
+            .impl = nullptr
+        });
+        spdlog::info("Running Flecs REST API on {}:{}", acFlecsConfig.IpAddress, acFlecsConfig.Port);
+    }
 
     this->import<flecs::units>();
     this->import<flecs::stats>();
