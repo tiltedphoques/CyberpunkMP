@@ -41,7 +41,7 @@ namespace Server.Loader
             var name = new AssemblyName(args.Name).Name;
 
             if (name == "CyberpunkSdk")
-                return typeof(Server).Assembly;
+                return typeof(CyberpunkSdk.Server).Assembly;
 
             string downDir = Path.GetDirectoryName(args.RequestingAssembly!.Location)!;
             string path = Path.Combine(downDir, name + ".dll");
