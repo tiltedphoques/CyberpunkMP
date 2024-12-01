@@ -66,6 +66,8 @@ void RpcService::HandleRpc(const PacketEvent<server::RpcCall>& aMessage)
 
 void RpcService::HandleRpcDefinitions(const PacketEvent<server::RpcDefinitions>& aMessage)
 {
+    m_clientRpcs.resize(aMessage.get_client_definitions().size());
+
     for (auto& rpc : aMessage.get_client_definitions())
     {
         const RpcId id{rpc.get_klass(), rpc.get_function()};
@@ -78,19 +80,20 @@ void RpcService::HandleRpcDefinitions(const PacketEvent<server::RpcDefinitions>&
     }
 }
 
-bool RpcService::Call(const server::RpcCall& aMessage)
+bool RpcService::Call(const server::RpcCall& aMessage) const
 {
     auto id = aMessage.get_id();
 
-    const auto rpc = m_clientRpcs.find(id);
-    if (rpc == std::end(m_clientRpcs))
+    if (id >= m_clientRpcs.size())
     {
         spdlog::error("Failed to retrieve Rpc with id {:X}", id);
         return false;
     }
 
-    const auto* pContext = rpc->second.Handler;
-    if (rpc->second.Id.Klass != 0 && !pContext)
+    const auto& rpc = m_clientRpcs[id];
+
+    const auto* pContext = rpc.Handler;
+    if (rpc.Id.Klass != 0 && !pContext)
         return false;
 
     const auto pFunc = pContext->function;

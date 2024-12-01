@@ -43,5 +43,5 @@ protected:
 private:
 
     Map<RpcId, uint32_t> m_serverRpcs;
-    Map<uint32_t, CachedRpcHandler> m_clientRpcs;
+    Vector<CachedRpcHandler> m_clientRpcs;
 };
