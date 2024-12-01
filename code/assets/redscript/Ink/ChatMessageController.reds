@@ -11,7 +11,7 @@ public class ChatMessageController extends ListItemController {
     public let m_messageLabel: wref<inkText>;
 
     protected cb func OnInitialize() -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[ChatMessageController] OnInitialize");
         // super.OnInitialize();
         this.m_authorLabel = inkTextRef.Get(this.m_authorWidget) as inkText;
         this.m_messageLabel = inkTextRef.Get(this.m_messageWidget) as inkText;
@@ -23,7 +23,7 @@ public class ChatMessageController extends ListItemController {
     }
     
     protected cb func OnDataChanged(value: ref<IScriptable>) -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[ChatMessageController] OnDataChanged");
         // super.OnDataChanged(value);
         this.m_data = value as ChatMessageData;
         if this.m_data.m_needsAuthorLabel {
@@ -42,7 +42,7 @@ public class ChatMessageController extends ListItemController {
     }
 
     public final func Refresh(value: ref<IScriptable>) -> Void {
-        // CMPLog(s"");
+        // LogChannel(n"DEBUG", s"[ChatMessageController] Refresh");
         this.m_data = value as ChatMessageData;
         if this.m_data.m_needsAuthorLabel {
             this.m_authorLabel.SetVisible(true);
@@ -60,7 +60,7 @@ public class ChatMessageController extends ListItemController {
     }
 
     protected cb func OnAddedToList(target: wref<ListItemController>) -> Bool {
-        // CMPLog(s"");
+        // LogChannel(n"DEBUG", s"[ChatMessageController] OnAddedToList");
         let m_animListText: ref<inkAnimDef>;
         let m_animTextInterp: ref<inkAnimTextOffset>;
         let stageOneTime: Float;

@@ -41,7 +41,7 @@ public class DeliveryClient extends ClientRpc {
     }
 
     public func StartDelivery(location: Vector4) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[DeliveryClient] StartDelivery");
         // Set the waypoint, show some UI marker
         
         let mappinData: MappinData;
@@ -59,7 +59,7 @@ public class DeliveryClient extends ClientRpc {
     }
 
     public func EndDelivery(success: Bool, reward: Uint32) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[DeliveryClient] EndDelivery");
         // Called when the delivery is successful or failed
         if success {
             let player = GetPlayer(GetGameInstance());
@@ -78,7 +78,7 @@ public class DeliveryClient extends ClientRpc {
     }
 
     public func LoadDeliveries(deliveries: array<DeliveryInfo>) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[DeliveryClient] LoadDeliveries");
 
         // Set the delivery list
         ArrayClear(GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_deliveryEntries);
@@ -103,7 +103,7 @@ public class DeliveryClient extends ClientRpc {
         GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_controller.ShowDeliveryListCallback();
         // let i = 0;
         // while i < ArraySize(deliveries) {
-        //     CMPLog(s"deliveryID: \(deliveries[i].id)");
+        //     LogChannel(n"DEBUG", s"[DeliveryClient] deliveryID: \(deliveries[i].id)");
 
         //     let shop = new ShopData();
         //     shop.m_name = s"Test Shop \(deliveries[i].id)";

@@ -10,7 +10,7 @@ public class ServerListItemController extends ListItemController {
     public let m_serverDescription: wref<inkText>;
 
     protected cb func OnInitialize() -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[ServerListItemController] OnInitialize");
         // super.OnInitialize();
         this.RegisterToCallback(n"OnSelected", this, n"OnSelected");
         this.RegisterToCallback(n"OnDeselected", this, n"OnDeselected");
@@ -18,7 +18,7 @@ public class ServerListItemController extends ListItemController {
         this.m_serverName = this.GetWidget(n"textContainer/NamePreviewContainer/NameContainer/contactLabel") as inkText;
         this.m_serverDescription = this.GetWidget(n"textContainer/NamePreviewContainer/preview") as inkText;
         if !IsDefined(this.m_serverName) {
-            CMPLog(s"COULD NOT FIND LABEL");
+            LogChannel(n"DEBUG", s"[ServerListItemController] COULD NOT FIND LABEL");
         }
         // this.RegisterToCallback(n"OnAddedToList", this, n"OnAddedToList");
     }
@@ -28,7 +28,7 @@ public class ServerListItemController extends ListItemController {
     }
 
     protected cb func OnSelected(itemController: wref<inkVirtualCompoundItemController>, discreteNav: Bool) -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[ServerListItemController] OnSelected");
         // let animOptions: inkAnimOptions;
         // if IsDefined(this.m_animProxySelection) {
         //     this.m_animProxySelection.GotoStartAndStop(true);
@@ -50,7 +50,7 @@ public class ServerListItemController extends ListItemController {
     }
     
     protected cb func OnDataChanged(value: ref<IScriptable>) -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[ServerListItemController] OnDataChanged");
         // super.OnDataChanged(value);
         this.m_data = value as ServerData;
         this.m_serverName.SetText(this.m_data.m_name);

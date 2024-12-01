@@ -12,7 +12,7 @@ public native class ChatSystem extends IScriptable {
         evt.author = author;
         evt.message = message;
 
-        CMPLog(s"\(message)");
+        LogChannel(n"DEBUG", s"[ChatSystem] HandleChatMessage: " + message);
         let uiSystem = GameInstance.GetUISystem(GetGameInstance());        
         uiSystem.QueueEvent(evt);
     }
