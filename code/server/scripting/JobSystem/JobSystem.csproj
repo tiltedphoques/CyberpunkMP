@@ -11,8 +11,8 @@
   </ItemGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath>..\..\..\build\windows\x64\debug\plugins\JobSystem</OutputPath>
-		<PackageOutputPath>..\..\..\\build\windows\x64\debug\plugins\JobSystem</PackageOutputPath>
+		<OutputPath>..\..\..\..\build\windows\x64\debug\plugins\JobSystem</OutputPath>
+		<PackageOutputPath>..\..\..\..\build\windows\x64\debug\plugins\JobSystem</PackageOutputPath>
 		<NoWarn>1701;1702;3270</NoWarn>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
