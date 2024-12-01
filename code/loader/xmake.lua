@@ -5,7 +5,7 @@ else
         set_kind("binary")
         set_basename("Cyberpunk2077")
         add_options("game")
-        set_runargs("-online", "--skipStartMenu", "--ip=127.0.0.1")
+        set_runargs("--online", "--skipStartMenu", "--ip=127.0.0.1")
         set_targetdir(path.directory(get_config("game")))
         on_build(function(target) end)
         on_clean(function(target) end)
