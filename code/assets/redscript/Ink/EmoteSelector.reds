@@ -64,7 +64,7 @@ public class EmoteSelector extends inkLogicController {
     this.m_listController = this.GetWidget(n"container").GetController() as ListController;
     this.m_indicator = this.GetWidget(n"indicator");
     if !IsDefined(this.m_listController) {
-        LogChannel(n"DEBUG", s"[EmoteSelector] COULD NOT FIND LIST CONTROLLER");
+        FTLog(s"[EmoteSelector] COULD NOT FIND LIST CONTROLLER");
     }
 
     // let setMenuModeEvent: ref<inkMenuLayer_SetMenuModeEvent>;
@@ -116,7 +116,7 @@ public class EmoteSelector extends inkLogicController {
     // this.QueueEvent(evt);
 
     // this.SetCursorOverWidget(this.GetRootWidget());
-    
+
     // this.m_Player.RegisterInputListener(this, n"UI_PreviousAbility");
     // this.m_Player.RegisterInputListener(this, n"UI_NextAbility");
     // this.m_Player.RegisterInputListener(this, n"UI_MoveX_Axis");
@@ -144,7 +144,7 @@ public class EmoteSelector extends inkLogicController {
     // this.UnregisterFromGlobalInputCallback(n"OnPostOnAxis", this, n"OnGlobalAxisInput");
     // this.UnregisterFromGlobalInputCallback(n"OnPostOnRelative", this, n"OnMouseInput");
     this.CloseEmoteSelector();
-    
+
   }
 
   private final func UpdateAxisIndicator(value: Float, actionName: CName) -> Void {
@@ -198,7 +198,7 @@ public class EmoteSelector extends inkLogicController {
   }
 
   protected cb func OnItemSelected(previous: ref<inkVirtualCompoundItemController>, next: ref<inkVirtualCompoundItemController>) -> Bool {
-    LogChannel(n"DEBUG", s"[EmoteSelector] OnItemSelected");
+    FTLog(s"[EmoteSelector] OnItemSelected");
     // let selectionChangeEvent: ref<ContactSelectionChangedEvent>;
     // let contactData: ref<ContactData> = FromVariant<ref<IScriptable>>(next.GetData()) as ContactData;
     // InkImageUtils.RequestAvatarOrUnknown(this, this.m_avatarImage, contactData.avatarID);
