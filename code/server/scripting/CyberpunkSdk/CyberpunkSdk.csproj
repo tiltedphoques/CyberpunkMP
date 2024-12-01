@@ -11,7 +11,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath>..\..\..\build\windows\x64\debug\plugins\</OutputPath>
-		<PackageOutputPath>..\..\..\\build\windows\x64\debug\plugins\</PackageOutputPath>
+		<PackageOutputPath>..\..\..\build\windows\x64\debug\plugins\</PackageOutputPath>
 		<NoWarn>1701;1702;3270</NoWarn>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
