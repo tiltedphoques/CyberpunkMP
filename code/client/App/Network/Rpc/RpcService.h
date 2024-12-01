@@ -10,6 +10,13 @@ struct RpcId
     bool operator==(const RpcId& acRhs) const { return Klass == acRhs.Klass && Function == acRhs.Function; }
 };
 
+struct RpcHandler;
+struct CachedRpcHandler
+{
+    RpcId Id;
+    RpcHandler* Handler;
+};
+
 template <> struct std::hash<RpcId>
 {
     std::size_t operator()(const RpcId& s) const noexcept { return s.Klass ^ (s.Function << 1); }
@@ -36,5 +43,5 @@ protected:
 private:
 
     Map<RpcId, uint32_t> m_serverRpcs;
-    Map<uint32_t, RpcId> m_clientRpcs;
+    Map<uint32_t, CachedRpcHandler> m_clientRpcs;
 };
