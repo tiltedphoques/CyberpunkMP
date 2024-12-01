@@ -30,6 +30,9 @@ Client::~Client()
 {
     uv_loop_close(static_cast<uv_loop_t*>(m_pLoop));
     Allocator::Get()->Free(m_pLoop);
+
+    Client::Close();
+
     SteamInterface::Release();
 }
 

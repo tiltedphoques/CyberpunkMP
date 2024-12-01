@@ -56,6 +56,11 @@ option("game")
     set_default("Cyberpunk2077.exe")
     set_description("Set the path to Cyberpunk2077.exe for easy debugging")
 
+option("rpcdir")
+    set_showmenu(true)
+    set_default("")
+    set_description("Set the path where the RPC files will be generated")
+
 if is_plat("windows") then
     includes("code/assets")
     includes("code/client")

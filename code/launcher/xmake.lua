@@ -1,5 +1,6 @@
 target("Launcher")
     set_kind("phony")
+    set_group("Tools")
 
     on_install(function (target)
         local function run_command(cmd, args)

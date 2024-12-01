@@ -27,4 +27,21 @@ void Settings::Load()
         for (const auto& mod : *mods)
             settings.mods.push_back(mod.c_str());
     }
+
+    if (launchParameters.Contains("-rpc"))
+    {
+        settings.RpcOnly = true;
+    }
+
+    if (const auto rpcDir = launchParameters.Get("-rpcdir"); rpcDir)
+    {
+        if (rpcDir->size > 0)
+        {
+            // For some reason cyberpunk adds a \ at the start and end of the path...
+            std::string path = std::string((*rpcDir)[0].c_str());
+            path = path.substr(1, path.length() - 2);
+
+            settings.RpcPath = path;
+        }
+    }
 }

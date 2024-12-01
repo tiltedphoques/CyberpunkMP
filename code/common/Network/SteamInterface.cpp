@@ -20,9 +20,10 @@ void SteamInterface::Acquire()
 
 void SteamInterface::Release()
 {
+    // This seems to conflict with the game's handles so disabling it
     if (s_initCounter.fetch_sub(1, std::memory_order_relaxed) == 1)
     {
-        GameNetworkingSockets_Kill();
+    //    GameNetworkingSockets_Kill();
     }
 }
 

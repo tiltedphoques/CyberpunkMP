@@ -6,6 +6,7 @@
 
 #include "RpcGenerator.h"
 #include "RpcPack.h"
+#include "App/Settings.h"
 
 
 RpcService::RpcService(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk)
@@ -48,6 +49,12 @@ bool RpcService::PrepareRpc(RED4ext::CGameApplication* aApp)
     RpcValidator::InternalValidate();
     RpcGenerator::GenerateHandlers();
     RpcGenerator::DumpCsharp();
+
+    if (Settings::Get().RpcOnly)
+    {
+        ExitProcess(0);
+    }
+
     return true;
 }
 

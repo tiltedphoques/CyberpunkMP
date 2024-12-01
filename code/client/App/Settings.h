@@ -18,6 +18,8 @@ struct Settings
     uint16_t port = 11778;
     Vector<fs::path> mods = {};
     bool enabled = false;
+    bool RpcOnly = false;
+    fs::path RpcPath{};
 
 private:
     Settings() = default;

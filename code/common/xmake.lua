@@ -39,25 +39,3 @@ target("Common")
         "snappy",
         "openssl",
         "libuv")
-
-target("Common_Tests")
-    set_kind("binary")
-    add_files("Tests/**.cpp")
-    set_group("Tests")
-
-    add_includedirs(".")
-    add_includedirs(
-        "../../build", 
-        "../../vendor"
-    )
-
-    add_deps("Common")
-    add_packages("hopscotch-map", "snappy", "gamenetworkingsockets", "libuv")
-    if is_plat("windows") then
-        add_packages("minhook", "mem", "xbyak")
-    else
-        remove_files("Reverse/**")
-    end
-
-    add_cxflags("-fPIC")
-    add_defines("STEAMNETWORKINGSOCKETS_STATIC_LINK")
