@@ -66,9 +66,12 @@ void RpcService::HandleRpc(const PacketEvent<server::RpcCall>& aMessage)
 
 void RpcService::HandleRpcDefinitions(const PacketEvent<server::RpcDefinitions>& aMessage)
 {
+    m_clientRpcs.resize(aMessage.get_client_definitions().size());
+
     for (auto& rpc : aMessage.get_client_definitions())
     {
-        m_clientRpcs[rpc.get_id()] = {rpc.get_klass(), rpc.get_function()};
+        const RpcId id{rpc.get_klass(), rpc.get_function()};
+        m_clientRpcs[rpc.get_id()] = {id, RpcGenerator::GetRpcHandler(id.Klass, id.Function)};
     }
 
     for (auto& rpc : aMessage.get_server_definitions())
@@ -77,31 +80,28 @@ void RpcService::HandleRpcDefinitions(const PacketEvent<server::RpcDefinitions>&
     }
 }
 
-bool RpcService::Call(const server::RpcCall& aMessage)
+bool RpcService::Call(const server::RpcCall& aMessage) const
 {
-    Red::IScriptable* context = nullptr;
-
     auto id = aMessage.get_id();
 
-    auto rpc = m_clientRpcs.find(id);
-    if (rpc == std::end(m_clientRpcs))
+    if (id >= m_clientRpcs.size())
     {
         spdlog::error("Failed to retrieve Rpc with id {:X}", id);
         return false;
     }
 
-    const auto* pContext = RpcGenerator::GetRpcHandler(rpc->second.Klass, rpc->second.Function);
-    if (rpc->second.Klass != 0 && !pContext)
+    const auto& rpc = m_clientRpcs[id];
+
+    const auto* pContext = rpc.Handler;
+    if (rpc.Id.Klass != 0 && !pContext)
         return false;
 
     const auto pFunc = pContext->function;
-
     const auto combinedArgCount = pFunc->params.size;
 
-    static char s_dummyContext[sizeof(RED4ext::IScriptable)]{};
-    context = reinterpret_cast<RED4ext::IScriptable*>(&s_dummyContext);
+    static auto* cScriptContext = static_cast<RED4ext::IScriptable*>(Red::GetClass("entEntity")->CreateInstance());
 
-    Red::CStack stack(context);
+    Red::CStack stack(cScriptContext);
     Red::StackArgs_t args;
 
     if (combinedArgCount > 0)
@@ -111,7 +111,7 @@ bool RpcService::Call(const server::RpcCall& aMessage)
         for (auto i = 0; i < combinedArgCount; ++i)
         {
             auto* pType = pFunc->params[i]->type;
-            auto* pTypeAllocator = pType->GetAllocator();
+            const auto* pTypeAllocator = pType->GetAllocator();
 
             auto* pInstance = pTypeAllocator->AllocAligned(pType->GetSize(), pType->GetAlignment()).memory;
             std::memset(pInstance, 0, pType->GetSize());
@@ -125,20 +125,18 @@ bool RpcService::Call(const server::RpcCall& aMessage)
         }
 
         stack.args = args.data();
-
         stack.argsCount = pFunc->params.size;
     }
 
     Red::Detail::CallFunctionWithStack(nullptr, pFunc, stack);
 
-    for (auto& arg : args)
+    for (const auto& arg : args)
     {
-        auto* pType = arg.type;
-        auto* pTypeAllocator = pType->GetAllocator();
+        const auto* pType = arg.type;
+        const auto* pTypeAllocator = pType->GetAllocator();
 
         pType->Destruct(arg.value);
         pTypeAllocator->Free(arg.value);
-
     }
 
     return true;
