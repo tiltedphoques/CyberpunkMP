@@ -99,8 +99,7 @@ bool RpcService::Call(const server::RpcCall& aMessage) const
     const auto pFunc = pContext->function;
     const auto combinedArgCount = pFunc->params.size;
 
-    static char s_dummyContext[sizeof(RED4ext::IScriptable)]{};
-    const auto cScriptContext = reinterpret_cast<RED4ext::IScriptable*>(&s_dummyContext);
+    static auto* cScriptContext = static_cast<RED4ext::IScriptable*>(Red::GetClass("entEntity")->CreateInstance());
 
     Red::CStack stack(cScriptContext);
     Red::StackArgs_t args;

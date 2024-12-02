@@ -38,7 +38,7 @@ protected:
 
     void HandleRpc(const PacketEvent<server::RpcCall>& aMessage);
     void HandleRpcDefinitions(const PacketEvent<server::RpcDefinitions>& aMessage);
-    bool Call(const server::RpcCall& aMessage);
+    bool Call(const server::RpcCall& aMessage) const;
 
 private:
 

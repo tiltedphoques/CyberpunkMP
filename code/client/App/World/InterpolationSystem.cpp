@@ -37,7 +37,7 @@ inline void SetSimpleMovement(Red::vehicle::IMoveSystem* apMoveSystem, const Red
 
 void InterpolateEntity(flecs::entity aEntity, const EntityComponent& aEntityComponent, InterpolationComponent& aInterpolation, float aSimulationDelay, Red::vehicle::IMoveSystem* apMoveSystem)
 {
-    const double tick = NetworkWorldSystem::GetTick() - aSimulationDelay;
+    const float tick = NetworkWorldSystem::GetTick() - aSimulationDelay;
 
     while (!aInterpolation.TimePoints.empty())
     {
@@ -55,11 +55,11 @@ void InterpolateEntity(flecs::entity aEntity, const EntityComponent& aEntityComp
     const auto& second = aInterpolation.TimePoints.front();
 
     // Calculate delta movement since last update
-    auto ratio = 0.0001;
-    const auto tickDelta = static_cast<double>(second.Tick - first.Tick);
+    auto ratio = 0.0001f;
+    const auto tickDelta = static_cast<float>(second.Tick - first.Tick);
     if (tickDelta > 0.0)
     {
-        ratio = 1.0 / tickDelta * (tick - first.Tick);
+        ratio = 1.0f / tickDelta * (tick - first.Tick);
     }
 
     const auto pEntityStubSystem = Red::GetGameSystem<Red::game::IEntityStubSystem>();
