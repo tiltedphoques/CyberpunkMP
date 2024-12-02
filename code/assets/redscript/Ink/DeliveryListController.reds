@@ -112,16 +112,16 @@ public class DeliveryListController extends inkLogicController {
     this.m_headerText.SetText("Select job");
     this.m_scrollArea = this.GetWidget(n"container/scrollarea") as inkScrollArea;
     if !IsDefined(this.m_scrollArea) {
-        CMPLog(s"COULD NOT FIND SCROLLAREA");
+        FTLog(s"[DeliveryListController] COULD NOT FIND SCROLLAREA");
     }
     this.m_listController = this.GetWidget(n"container/scrollarea/list").GetController() as ListController;
     if !IsDefined(this.m_listController) {
-        CMPLog(s"COULD NOT FIND LIST CONTROLLER");
+        FTLog(s"[DeliveryListController] COULD NOT FIND LIST CONTROLLER");
     }
     this.m_scrollArea.RegisterToCallback(n"OnScrollChanged", this, n"OnScrollChanged");
     this.m_scrollController = this.m_scrollArea.GetControllerByType(n"inkScrollController") as inkScrollController;
     if !IsDefined(this.m_scrollController) {
-        CMPLog(s"COULD NOT FIND SCROLL CONTROLLER");
+        FTLog(s"[DeliveryListController] COULD NOT FIND SCROLL CONTROLLER");
     }
     // this.m_leftMargin = new inkMargin(35.00, 10.00, 0.00, 0.00);
     // this.m_rightMargin = new inkMargin(1400.00, 10.00, 0.00, 0.00);
@@ -133,7 +133,7 @@ public class DeliveryListController extends inkLogicController {
     while i < ArraySize(GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_deliveryEntries) {
       let data = GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_deliveryEntries[i];
       this.m_listController.PushData(data, true);
-      i += 1; 
+      i += 1;
     }
 
     // let shop = new ShopData();
@@ -162,7 +162,7 @@ public class DeliveryListController extends inkLogicController {
   }
 
   protected cb func OnItemSelected(previous: ref<inkVirtualCompoundItemController>, next: ref<inkVirtualCompoundItemController>) -> Bool {
-    CMPLog(s"");
+    FTLog(s"[DeliveryListController] OnItemSelected");
     // let selectionChangeEvent: ref<ContactSelectionChangedEvent>;
     // let contactData: ref<ContactData> = FromVariant<ref<IScriptable>>(next.GetData()) as ContactData;
     // InkImageUtils.RequestAvatarOrUnknown(this, this.m_avatarImage, contactData.avatarID);

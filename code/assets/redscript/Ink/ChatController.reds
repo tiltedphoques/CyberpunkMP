@@ -11,17 +11,17 @@ public class ChatController extends inkHUDGameController {
 
     private let m_uiSystem: wref<UISystem>;
     private let m_player: wref<PlayerPuppet>;
-    private let m_repeatingScrollActionEnabled: Bool = false; 
+    private let m_repeatingScrollActionEnabled: Bool = false;
     private let m_messageController: ref<ListController>;
     private let m_chatInputOpen: Bool;
     private let m_input: wref<inkTextInput>;
     private let m_lastMessageData: ref<ChatMessageData>;
 
     protected cb func OnInitialize() -> Bool {
-        CMPLog(s"");
+        FTLog(s"[ChatController] OnInitialize");
         this.m_player = this.GetPlayerControlledObject() as PlayerPuppet;
         if !IsDefined(this.m_player) {
-            CMPLog(s"NO PLAYER");
+            FTLog(s"[ChatController] NO PLAYER");
         }
         this.m_uiSystem = GameInstance.GetUISystem(this.m_player.GetGame());
         this.m_messageController = inkWidgetRef.GetController(this.m_messagesRef) as ListController;
@@ -35,11 +35,10 @@ public class ChatController extends inkHUDGameController {
         messageData.author = "SERVER";
         messageData.message = "Connected to...";
         this.QueueEvent(messageData);
-        
     }
 
     protected cb func OnUninitialize() -> Bool {
-        CMPLog(s"");
+        FTLog(s"[ChatController] OnUninitialize");
         this.m_player.UnregisterInputListener(this, n"UIEnterChatMessage");
     }
 
@@ -57,7 +56,7 @@ public class ChatController extends inkHUDGameController {
     }
 
     protected cb func OnChatMessageUIEvent(evt: ref<ChatMessageUIEvent>) -> Bool {
-        CMPLog(s"");
+        FTLog(s"[ChatController] OnChatMessageUIEvent");
         let messageData = new ChatMessageData();
         messageData.m_author = evt.author;
         messageData.m_message = evt.message;
@@ -70,11 +69,11 @@ public class ChatController extends inkHUDGameController {
         this.m_lastMessageData = messageData;
         inkScrollAreaRef.ScrollVertical(this.m_scrollRef, 0.0);
         this.m_messageController.PushData(messageData, true);
-        
+
         let targets = new inkWidgetsSet();
         targets.Select(this.m_messageController.GetItemAt(this.m_messageController.Size() - 1));
         this.PlayLibraryAnimationOnTargets(n"new_message", targets);
-        
+
         inkScrollAreaRef.ScrollVertical(this.m_scrollRef, 1.0);
     }
 
@@ -106,7 +105,7 @@ public class ChatController extends inkHUDGameController {
             targets.Select(this.GetWidget(n"wrapper/chat/mask"));
             targets.Select(this.GetWidget(n"wrapper/chat/bg"));
             this.PlayLibraryAnimationOnTargets(n"from_input", targets);
-            
+
             uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIChatInputContextRequest, false, true);
             this.m_player.UnregisterInputListener(this, n"OpenPauseMenu");
             this.m_player.UnregisterInputListener(this, n"back");
@@ -121,11 +120,11 @@ public class ChatController extends inkHUDGameController {
         this.m_chatInputOpen = show;
         this.UpdateInputHints();
     }
-    
+
     private final func SendChat() -> Void {
         let textEntered: String = this.m_input.GetText();
         if NotEquals(textEntered, "") {
-            CMPLog(s"\"\(textEntered)\"");
+            FTLog(s"[ChatController] SendChat \"\(textEntered)\"");
 
             GameInstance.GetNetworkWorldSystem().GetChatSystem().Send(textEntered);
         };
@@ -205,7 +204,7 @@ public class ChatController extends inkHUDGameController {
     protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
         let actionName: CName = ListenerAction.GetName(action);
         let actionType: gameinputActionType = ListenerAction.GetType(action);
-       
+
         if !this.m_chatInputOpen {
             if Equals(actionName, n"UIEnterChatMessage") && Equals(actionType, gameinputActionType.BUTTON_RELEASED) {
                 // let targets = new inkWidgetsSet();
@@ -218,6 +217,6 @@ public class ChatController extends inkHUDGameController {
             }
         } else {
             return this.OnChatInputAction(action, consumer);
-        } 
+        }
     }
 }

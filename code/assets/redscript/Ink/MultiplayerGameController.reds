@@ -9,7 +9,7 @@ import CyberpunkMP.Plugins.*
 public class MultiplayerGameController extends inkGameController {
     public let m_audioSystem: wref<AudioSystem>;
     public let m_uiSystem: wref<UISystem>;
-    public let m_repeatingScrollActionEnabled: Bool = false; 
+    public let m_repeatingScrollActionEnabled: Bool = false;
     public let m_serverListLogicController: wref<ServerListController>;
     public let m_jobListLogicController: wref<JobListController>;
     public let m_deliveryListLogicController: wref<DeliveryListController>;
@@ -53,14 +53,14 @@ public class MultiplayerGameController extends inkGameController {
     protected cb func OnInitialize() -> Bool {
         GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_controller = this;
 
-        CMPLog(s"");
+        FTLog(s"[MultiplayerGameController] OnInitialize");
 
         this.m_comDeviceBBDef = GetAllBlackboardDefs().UI_ComDevice;
         this.m_comDeviceBB = this.GetBlackboardSystem().Get(this.m_comDeviceBBDef);
         if IsDefined(this.m_comDeviceBB) {
             this.m_activePhoneElementsListener = this.m_comDeviceBB.RegisterListenerUint(this.m_comDeviceBBDef.ActivatePhoneElements, this, n"OnActivatePhoneElements", true);
         }
-        
+
         let blackboardSystem: ref<BlackboardSystem> = GameInstance.GetBlackboardSystem(GetGameInstance());
         let uiBlackboard: ref<IBlackboard> = blackboardSystem.Get(GetAllBlackboardDefs().UIGameData);
         let connectedToServerDef = GetAllBlackboardDefs().UIGameData.UIMultiplayerConnectedToServer;
@@ -83,7 +83,7 @@ public class MultiplayerGameController extends inkGameController {
         // this.SpawnFromExternal(this.GetWidget(n"hud/wrapper"), r"mods\\cyberpunkmp\\multiplayer_ui.inkwidget", n"phone_device");
         this.AsyncSpawnFromLocal(this.GetWidget(n"hud"), n"phone_device", this, n"OnHotKeySpawn");
 
-        
+
         let callbackSystem = GameInstance.GetCallbackSystem();
         callbackSystem.RegisterCallback(n"Entity/Attached", this, n"OnEntityAttached")
             .AddTarget(DynamicEntityTarget.Tag(n"CyberpunkMP.Puppet.Animation"));
@@ -100,14 +100,14 @@ public class MultiplayerGameController extends inkGameController {
         uiBlackboard.UnregisterListenerBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerConnectedToServer, this.m_connectedToServerCallback);
 
         // this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_ActiveVehicleData).UnregisterListenerBool(GetAllBlackboardDefs().UI_ActiveVehicleData.IsPlayerMounted, this.m_mountedCallback);
-        
+
         // if IsDefined(this.bbListener) {
         //     this.psmBB.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Vehicle, this.bbListener);
         // };
         // this.m_player.UnregisterInputListener(this);
     }
 
-// Hotkey 
+// Hotkey
 
     protected cb func OnHotKeySpawn(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
         this.m_phoneIconWidget = widget;
@@ -134,7 +134,7 @@ public class MultiplayerGameController extends inkGameController {
     }
 
     private cb func OnActivatePhoneElements(element: Uint32) -> Bool {
-        CMPLog(s"\(element)");
+        FTLog(s"[MultiplayerGameController] OnActivatePhoneElements: \(element)");
         let isInVehicle = 0;
         if Cast<Bool>(element & Cast<Uint32>(EnumInt(gameuiActivePhoneElement.InVehicle))) {
             isInVehicle = 1;
@@ -155,7 +155,7 @@ public class MultiplayerGameController extends inkGameController {
 
 /*
     protected cb func OnVehicleMount(value: Bool) -> Bool {
-        CMPLog(s"");
+        FTLog(s"[MultiplayerGameController] OnPlayerEnteredVehicle");
         if value  {
             let targets = new inkWidgetsSet();
             targets.Select(this.GetWidget(n"hud"));
@@ -179,7 +179,7 @@ public class MultiplayerGameController extends inkGameController {
     }
 
     protected cb func OnPlayerEnteredVehicle(value: Int32) -> Bool {
-        CMPLog(s"");
+        FTLog(s"[MultiplayerGameController] OnPlayerEnteredVehicle");
         if value != 0 {
             let targets = new inkWidgetsSet();
             targets.Select(this.GetWidget(n"hud"));
@@ -202,7 +202,7 @@ public class MultiplayerGameController extends inkGameController {
         }
     }
     */
-    
+
     private func UpdateInputHints() -> Void {
         let evt = new UpdateInputHintMultipleEvent();
         evt.targetHintContainer = n"GameplayInputHelper";
@@ -218,7 +218,7 @@ public class MultiplayerGameController extends inkGameController {
         evt.AddInputHint(CreateInputHint(n"Emote", n"UIEmote", true), this.m_connectedToServer && !this.m_emoteSelectorOpen);
         evt.AddInputHint(CreateInputHint(n"Cancel Job", n"UIShop", true), this.m_connectedToServer && !this.m_deliveryListOpen && this.m_activeDelivery);
         evt.AddInputHint(CreateInputHint(n"Start Job", n"UIJob", false), this.m_connectedToServer && !this.m_deliveryListOpen && !this.m_activeDelivery);
-        
+
         this.m_uiSystem.QueueEvent(evt);
     }
 
@@ -235,7 +235,7 @@ public class MultiplayerGameController extends inkGameController {
     }
 
     protected func OnConnectedToServer(connected: Bool) -> Void {
-        CMPLog(s"");
+        FTLog(s"[MultiplayerGameController] OnConnectedToServer");
         this.m_connectedToServer = connected;
         if (connected) {
             this.ShowServerList(false);
@@ -281,7 +281,7 @@ public class MultiplayerGameController extends inkGameController {
         this.m_serverListOpen = show;
         this.UpdateInputHints();
     }
-    
+
     protected cb func OnServerListSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
         if IsDefined(widget) {
             this.m_serverListWidget = widget;
@@ -300,10 +300,10 @@ public class MultiplayerGameController extends inkGameController {
                 uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerContextRequest, true, true);
                 this.EnableServerInput();
             } else {
-                CMPLog(s"no logic controller");
+                FTLog(s"[MultiplayerGameController] OnServerListSpawned - no logic controller");
             }
         } else {
-            CMPLog(s"no widget");
+            FTLog(s"[MultiplayerGameController] OnServerListSpawned - no widget");
         }
     }
 
@@ -358,11 +358,11 @@ public class MultiplayerGameController extends inkGameController {
         this.m_player.UnregisterInputListener(this, n"popup_moveLeft");
         this.m_player.UnregisterInputListener(this, n"popup_moveRight");
     }
-    
+
     protected cb func OnCloseServerList(target: wref<inkWidget>) -> Bool {
         // this.CloseContactList();
     }
-    
+
     protected cb func OnServerListAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
         let actionName: CName = ListenerAction.GetName(action);
         let actionType: gameinputActionType = ListenerAction.GetType(action);
@@ -407,15 +407,15 @@ public class MultiplayerGameController extends inkGameController {
                     if IsDefined(this.m_serverListLogicController) {
                         serverData = this.m_serverListLogicController.GetSelectedServerData();
                         if IsDefined(serverData) {
-                            CMPLog(s"Server selected: \(serverData.m_name)");
+                            FTLog(s"[MultiplayerGameController] Server selected: \(serverData.m_name)");
                             this.m_server = serverData.m_name;
                             if serverData.m_test {
                                 this.GetUIBlackboard().SetBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerConnectedToServer, true, true);
                             } else {
                                 GameInstance.GetNetworkWorldSystem().Connect();
                             }
-                        } else { 
-                            CMPLog(s"No server selected");
+                        } else {
+                            FTLog(s"[MultiplayerGameController] No server selected");
                         }
                     }
                     break;
@@ -438,25 +438,25 @@ public class MultiplayerGameController extends inkGameController {
     }
 
 // Chat
-    
+
     // protected cb func OnChatSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
-    //     CMPLog(s"");
+    //     FTLog(s"[MultiplayerGameController] OnChatSpawned");
     //     this.m_messageController = this.GetWidget(n"hud/chat/wrapper/chat/scrollarea/messages").GetController() as ListController;
     //     if !IsDefined(this.m_messageController) {
-    //         CMPLog(s"LIST CONTROLLER NOT FOUND");
+    //         FTLog(s"[MultiplayerGameController] OnChatSpawned - LIST CONTROLLER NOT FOUND");
     //     }
     //     this.m_scrollArea = this.GetWidget(n"hud/chat/wrapper/chat/scrollarea") as inkScrollArea;
     //     if !IsDefined(this.m_scrollArea) {
-    //         CMPLog(s"SCROLLAREA NOT FOUND");
+    //         FTLog(s"[MultiplayerGameController] OnChatSpawned - SCROLLAREA NOT FOUND");
     //     }
     //     // this.m_scrollArea.RegisterToCallback(n"OnScrollChanged", this, n"OnScrollChanged");
     //     // this.m_scrollController = this.GetWidget(n"hud/chat/wrapper/chat").GetController() as inkScrollController;
     //     // if !IsDefined(this.m_scrollController) {
-    //         // CMPLog(s"SCROLL CONTROLLER NOT FOUND");
+    //         // FTLog(s"[MultiplayerGameController] OnChatSpawned - SCROLL CONTROLLER NOT FOUND");
     //     // }
     //     this.m_input = this.GetWidget(n"hud/chat/wrapper/input_box/input") as inkTextInput;
     //     if !IsDefined(this.m_input) {
-    //         CMPLog(s"INPUT WIDGET NOT FOUND");
+    //         FTLog(s"[MultiplayerGameController] OnChatSpawned - INPUT WIDGET NOT FOUND");
     //     }
 
     //     this.m_messageController.Clear(true);
@@ -578,16 +578,16 @@ public class MultiplayerGameController extends inkGameController {
                 let blackboardSystem: ref<BlackboardSystem> = GameInstance.GetBlackboardSystem(GetGameInstance());
                 let uiBlackboard: ref<IBlackboard> = blackboardSystem.Get(GetAllBlackboardDefs().UIGameData);
                 uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIEmoteSelectionContextRequest, true, true);
-                
+
                 this.m_player.RegisterInputListener(this, n"mouse_x");
                 this.m_player.RegisterInputListener(this, n"mouse_y");
 
                 // this.EnableServerInput();
             } else {
-                CMPLog(s"no logic controller");
+                FTLog(s"[MultiplayerGameController] OnEmoteSelectorSpawned - no logic controller");
             }
         } else {
-            CMPLog(s"no widget");
+            FTLog(s"[MultiplayerGameController] OnEmoteSelectorSpawned - no widget");
         }
     }
 
@@ -603,10 +603,10 @@ public class MultiplayerGameController extends inkGameController {
             this.m_repeatingScrollActionEnabled = false;
             let emoteData = this.m_emoteSelector.GetSelectedEmoteData();
             if IsDefined(emoteData) {
-                CMPLog(s"\(emoteData.m_name)");
+                FTLog(s"[MultiplayerGameController] OnEmoteSelectorClosed: \(emoteData.m_name)");
                 EmoteServer.TriggerEmote(emoteData.m_name);
             } else {
-                CMPLog(s"no emote selected");
+                FTLog(s"[MultiplayerGameController] OnEmoteSelectorClosed - no emote selected");
             }
             this.PlayRumble(RumbleStrength.SuperLight, RumbleType.Fast, RumblePosition.Left);
             TimeDilationHelper.SetTimeDilationWithProfile(this.m_player, "radialMenu", false, false);
@@ -650,7 +650,7 @@ public class MultiplayerGameController extends inkGameController {
         this.m_jobListOpen = show;
         this.UpdateInputHints();
     }
-    
+
     protected cb func OnJobListSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
         if IsDefined(widget) {
             this.m_jobListWidget = widget;
@@ -669,10 +669,10 @@ public class MultiplayerGameController extends inkGameController {
                 uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerContextRequest, true, true);
                 this.EnableServerInput();
             } else {
-                CMPLog(s"no logic controller");
+                FTLog(s"[MultiplayerGameController] OnJobListSpawned - no logic controller");
             }
         } else {
-            CMPLog(s"no widget");
+            FTLog(s"[MultiplayerGameController] OnJobListSpawned - no widget");
         }
     }
 
@@ -699,7 +699,7 @@ public class MultiplayerGameController extends inkGameController {
     protected cb func OnCloseJobList(target: wref<inkWidget>) -> Bool {
         // this.CloseContactList();
     }
-    
+
     protected cb func OnJobListAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
         let actionName: CName = ListenerAction.GetName(action);
         let actionType: gameinputActionType = ListenerAction.GetType(action);
@@ -742,7 +742,7 @@ public class MultiplayerGameController extends inkGameController {
                     // this.AcceptAction();
                     if IsDefined(this.m_jobListLogicController) {
                         let jobType = this.m_jobListLogicController.GetSelectedJobData();
-                        // CMPLog(s"Job selected: \(jobType.id)");
+                        // FTLog(s"[MultiplayerGameController] Job selected: \(jobType.id)");
                         // JobsServer.SelectJob(n"Delivery driver");
                         if (Equals(ToName(jobType.m_name), n"Taxi Rider")) {
                             TaxiServer.CreateJob(new Vector4(-2565.0, -5263.0, 94.25, 1.0));
@@ -804,7 +804,7 @@ public class MultiplayerGameController extends inkGameController {
         this.m_deliveryListOpen = true;
         this.UpdateInputHints();
     }
-    
+
     protected cb func OnDeliveryListSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
         if IsDefined(widget) {
             this.m_deliveryListWidget = widget;
@@ -823,10 +823,10 @@ public class MultiplayerGameController extends inkGameController {
                 uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIMultiplayerContextRequest, true, true);
                 this.EnableServerInput();
             } else {
-                CMPLog(s"no logic controller");
+                FTLog(s"[MultiplayerGameController] OnDeliveryListSpawned - no logic controller");
             }
         } else {
-            CMPLog(s"no widget");
+            FTLog(s"[MultiplayerGameController] OnDeliveryListSpawned - no widget");
         }
     }
 
@@ -853,7 +853,7 @@ public class MultiplayerGameController extends inkGameController {
     protected cb func OnCloseDeliveryList(target: wref<inkWidget>) -> Bool {
         // this.CloseContactList();
     }
-    
+
     protected cb func OnDeliveryListAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
         let actionName: CName = ListenerAction.GetName(action);
         let actionType: gameinputActionType = ListenerAction.GetType(action);
@@ -900,11 +900,11 @@ public class MultiplayerGameController extends inkGameController {
                         if IsDefined(jobEntry) {
                             let delivery = jobEntry as DeliveryEntry;
                             let taxi = jobEntry as TaxiJobEntry;
-                            if IsDefined(delivery) { 
-                                CMPLog(s"Delivery selected: \(delivery.id)");
+                            if IsDefined(delivery) {
+                                FTLog(s"[MultiplayerGameController] Delivery selected: \(delivery.id)");
                                 DeliveryServer.AcceptDelivery(delivery.id);
                             } else if IsDefined(taxi) {
-                                CMPLog(s"Taxi selected: \(taxi.id)");
+                                FTLog(s"[MultiplayerGameController] Taxi selected: \(taxi.id)");
                                 TaxiServer.AcceptJob(taxi.id);
                             }
                             this.m_activeDelivery = true;
@@ -913,7 +913,7 @@ public class MultiplayerGameController extends inkGameController {
                             this.ShowDeliveryList(false);
                             this.UpdateInputHints();
                         } else {
-                            CMPLog(s"No jobs available");
+                            FTLog(s"[MultiplayerGameController] No jobs available");
                         }
                     }
                     break;
@@ -956,7 +956,7 @@ public class MultiplayerGameController extends inkGameController {
         if !this.m_connectedToServer {
             if !this.m_serverListOpen {
                 if Equals(actionName, n"UIConnectToServer") && Equals(actionType, gameinputActionType.BUTTON_HOLD_COMPLETE) {
-                    // this.ShowServerList(true);                    
+                    // this.ShowServerList(true);
                     GameInstance.GetNetworkWorldSystem().Connect();
                     return true;
                 } else {
@@ -1000,14 +1000,14 @@ public class MultiplayerGameController extends inkGameController {
             } else {
                 // let value = ListenerAction.GetValue(action);
                 // let name = ListenerAction.GetName(action);
-                // CMPLog(s"\(name): \(value)");
+                // FTLog(s"\(name): \(value)");
                 if Equals(ListenerAction.GetName(action), n"mouse_x") || Equals(ListenerAction.GetName(action), n"mouse_y") {
                     this.m_emoteSelector.UpdateAxisIndicator(ListenerAction.GetValue(action), ListenerAction.GetName(action));
                     return true;
                 };
 
                 return false;
-            } 
+            }
         }
     }
 }

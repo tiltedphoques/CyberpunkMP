@@ -34,7 +34,7 @@ public class TaxiDriverClient extends ClientRpc {
 
     // Driver has accepted the job
     public func StartJob(pickupLocation: Vector4) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiDriverClient] StartJob");
         
         // create mappin where the job was created
         let mappinData: MappinData;
@@ -48,7 +48,7 @@ public class TaxiDriverClient extends ClientRpc {
 
     // Driver is close enough & is stopped, so rider can mount vehicle
     public func MountPassenger(rider_server_id: Uint64) {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiDriverClient] MountPassenger");
 
         // get rid of mappin
 
@@ -72,7 +72,7 @@ public class TaxiDriverClient extends ClientRpc {
 
     // Rider has mounted the vehicle
     public func StartTrip(dropoffLocation: Vector4) {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiDriverClient] StartTrip");
 
         // create mappin at the destination
         let mappinData: MappinData;
@@ -92,7 +92,7 @@ public class TaxiDriverClient extends ClientRpc {
 
     // User is close enough to the waypoint and is stopped, so NPC can get out
     public func EndTrip(success: Bool, reward: Uint32) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiDriverClient] EndTrip");
 
         let mappinSystem: ref<MappinSystem> = GameInstance.GetMappinSystem(GetGameInstance());
         mappinSystem.UnregisterMappin(GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_mappin);
@@ -108,7 +108,7 @@ public class TaxiDriverClient extends ClientRpc {
     }
 
     public func LoadJobs(jobs: array<TaxiJobInfo>) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiDriverClient] LoadJobs");
 
         // Set the job list
         ArrayClear(GameInstance.GetNetworkWorldSystem().GetAppearanceSystem().m_deliveryEntries);
@@ -132,7 +132,7 @@ public class TaxiRiderClient extends ClientRpc {
 
     // vehicle is close & slow enough to mount
     public func StartTrip(vehicle_server_id: Uint64) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiRiderClient] StartTrip");
     
         // mount muppet in vehicle
         // this.m_vehicle_id = GameInstance.GetNetworkWorldSystem().GetEntityIdByServerId(vehicle_server_id);
@@ -151,7 +151,7 @@ public class TaxiRiderClient extends ClientRpc {
 
     // trip is ended/cancelled
     public func EndTrip(success: Bool, cost: Uint32) -> Void {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", s"[TaxiRiderClient] EndTrip");
 
         // Called when the Taxi is successful or failed
         if success {

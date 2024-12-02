@@ -38,12 +38,12 @@ public native class VehicleSystem extends IScriptable {
     }
 
     private cb func OnEntityAttached(event: ref<EntityLifecycleEvent>) {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", "[VehicleSystem] OnEntityAttached");
         this.OnVehicleReady(event.GetEntity().GetEntityID());
     }
 
     public func EnterVehicle(character_id: EntityID, vehicle_id: EntityID, sit_position: CName) -> Bool {
-        CMPLog(s"with seat");
+        LogChannel(n"DEBUG", "[VehicleSystem] Entering Vehicle with seat");
         
         // works fine
 
@@ -54,7 +54,7 @@ public native class VehicleSystem extends IScriptable {
         //     let component = vehicle.GetVehicleComponent();
         //     component.MountEntityToSlot(vehicle_id, character_id, sit_position);
         // } else {
-        //     CMPLog(s"NOT DEFINED");
+        //     LogChannel(n"DEBUG", "[VehicleSystem] NOT DEFINED");
         // }
 
         // maybe better? makes them walk to the car - kinda cool
@@ -97,7 +97,7 @@ public native class VehicleSystem extends IScriptable {
     }
 
     public func ExitVehicle(character_id: EntityID) -> Bool {
-        CMPLog(s"");
+        LogChannel(n"DEBUG", "[VehicleSystem] Exiting vehicle");
 
         let entity_system = GameInstance.GetDynamicEntitySystem();
         let character = entity_system.GetEntity(character_id) as GameObject;
