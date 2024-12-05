@@ -1,9 +1,16 @@
-﻿using EmbedIO.Actions;
+﻿using CyberpunkSdk.Internal;
 using EmbedIO;
-using CyberpunkSdk.Internal;
+using EmbedIO.Actions;
+using Server.Loader.Extensions;
+using Swan.Logging;
 
 namespace Server.Loader.Systems
 {
+    internal class WebApiPluginDto
+    {
+        public required string Name { get; set; }
+    }
+
     internal class WebApi
     {
         private Plugins Plugins { get; set; }
@@ -27,7 +34,7 @@ namespace Server.Loader.Systems
 
         private WebServer CreateWebServer(string url)
         {
-            Swan.Logging.Logger.UnregisterLogger<Swan.Logging.ConsoleLogger>();
+            Logger.UnregisterLogger<ConsoleLogger>();
 
             var server = new WebServer(o => o
                 .WithUrlPrefix(url)
@@ -35,8 +42,25 @@ namespace Server.Loader.Systems
                 .WithModule(new ActionModule("/api/v1/mods/", HttpVerbs.Get, HandleModsRoute))
                 .WithModule(new ActionModule("/api/v1/statistics/", HttpVerbs.Get, HandleStatistics));
 
+            RegisterHooks(server);
+            // NOTE: must be registered after hooks.
+            server.WithModule(new ActionModule("/api/v1/plugins/", HttpVerbs.Get, HandleListPlugins));
             return server;
         }
+
+        private void RegisterHooks(WebServer server)
+        {
+            foreach (var (name, hook) in Plugins.Hooks)
+            {
+                var controller = hook.BuildController()();
+
+                server.WithWebApi(
+                    baseRoute: $"/api/v1/plugins/{name}",
+                    configure: m => m.WithController(controller));
+            }
+        }
+
+        #region Routes
 
         private Task HandleModsRoute(IHttpContext context)
         {
@@ -53,5 +77,19 @@ namespace Server.Loader.Systems
                 Statistics.Rpcs
             });
         }
+
+        private Task HandleListPlugins(IHttpContext context)
+        {
+            return context.SendDataAsync(
+                Plugins.Hooks
+                    .Select(hook => new WebApiPluginDto
+                    {
+                        Name = hook.Key
+                    })
+                    .ToList()
+            );
+        }
+
+        #endregion
     }
 }

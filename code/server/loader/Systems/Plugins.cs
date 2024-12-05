@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 using CurseForge.APIClient.Models.Mods;
+using CyberpunkSdk;
 using CyberpunkSdk.Systems;
 using File = System.IO.File;
 
@@ -37,13 +38,16 @@ namespace Server.Loader.Systems
 
     internal class Plugins
     {
-        private Configuration configuration = new Configuration();
-        private Cache cache = new Cache();
-        private List<ModDef> serverMods = new List<ModDef>();
-        private List<ModDef> clientMods = new List<ModDef>();
-        private Logger logger = new Logger("SDK");
+        private Configuration configuration = new();
+        private Cache cache = new();
+        private List<ModDef> serverMods = [];
+        private List<ModDef> clientMods = [];
+        private Dictionary<string, IWebApiHook> hooks = [];
+        private Logger logger = new("SDK");
 
-        public IList<ModDef> ClientMods { get { return clientMods; } } 
+        public IList<ModDef> ClientMods => clientMods;
+
+        public IDictionary<string, IWebApiHook> Hooks => hooks;
 
         private void LoadConfiguration(string path)
         {
@@ -84,11 +88,10 @@ namespace Server.Loader.Systems
                     }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 logger.Error(ex.ToString());
             }
-
         }
 
         private void GetMods(List<int>? mods, bool client)
@@ -103,19 +106,19 @@ namespace Server.Loader.Systems
                     ModIds = mods
                 }).Result;
 
-                foreach(var m in modList.Data)
+                foreach (var m in modList.Data)
                 {
                     ModDef def = new();
 
                     def.Description = m.Summary;
                     def.Id = m.Id;
                     def.Name = m.Name;
-                    foreach(var f in m.LatestFiles)
+                    foreach (var f in m.LatestFiles)
                     {
                         if (f.Id != m.MainFileId)
                             continue;
 
-                        if(f.FileStatus == CurseForge.APIClient.Models.Files.FileStatus.Approved)
+                        if (f.FileStatus == CurseForge.APIClient.Models.Files.FileStatus.Approved)
                         {
                             def.Url = f.DownloadUrl;
                             foreach (var hash in f.Hashes)
@@ -129,11 +132,10 @@ namespace Server.Loader.Systems
                         }
                     }
 
-                    if(client)
+                    if (client)
                         clientMods.Add(def);
                     else
                         serverMods.Add(def);
-
                 }
             }
         }
@@ -149,11 +151,12 @@ namespace Server.Loader.Systems
 
                 DownloadServerMods(root);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex.ToString());
             }
         }
+
         public static async Task DownloadFileAsync(string url, string downloadPath)
         {
             HttpClient client = new HttpClient();
@@ -205,6 +208,7 @@ namespace Server.Loader.Systems
             {
                 Directory.Delete(tempExtractPath, true);
             }
+
             Directory.CreateDirectory(tempExtractPath);
 
             // Download the zip file
@@ -229,7 +233,8 @@ namespace Server.Loader.Systems
 
             // Update the artifact directories to point to the new locations
             artifact.Directories.Clear();
-            artifact.Directories.AddRange(topLevelDirectories.Select(dir => Path.Combine("plugins", Path.GetFileName(dir))));
+            artifact.Directories.AddRange(topLevelDirectories.Select(dir =>
+                Path.Combine("plugins", Path.GetFileName(dir))));
 
             // Update the artifact checksum
             artifact.Checksum = def.Checksum;
@@ -239,7 +244,7 @@ namespace Server.Loader.Systems
 
         private void DownloadServerMods(string root)
         {
-            foreach(var def in serverMods)
+            foreach (var def in serverMods)
             {
                 DownloadMod(def);
             }
@@ -254,7 +259,25 @@ namespace Server.Loader.Systems
             File.WriteAllText(filepath, content);
         }
 
-        internal Plugins(RpcManager rpcManager) 
+        private bool DetectWebApiHook(Type plugin, string name)
+        {
+            var property = plugin.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
+            if (property == null)
+            {
+                return false;
+            }
+
+            var instance = property.GetValue(null);
+            if (instance is not IWebApiHook hook)
+            {
+                return false;
+            }
+
+            hooks.Add(name[..^"System".Length].ToLower(), hook);
+            return true;
+        }
+
+        internal Plugins(RpcManager rpcManager)
         {
             // Get the location of the current assembly and its containing directory
             string currentAssemblyLocation = Assembly.GetExecutingAssembly().Location;
@@ -287,9 +310,9 @@ namespace Server.Loader.Systems
                         {
                             System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(plugin.TypeHandle);
 
+                            var hasHook = DetectWebApiHook(plugin, directoryName);
                             rpcManager.ParseAssembly(assembly);
-
-                            logger.Info($"Loaded Plugin: {directoryName}");
+                            logger.Info($"Loaded Plugin{(hasHook ? " + WebApi" : "")}: {directoryName}");
                         }
                         else
                         {
