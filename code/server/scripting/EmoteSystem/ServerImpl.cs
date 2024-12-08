@@ -1,6 +1,7 @@
 ﻿using CurseForge.APIClient.Models.Games;
 using Cyberpunk.Rpc.Client.Plugins;
 using CyberpunkSdk;
+using EmoteSystem;
 
 namespace Cyberpunk.Rpc.Server.Plugins
 {
@@ -17,6 +18,7 @@ namespace Cyberpunk.Rpc.Server.Plugins
 
                 EmoteClient.TriggerEmote(id, player.PuppetId, name);
             }
+            Plugin.Instance.UpdateLastEmote(player.Username, name);
         }
     }
 }
