@@ -18,12 +18,15 @@
     "@mui/material": "^6.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.0.2"
+    "react-error-boundary": "^4.1.2",
+    "react-router": "^7.0.2",
+    "systemjs": "^6.15.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
+    "@types/systemjs": "^6.15.1",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "@vitejs/plugin-react": "^4.3.4",

@@ -1,39 +1,46 @@
 ﻿import {Alert, Card, CardActionArea, Tooltip, Typography} from "@mui/material";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
-export default function Widget() {
+interface EmoteDto {
+    readonly Username: string;
+    readonly Emote: string;
+}
+
+export function Widget() {
     const [username, setUsername] = useState<string>('');
     const [emote, setEmote] = useState<string>('');
+    const load = useRef<boolean>(false);
 
-    useEffect(() => handleRefresh(), [username, emote]);
+    useEffect(() => {
+        if (load.current) {
+            return;
+        }
+        load.current = true;
+        return handleRefresh();
+    }, []);
 
     // NOTE: start an interval to automatically fetch last emote every X s/m/h.
 
     // @ts-ignore
-    const getLastEmote = async () => {
-        const response = await fetch('/api/v1/plugins/emote/');
+    const getLastEmote = async (): Promise<EmoteDto | undefined> => {
+        const response: Response = await fetch('/api/v1/plugins/emote/');
 
         if (!response.ok) {
             return;
         }
-        const json = await response.json();
-
-        return {
-            username: json.Username ?? '',
-            emote: json.Emote ?? '',
-        };
+        return await response.json() as EmoteDto | undefined;
     };
 
     const handleRefresh = () => {
         // @ts-ignore
         async function request() {
-            const data = await getLastEmote();
+            const data: EmoteDto | undefined = await getLastEmote();
 
-            if (lock) {
+            if (!data || lock) {
                 return;
             }
-            setUsername(data.username);
-            setEmote(data.emote);
+            setUsername(data.Username);
+            setEmote(data.Emote);
         }
 
         let lock: boolean = false;
@@ -48,7 +55,7 @@ export default function Widget() {
 
     return (
         <Tooltip title="Click to refresh">
-            <Card>
+            <Card sx={{maxWidth: '200px'}}>
                 <CardActionArea onClick={handleRefresh}>
                     {isEmpty() ?
                         <Alert severity="info">

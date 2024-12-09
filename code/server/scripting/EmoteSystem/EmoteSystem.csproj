@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Admin\dist\**\*">
+        <Content Include="Admin\dist\**\*.*">
             <Link>assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
@@ -27,5 +27,6 @@
 
     <Target Name="Admin" BeforeTargets="Publish">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)\Admin"/>
+        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)\Admin"/>
     </Target>
 </Project>

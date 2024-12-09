@@ -2,27 +2,31 @@
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+    define: {
+        'process.env.NODE_ENV': '"production"',
+    },
+    plugins: [
+        react(),
+    ],
     build: {
-        target: 'modules',
         lib: {
-            name: 'emote',
-            entry: './widget.tsx',
-            formats: ['es'],
+            name: 'widget',
+            entry: './index.ts',
+            formats: ['umd'],
             fileName: 'widget',
         },
         rollupOptions: {
-            // NOTE: Exclude dependencies already declared in Admin webapp.
-            //       This will reduce the bundle of your widget with only the
-            //       minimum required.
             external: [
-                '@emotion/react',
-                '@emotion/styled',
-                '@mui/icons-material',
-                '@mui/material',
                 'react',
-                'react-dom'
+                '@mui/material',
             ],
-        },
+            output: {
+                name: 'Widget',
+                globals: {
+                    'react': 'React',
+                    '@mui/material': 'MaterialUI',
+                }
+            }
+        }
     },
-    plugins: [react()],
 });
