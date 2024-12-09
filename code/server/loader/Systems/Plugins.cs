@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using CurseForge.APIClient.Models.Mods;
 using CyberpunkSdk;
@@ -43,11 +44,14 @@ namespace Server.Loader.Systems
         private List<ModDef> serverMods = [];
         private List<ModDef> clientMods = [];
         private Dictionary<string, IWebApiHook> hooks = [];
+        private Dictionary<string, string> assets = [];
         private Logger logger = new("SDK");
 
         public IList<ModDef> ClientMods => clientMods;
 
         public IDictionary<string, IWebApiHook> Hooks => hooks;
+        
+        public IDictionary<string, string> Assets => assets;
 
         private void LoadConfiguration(string path)
         {
@@ -273,7 +277,24 @@ namespace Server.Loader.Systems
                 return false;
             }
 
-            hooks.Add(name[..^"System".Length].ToLower(), hook);
+            hooks.Add(name, hook);
+            return true;
+        }
+
+        private bool DetectAssets(string path, string name)
+        {
+            path = Path.Combine(path, "Assets");
+
+            if (!Directory.Exists(path))
+            {
+                return false;
+            }
+
+            if (Directory.GetFiles(path).Length == 0)
+            {
+                return false;
+            }
+            assets.Add(path, name);
             return true;
         }
 
@@ -308,11 +329,15 @@ namespace Server.Loader.Systems
 
                         if (plugin != null)
                         {
-                            System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(plugin.TypeHandle);
+                            RuntimeHelpers.RunClassConstructor(plugin.TypeHandle);
 
-                            var hasHook = DetectWebApiHook(plugin, directoryName);
                             rpcManager.ParseAssembly(assembly);
-                            logger.Info($"Loaded Plugin{(hasHook ? " + WebApi" : "")}: {directoryName}");
+                            var pluginName = directoryName[..^"System".Length].ToLower();
+                            var hasHook = DetectWebApiHook(plugin, pluginName);
+                            var hasAssets = DetectAssets(directory, pluginName);
+                            logger.Info($"Loaded Plugin" +
+                                        $"{(hasHook ? " + WebApi" : "")}" +
+                                        $"{(hasAssets ? " + Assets" : "")}: {directoryName}");
                         }
                         else
                         {

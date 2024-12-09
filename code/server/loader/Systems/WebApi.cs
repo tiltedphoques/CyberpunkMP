@@ -42,6 +42,7 @@ namespace Server.Loader.Systems
                 .WithModule(new ActionModule("/api/v1/mods/", HttpVerbs.Get, HandleModsRoute))
                 .WithModule(new ActionModule("/api/v1/statistics/", HttpVerbs.Get, HandleStatistics));
 
+            RegisterAssets(server);
             RegisterHooks(server);
             // NOTE: must be registered after hooks.
             server.WithModule(new ActionModule("/api/v1/plugins/", HttpVerbs.Get, HandleListPlugins));
@@ -57,6 +58,17 @@ namespace Server.Loader.Systems
                 server.WithWebApi(
                     baseRoute: $"/api/v1/plugins/{name}",
                     configure: m => m.WithController(controller));
+            }
+        }
+
+        private void RegisterAssets(WebServer server)
+        {
+            foreach (var (path, name) in Plugins.Assets)
+            {
+                server.WithStaticFolder(
+                    baseRoute: $"/api/v1/plugins/{name}/assets/",
+                    fileSystemPath: path,
+                    isImmutable: true);
             }
         }
 

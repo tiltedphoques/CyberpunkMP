@@ -5,6 +5,7 @@
   "author": "Rayshader",
   "main": "widget.tsx",
   "scripts": {
+    "postinstall": "vite build",
     "dev": "vite",
     "start": "vite",
     "build": "vite build"
