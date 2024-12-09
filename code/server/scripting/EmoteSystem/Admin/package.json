@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "Rayshader",
-  "main": "widget.tsx",
   "scripts": {
-    "postinstall": "vite build",
     "dev": "vite",
     "start": "vite",
     "build": "vite build"

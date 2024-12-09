@@ -68,7 +68,12 @@ namespace Server.Loader.Systems
                 server.WithStaticFolder(
                     baseRoute: $"/api/v1/plugins/{name}/assets/",
                     fileSystemPath: path,
-                    isImmutable: true);
+#if DEBUG
+                    isImmutable: false,
+#else
+                    isImmutable: true,
+#endif
+                    configure: m => { m.AddCustomMimeType(".umd.js", "application/javascript"); });
             }
         }
 
