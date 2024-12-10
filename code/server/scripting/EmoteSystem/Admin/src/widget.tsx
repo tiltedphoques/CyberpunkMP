@@ -1,5 +1,8 @@
 ﻿import {Alert, Card, CardActionArea, Tooltip, Typography} from "@mui/material";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
+// @ts-ignore
+import {useToasts} from "App";
+import {StatusCodes} from "http-status-codes";
 
 interface EmoteDto {
     readonly Username: string;
@@ -7,57 +10,48 @@ interface EmoteDto {
 }
 
 export function Widget() {
+    const showToast = useToasts();
     const [username, setUsername] = useState<string>('');
     const [emote, setEmote] = useState<string>('');
-    const load = useRef<boolean>(false);
 
     useEffect(() => {
-        if (load.current) {
-            return;
-        }
-        load.current = true;
         return handleRefresh();
     }, []);
 
     // NOTE: start an interval to automatically fetch last emote every X s/m/h.
 
-    // @ts-ignore
     const getLastEmote = async (): Promise<EmoteDto | undefined> => {
         const response: Response = await fetch('/api/v1/plugins/emote/');
 
         if (!response.ok) {
+            if (response.status !== StatusCodes.NOT_FOUND) {
+                showToast({
+                    style: 'error',
+                    message: 'Failed to request Emote API',
+                });
+            }
             return;
         }
-        return await response.json() as EmoteDto | undefined;
+        return await response.json();
     };
 
     const handleRefresh = () => {
-        // @ts-ignore
-        async function request() {
-            const data: EmoteDto | undefined = await getLastEmote();
-
-            if (!data || lock) {
+        getLastEmote().then(data => {
+            if (!data) {
                 return;
             }
             setUsername(data.Username);
             setEmote(data.Emote);
-        }
-
-        let lock: boolean = false;
-
-        request();
-        return () => {
-            lock = true;
-        };
+        })
     }
 
-    const isEmpty = () => username.length === 0 && emote.length === 0;
+    const isEmpty: boolean = username.length === 0 && emote.length === 0;
 
     return (
         <Tooltip title="Click to refresh">
             <Card sx={{maxWidth: '200px'}}>
                 <CardActionArea onClick={handleRefresh}>
-                    {isEmpty() ?
+                    {isEmpty ?
                         <Alert severity="info">
                             No emote played for now...
                         </Alert> :
