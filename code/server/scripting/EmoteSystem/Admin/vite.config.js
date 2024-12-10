@@ -19,12 +19,14 @@ export default defineConfig({
             external: [
                 'react',
                 '@mui/material',
+                'App'
             ],
             output: {
                 name: 'Widget',
                 globals: {
                     'react': 'React',
-                    '@mui/material': 'MaterialUI',
+                    '@mui/material': 'MUI',
+                    'App': 'App',
                 }
             }
         }

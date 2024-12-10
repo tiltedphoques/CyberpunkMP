@@ -1,4 +1,5 @@
-import * as React from 'react';
+import {useState} from 'react';
+import {Route, Routes} from 'react-router';
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
@@ -7,7 +8,7 @@ import {ThemeProvider} from "@mui/material";
 import {theme} from "./Theme.ts";
 import Toolbar from "./Toolbar/Toolbar.tsx";
 import Drawer, {drawerWidth} from "./Drawer/Drawer.tsx";
-import {Route, Routes} from "react-router";
+import ToastProvider from "./Toast/ToastProvider.tsx";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
 import Plugins from "./Pages/Plugins/Plugins.tsx";
 import Settings from "./Pages/Settings/Settings.tsx";
@@ -47,7 +48,7 @@ export interface ToolbarProps {
 }
 
 export default function App() {
-  const [openDrawer, setOpenDrawer] = React.useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -59,32 +60,37 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}
-                   defaultMode="dark"
+                   defaultMode="system"
                    noSsr>
-      <Box sx={{height: '100%', display: 'flex'}}>
-        <CssBaseline/>
+      <ToastProvider>
+        <Box sx={{height: '100%', display: 'flex'}}>
+          <CssBaseline/>
 
-        <AppBar position="fixed" color="primary" enableColorOnDark open={openDrawer}>
-          <Toolbar open={openDrawer} onOpenDrawer={handleDrawerOpen}/>
-        </AppBar>
+          <AppBar position="fixed"
+                  color="primary"
+                  enableColorOnDark
+                  open={openDrawer}>
+            <Toolbar open={openDrawer} onOpenDrawer={handleDrawerOpen}/>
+          </AppBar>
 
-        <Drawer open={openDrawer} onCloseDrawer={handleDrawerClose}/>
+          <Drawer open={openDrawer} onCloseDrawer={handleDrawerClose}/>
 
-        <Box component="main"
-             sx={{
-               overflowY: 'auto',
-               flexGrow: 1,
-               p: 3,
-               mt: '64px'
-             }}>
-          <Routes>
-            <Route index element={<Dashboard/>}/>
-            <Route path="plugins" element={<Plugins/>}/>
-            <Route path="settings" element={<Settings/>}/>
-            <Route path="about" element={<About/>}/>
-          </Routes>
+          <Box component="main"
+               sx={{
+                 overflowY: 'auto',
+                 flexGrow: 1,
+                 p: 3,
+                 mt: '64px'
+               }}>
+            <Routes>
+              <Route index element={<Dashboard/>}/>
+              <Route path="plugins" element={<Plugins/>}/>
+              <Route path="settings" element={<Settings/>}/>
+              <Route path="about" element={<About/>}/>
+            </Routes>
+          </Box>
         </Box>
-      </Box>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
