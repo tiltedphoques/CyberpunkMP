@@ -18,11 +18,11 @@ target("Launcher")
 
         os.cd("code/launcher")
 
-        local npm = is_host("windows") and "npm.cmd" or "npm"
+        local pnpm = is_host("windows") and "pnpm.cmd" or "pnpm"
 
-        -- Run npm commands in the root directory
-        run_install(npm)
-        run_command(npm, {"run", "build"})
+        -- Run pnpm commands in the root directory
+        run_install(pnpm)
+        run_command(pnpm, {"run", "build"})
 
         local electron_dir = path.join(os.curdir(), "electron")
         if not os.isdir(electron_dir) then
@@ -31,9 +31,9 @@ target("Launcher")
 
         os.cd(electron_dir)
 
-        -- Run npm commands in the electron directory
-        run_install(npm)
-        run_command(npm, {"run", "build:electron"})
+        -- Run pnpm commands in the electron directory
+        run_install(pnpm)
+        run_command(pnpm, {"run", "build:electron"})
 
         -- Copy produced files
         local src = path.join(electron_dir, "out", "win-unpacked")
