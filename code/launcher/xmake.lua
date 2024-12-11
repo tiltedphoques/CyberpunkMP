@@ -9,11 +9,11 @@ target("Launcher")
         end
 
         local function run_install(cmd)
-            if os.getenv("IS_CI") == "true" then
-                run_command(cmd, {"ci"})
-            else
-                run_command(cmd, {"install"})
-            end
+            --if os.getenv("IS_CI") == "true" then
+            --    run_command(cmd, {"ci"})
+            --else
+            run_command(cmd, {"install"})
+            --end
         end
 
         os.cd("code/launcher")

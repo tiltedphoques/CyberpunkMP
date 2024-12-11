@@ -7,8 +7,10 @@ on:
       - main
       - dev
 
-env:
-  IS_CI: true
+# NOTE: pnpm doesn't support command 'ci' for now.
+#
+#env:
+#  IS_CI: true
 
 jobs:
   build:
