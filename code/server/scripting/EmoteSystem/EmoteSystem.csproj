@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <Target Name="Admin" BeforeTargets="Publish">
-        <Exec Command="npm install" WorkingDirectory="$(ProjectDir)\Admin"/>
-        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)\Admin"/>
+        <Exec Command="pnpm install" WorkingDirectory="$(ProjectDir)\Admin"/>
+        <Exec Command="pnpm run build" WorkingDirectory="$(ProjectDir)\Admin"/>
     </Target>
 </Project>
