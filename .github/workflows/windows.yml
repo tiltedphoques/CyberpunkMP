@@ -61,6 +61,10 @@ jobs:
         with:
           version: 9
 
+      # Fix long path issue
+      - name: Configure pnpm
+        run: pnpm config set virtual-store-dir-max-length=50
+
       # Install node
       - uses: actions/setup-node@v4
         with:
