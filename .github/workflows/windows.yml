@@ -22,55 +22,61 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: 'Checkout submodules'
-      run: |
-        git config --global url."https://github.com/".insteadOf "git@github.com:"
-        git submodule sync --recursive
-        git submodule update --init --force --recursive --depth=1
+      - name: 'Checkout submodules'
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule sync --recursive
+          git submodule update --init --force --recursive --depth=1
 
-    - name: 'Cache xmake dependencies'
-      uses: actions/cache@v4
-      with:
-        path: ~/AppData/Local/.xmake/packages
-        key: ${{ runner.os }}-xmake-packages-${{ hashFiles('**/xmake.lua') }}
-        restore-keys: |
-          ${{ runner.os }}-xmake-packages-
+      - name: 'Cache xmake dependencies'
+        uses: actions/cache@v4
+        with:
+          path: ~/AppData/Local/.xmake/packages
+          key: ${{ runner.os }}-xmake-packages-${{ hashFiles('**/xmake.lua') }}
+          restore-keys: |
+            ${{ runner.os }}-xmake-packages-
 
-    # Install xmake
-    - name: 'Setup xmake'
-      uses: xmake-io/github-action-setup-xmake@v1
-      with:
-        xmake-version: 2.9.6 # Sync with cache key too
-        actions-cache-folder: '.xmake-cache' # This doesn't cache dependencies, only xmake itself
-        actions-cache-key: ${{ runner.os }}-xmake-cache-2.9.6
+      # Install xmake
+      - name: 'Setup xmake'
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: 2.9.6 # Sync with cache key too
+          actions-cache-folder: '.xmake-cache' # This doesn't cache dependencies, only xmake itself
+          actions-cache-key: ${{ runner.os }}-xmake-cache-2.9.6
 
-    - name: 'Configure xmake and install dependencies'
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes
+      - name: 'Configure xmake and install dependencies'
+        run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --vs_sdkver=10.0.19041.0 --yes
 
-    # Build the game
-    - name: 'Build with xmake'
-      run: xmake -y
+      # Build the game
+      - name: 'Build with xmake'
+        run: xmake -y
 
-    # Install node
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-        cache-dependency-path: |
-          code/launcher/package-lock.json
-          code/launcher/electron/package-lock.json
+      # Install pnpm for better disk/cache performance
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-    - name: 'Generate build'
-      run: xmake install -o distrib
+      # Install node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: |
+            code/launcher/pnpm-lock.yaml
+            code/launcher/electron/pnpm-lock.yaml
 
-    - name: 'Package build'
-      run: xmake pack
+      - name: 'Generate build'
+        run: xmake install -o distrib
 
-    - name: 'Upload Artifact'
-      if: github.event_name == 'push'
-      uses: actions/upload-artifact@v4
-      with:
-        name: build
-        path: build/xpack/Cyberpunk Multiplayer/Artifacts.zip
+      - name: 'Package build'
+        run: xmake pack
+
+      - name: 'Upload Artifact'
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build/xpack/Cyberpunk Multiplayer/Artifacts.zip
