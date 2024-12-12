@@ -1,5 +1,4 @@
-import {PluginData, PluginDto, WidgetData} from "./WebApiData.ts";
-import Module = System.Module;
+import {PluginDto, PluginModule} from "./WebApiData.ts";
 
 export class WebApiError extends Error {
   constructor(readonly type: string) {
@@ -8,7 +7,7 @@ export class WebApiError extends Error {
 }
 
 export class WebApiClient {
-  public static async getPlugins(): Promise<PluginData[]> {
+  public static async getPlugins(): Promise<PluginModule[]> {
     const response: Response = await fetch('/api/v1/plugins');
 
     if (!response.ok) {
@@ -18,22 +17,21 @@ export class WebApiClient {
 
     return plugins.map(plugin => {
       return {
-        name: plugin.Name
+        manifest: {
+          name: plugin.Name,
+          url: `/api/v1/plugins/${plugin.Name}`,
+          author: '',
+          version: '',
+        }
       };
     });
   }
 
-  public static async getWidget(name: string): Promise<WidgetData | undefined> {
+  public static async getWidget(name: string): Promise<PluginModule | undefined> {
     const url: string = `/api/v1/plugins/${name}/assets/widget.umd.js`;
 
     try {
-      const module: Module = await System.import(url);
-
-      return {
-        url: url,
-        name: name,
-        module: module
-      };
+      return await System.import(url) as PluginModule;
     } catch (error) {
       console.error(error);
     }

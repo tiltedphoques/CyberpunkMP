@@ -1,4 +1,4 @@
-﻿import {Alert, Card, CardActionArea, Tooltip, Typography} from "@mui/material";
+﻿import {Alert, Box, ButtonBase, Tooltip, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 // @ts-ignore
 import {useToasts} from "App";
@@ -49,17 +49,17 @@ export function Widget() {
 
     return (
         <Tooltip title="Click to refresh">
-            <Card sx={{maxWidth: '200px'}}>
-                <CardActionArea onClick={handleRefresh}>
-                    {isEmpty ?
-                        <Alert severity="info">
-                            No emote played for now...
-                        </Alert> :
-                        <Typography variant="body2" color="text.secondary">
-                            Last emote was {emote} by {username}.
-                        </Typography>}
-                </CardActionArea>
-            </Card>
+            <ButtonBase component={Box}
+                        sx={{width: '100%', height: '100%'}}
+                        onClick={handleRefresh}>
+                {isEmpty ?
+                    <Alert severity="info">
+                        No emote played for now...
+                    </Alert> :
+                    <Typography variant="body2" color="text.secondary">
+                        Last emote was {emote} by {username}.
+                    </Typography>}
+            </ButtonBase>
         </Tooltip>
     );
 }

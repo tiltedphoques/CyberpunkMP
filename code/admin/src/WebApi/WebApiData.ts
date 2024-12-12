@@ -1,23 +1,33 @@
-import {ReactElement} from "react";
-import Module = System.Module;
+import {Layout} from "react-grid-layout";
+
 
 export interface PluginDto {
   readonly Name: string;
 }
 
-export interface PluginData {
+export interface PluginManifest {
   name: string;
-  widget?: WidgetData;
-  settings?: PluginSettings;
+  url: string;
+  author: string;
+  version: string;
 }
 
 export interface PluginSettings {
   [key: string]: any;
 }
 
-export interface WidgetData {
-  url: string;
-  name: string;
-  module?: Module;
-  element?: ReactElement;
+export interface PluginWidget {
+  component: any;
+  layout: Partial<Layout>;
+}
+
+export interface PluginPage {
+
+}
+
+export interface PluginModule {
+  manifest: PluginManifest;
+  settings?: PluginSettings;
+  widget?: PluginWidget;
+  page?: PluginPage;
 }

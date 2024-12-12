@@ -4,10 +4,10 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import {Fragment, useEffect, useState} from "react";
 import {ShowToastCallback} from "../../Toast/Toast.ts";
-import {Settings, Widgets} from "@mui/icons-material";
+import {InsertDriveFile, Settings, Widgets} from "@mui/icons-material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItem from "@mui/material/ListItem";
-import {PluginData} from "../../WebApi/WebApiData.ts";
+import {PluginModule} from "../../WebApi/WebApiData.ts";
 import {WebApiError} from "../../WebApi/WebApiClient.ts";
 import {useToasts} from "../../Toast/ToastReducer.ts";
 import {WebApiService} from "../../WebApi/WebApiService.ts";
@@ -16,7 +16,7 @@ export default function Plugins() {
   const showToast: ShowToastCallback = useToasts();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [plugins, setPlugins] = useState<PluginData[]>([]);
+  const [plugins, setPlugins] = useState<PluginModule[]>([]);
 
   useEffect(() => {
     WebApiService.getPlugins().then(setPlugins).catch((e) => {
@@ -63,9 +63,10 @@ export default function Plugins() {
                     sx={{maxHeight: '48px', p: '8px 0'}}>
             <ListItemIcon sx={{mr: '20px', gap: '8px'}}>
               {!!plugin.widget ? <Tooltip title="Widget"><Widgets/></Tooltip> : <Box width={24}/>}
+              {!!plugin.page ? <Tooltip title="Page"><InsertDriveFile/></Tooltip> : <Box width={24}/>}
               {!!plugin.settings ? <Tooltip title="Settings"><Settings/></Tooltip> : <Box width={24}/>}
             </ListItemIcon>
-            <ListItemText primary={plugin.name}/>
+            <ListItemText primary={plugin.manifest.name}/>
           </ListItem>
         ))}
       </Card>

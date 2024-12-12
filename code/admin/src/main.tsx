@@ -4,6 +4,8 @@ import {BrowserRouter} from "react-router";
 import {createRoot} from 'react-dom/client';
 import * as MUI from '@mui/material';
 import './index.css';
+import '../node_modules/react-grid-layout/css/styles.css';
+import '../node_modules/react-resizable/css/styles.css';
 import App from './App.tsx';
 import {useToasts} from "./Toast/ToastReducer.ts";
 
