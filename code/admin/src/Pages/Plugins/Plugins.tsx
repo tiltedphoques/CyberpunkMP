@@ -1,23 +1,25 @@
 import Box from "@mui/material/Box";
-import {Card, Tooltip} from "@mui/material";
+import {Card, Skeleton, Tooltip} from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import {PluginData, useWebApi, WebApiError, WebApiService} from "../../Services/WebApiService.ts";
-import {useEffect, useState} from "react";
-import {useToasts} from "../../Toast/ToastProvider.tsx";
-import {ShowToastCallback} from "../../Toast/ToastReducer.ts";
+import {Fragment, useEffect, useState} from "react";
+import {ShowToastCallback} from "../../Toast/Toast.ts";
 import {Settings, Widgets} from "@mui/icons-material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItem from "@mui/material/ListItem";
+import {PluginData} from "../../WebApi/WebApiData.ts";
+import {WebApiError} from "../../WebApi/WebApiClient.ts";
+import {useToasts} from "../../Toast/ToastReducer.ts";
+import {WebApiService} from "../../WebApi/WebApiService.ts";
 
 export default function Plugins() {
-  const webApi: WebApiService = useWebApi();
   const showToast: ShowToastCallback = useToasts();
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [plugins, setPlugins] = useState<PluginData[]>([]);
 
   useEffect(() => {
-    webApi.getPlugins().then(setPlugins).catch((e) => {
+    WebApiService.getPlugins().then(setPlugins).catch((e) => {
       const error: WebApiError = e as WebApiError;
 
       if (error.type === 'plugins') {
@@ -33,7 +35,7 @@ export default function Plugins() {
           duration: 5000
         });
       }
-    });
+    }).finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -47,14 +49,21 @@ export default function Plugins() {
           List of all plugins installed on the server:
         </Typography>
 
+        {isLoading && <Fragment>
+            <Skeleton variant="rectangular" height={48} sx={{m: '8px 0'}}/>
+            <Skeleton variant="rectangular" height={48} sx={{m: '8px 0'}}/>
+            <Skeleton variant="rectangular" height={48} sx={{m: '8px 0'}}/>
+            <Skeleton variant="rectangular" height={48} sx={{m: '8px 0'}}/>
+        </Fragment>}
+
         {plugins.map((plugin, i) => (
           <ListItem key={i}
                     component="a"
                     disablePadding
                     sx={{maxHeight: '48px', p: '8px 0'}}>
             <ListItemIcon sx={{mr: '20px', gap: '8px'}}>
-              {!!plugin.widget ? <Tooltip title="Widget"><Widgets/></Tooltip> : <Box sx={{width: '24px'}}/>}
-              {!!plugin.settings ? <Tooltip title="Settings"><Settings/></Tooltip> : <Box sx={{width: '24px'}}/>}
+              {!!plugin.widget ? <Tooltip title="Widget"><Widgets/></Tooltip> : <Box width={24}/>}
+              {!!plugin.settings ? <Tooltip title="Settings"><Settings/></Tooltip> : <Box width={24}/>}
             </ListItemIcon>
             <ListItemText primary={plugin.name}/>
           </ListItem>

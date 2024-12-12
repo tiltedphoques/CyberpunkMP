@@ -1,27 +1,69 @@
-export type ToastStyle = 'info' | 'success' | 'warning' | 'error';
+import {ActionDispatch, createContext, useContext, useReducer} from "react";
+import {equalsToast, ShowToastCallback, Toast, ToastAction, ToastState} from "./Toast.ts";
 
-export type ShowToastCallback = (toast: Toast) => void;
+export const ToastContext = createContext<ToastState | null>(null);
+export const ToastDispatchContext = createContext<ActionDispatch<[action: ToastAction]> | null>(null);
 
-export interface Toast {
-  readonly message: string;
-  readonly style?: ToastStyle;
-  readonly duration?: number;
-  readonly onClosed?: () => void;
+export function useToasts(): ShowToastCallback {
+  const dispatch = useContext(ToastDispatchContext);
+
+  return (toast: Toast) => {
+    dispatch!({
+      type: 'open',
+      toast: {
+        ...toast,
+        style: toast.style ?? 'info',
+        duration: toast.duration ?? 4000,
+      }
+    });
+  };
 }
 
-export interface ToastState {
-  readonly toast?: Toast;
-  readonly toasts: Toast[];
+export function reduceToasts() {
+  return useReducer(toastReducer, toastState);
 }
 
-export interface ToastAction {
-  readonly type: 'open' | 'close';
-  readonly toast?: Toast;
+const toastState: ToastState = {
+  toast: undefined,
+  toasts: []
+};
+
+function toastReducer(state: ToastState, action: ToastAction): ToastState {
+  if (action.type === 'open') {
+    return queueToast(state, action.toast);
+  } else if (action.type === 'close') {
+    return closeToast(state);
+  }
+  throw new Error(`ToastProvider: unknown action "${action.type}".`);
 }
 
-export function equalsToast(a?: Toast, b?: Toast): boolean {
-  return a?.style === b?.style &&
-    a?.duration === b?.duration &&
-    a?.message === b?.message &&
-    a?.onClosed === b?.onClosed;
+function queueToast(state: ToastState, toast?: Toast): ToastState {
+  if (!toast) {
+    return state;
+  }
+  const lastToast: Toast | undefined = state.toasts[state.toasts.length - 1] ?? state.toast;
+
+  if (equalsToast(lastToast, toast)) {
+    return state;
+  }
+  if (state.toast) {
+    return {
+      toast: state.toast,
+      toasts: [...state.toasts, toast]
+    }
+  }
+  return {
+    toast: toast,
+    toasts: []
+  };
+}
+
+function closeToast(state: ToastState) {
+  let toasts: Toast[] = state.toasts;
+  let toast: Toast | undefined = toasts.splice(0, 1)[0];
+
+  return {
+    toast: toast,
+    toasts: [...toasts]
+  };
 }
