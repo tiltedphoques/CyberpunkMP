@@ -7,7 +7,7 @@ export default function About() {
   return (
     <Box className="page center">
       <Card sx={{width: '500px', m: 'auto'}}>
-        <Typography variant="h4" sx={{pb: '24px'}}>
+        <Typography variant="h4" sx={{mb: '24px'}}>
           About
         </Typography>
 

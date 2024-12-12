@@ -1,13 +1,9 @@
 import Box from "@mui/material/Box";
-import {createElement, ReactElement, Suspense, useEffect, useState} from "react";
+import {ReactElement, Suspense, useEffect, useState} from "react";
 import {ErrorBoundary} from "react-error-boundary";
 import {Alert, CircularProgress} from "@mui/material";
+import {useWebApi, WebApiError, WebApiService} from "../../Services/WebApiService.ts";
 import {useToasts} from "../../Toast/ToastProvider.tsx";
-import Module = System.Module;
-
-interface PluginDto {
-  readonly Name: string;
-}
 
 interface WidgetData {
   readonly url: string;
@@ -16,52 +12,36 @@ interface WidgetData {
 }
 
 export default function Dashboard() {
+  const webApi: WebApiService = useWebApi();
+
   const [widgets, setWidgets] = useState<WidgetData[]>([]);
   const showToast = useToasts();
 
   useEffect(() => {
-    async function getWidgets() {
-      const plugins = await getPlugins();
-      const widgets: WidgetData[] = [];
+    webApi.getPlugins().then(plugins => {
+      const widgets = plugins
+        .map(plugin => plugin.widget)
+        .filter(widget => !!widget);
 
-      for (const plugin of plugins) {
-        const url: string = `/api/v1/plugins/${plugin.Name}/assets/widget.umd.js`;
-
-        try {
-          const module: Module = await System.import(url);
-          const element: ReactElement = createElement(module.default);
-
-          widgets.push({
-            url: url,
-            name: plugin.Name,
-            element: element,
-          });
-        } catch (error) {
-          showToast({
-            style: 'error',
-            message: `Failed to load widget of plugin ${plugin.Name}:\n${error}`,
-          });
-        }
-      }
       setWidgets(widgets);
-    }
+    }).catch((e) => {
+      const error: WebApiError = e as WebApiError;
 
-    getWidgets();
+      if (error.type === 'plugins') {
+        showToast({
+          style: 'error',
+          message: 'Failed to request API. Are you sure the server is running?',
+          duration: 5000
+        });
+      } else {
+        showToast({
+          style: 'error',
+          message: `Unknown error: ${error.message}.`,
+          duration: 5000
+        });
+      }
+    });
   }, []);
-
-  const getPlugins = async (): Promise<PluginDto[]> => {
-    const response: Response = await fetch('/api/v1/plugins');
-
-    if (!response.ok) {
-      showToast({
-        style: 'error',
-        message: 'Failed to request API. Are you sure the server is running?',
-        duration: 5000
-      });
-      return [];
-    }
-    return await response.json() as PluginDto[];
-  }
 
   return (
     <Box className="page center">

@@ -1,5 +1,7 @@
 export type ToastStyle = 'info' | 'success' | 'warning' | 'error';
 
+export type ShowToastCallback = (toast: Toast) => void;
+
 export interface Toast {
   readonly message: string;
   readonly style?: ToastStyle;
