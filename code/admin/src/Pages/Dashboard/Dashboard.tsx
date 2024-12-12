@@ -44,7 +44,7 @@ export default function Dashboard() {
          sx={{height: '100%', padding: 0}}>
       {isLoading && <CircularProgress/>}
 
-      <WidgetGrid widgets={plugins}/>
+      <WidgetGrid plugins={plugins}/>
     </Box>
   );
 }

@@ -1,14 +1,15 @@
 import RGL, {Layout, ReactGridLayoutProps, WidthProvider, WidthProviderProps} from "react-grid-layout";
-import {PluginModule, PluginWidget} from "../../WebApi/WebApiData.ts";
+import {PluginManifest, PluginModule, PluginWidget} from "../../WebApi/WebApiData.ts";
 import {Component, createElement, Suspense, useEffect, useRef, useState} from "react";
 import {Alert, Card, CircularProgress} from "@mui/material";
 import {ErrorBoundary} from "react-error-boundary";
+import {AppService} from "../../AppService.ts";
 
 const GridLayout = WidthProvider(RGL);
 type GridLayoutComponent = Component<ReactGridLayoutProps & WidthProviderProps, any, any>;
 
 interface WidgetGridProps {
-  readonly widgets: PluginModule[];
+  readonly plugins: PluginModule[];
 }
 
 interface WidgetLayout {
@@ -17,13 +18,25 @@ interface WidgetLayout {
   readonly layout: Layout;
 }
 
-export default function WidgetGrid({widgets: plugins}: WidgetGridProps) {
+export default function WidgetGrid({plugins}: WidgetGridProps) {
   const MARGIN: number = 24;
   const CELL_SIZE: number = 64;
 
   const root = useRef<GridLayoutComponent | null>(null);
   const [columns, setColumns] = useState<number>(28);
   const [grid, setGrid] = useState<WidgetLayout[]>([]);
+
+  useEffect(() => {
+    const layouts: Layout[] = AppService.loadLayout();
+    const grid: WidgetLayout[] = plugins.map((plugin, i) => {
+      const key: string = getLayoutKey(plugin.manifest);
+      const layout: Layout | undefined = layouts.find(cache => cache.i === key);
+
+      return createLayout(plugin, layout, i);
+    });
+
+    setGrid(grid);
+  }, [plugins]);
 
   useEffect(() => {
     if (!root.current) {
@@ -37,27 +50,32 @@ export default function WidgetGrid({widgets: plugins}: WidgetGridProps) {
     setColumns(Math.ceil(width / CELL_SIZE));
   }, [root]);
 
-  useEffect(() => {
-    const layouts: WidgetLayout[] = plugins.map((plugin, i) => {
-      const widget: PluginWidget = plugin.widget!;
-      const layout: Layout = {
-        ...widget.layout,
-        i: `${plugin.manifest.author}/${plugin.manifest.name}`,
-        x: 0,
-        y: i,
-        w: widget.layout.minW ?? 4,
-        h: widget.layout.minH ?? 4,
-      };
+  const getLayoutKey = (manifest: PluginManifest): string => {
+    return `${manifest.author}/${manifest.name}`;
+  }
 
-      return {
-        key: layout.i,
-        component: createElement(widget.component),
-        layout: layout
-      } as WidgetLayout;
-    });
+  const createLayout = (plugin: PluginModule, cache: Layout | undefined, i: number): WidgetLayout => {
+    const widget: PluginWidget = plugin.widget!;
+    const layout: Layout = {
+      ...widget.layout,
+      i: getLayoutKey(plugin.manifest),
+      x: 0,
+      y: i,
+      w: widget.layout.minW ?? 4,
+      h: widget.layout.minH ?? 4,
+      ...cache
+    };
 
-    setGrid(layouts);
-  }, [plugins]);
+    return {
+      key: layout.i,
+      component: createElement(widget.component),
+      layout: layout
+    } as WidgetLayout;
+  }
+
+  const handleLayout = (layout: Layout[]) => {
+    AppService.saveLayout(layout);
+  };
 
   const layout: Layout[] = grid.map(item => item.layout);
 
@@ -65,13 +83,14 @@ export default function WidgetGrid({widgets: plugins}: WidgetGridProps) {
     <GridLayout
       ref={root}
       className="layout"
-      layout={layout}
-      isDraggable
-      isResizable
       margin={[MARGIN, MARGIN]}
       containerPadding={[0, 0]}
       cols={columns}
       rowHeight={CELL_SIZE}
+      layout={layout}
+      isDraggable
+      isResizable
+      onLayoutChange={handleLayout}
     >
       {grid.map(widget => (
         <Card key={widget.key}>
