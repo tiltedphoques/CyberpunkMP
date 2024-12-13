@@ -1,4 +1,4 @@
-import {PluginDto, PluginModule} from "./WebApiData.ts";
+import {PluginDto, PluginModule} from "../Data/PluginData.ts";
 
 export class WebApiError extends Error {
   constructor(readonly type: string) {

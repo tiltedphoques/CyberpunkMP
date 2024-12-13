@@ -1,6 +1,5 @@
 import {Layout} from "react-grid-layout";
 
-
 export interface PluginDto {
   readonly Name: string;
 }
@@ -12,9 +11,11 @@ export interface PluginManifest {
   version: string;
 }
 
+/*
 export interface PluginSettings {
   [key: string]: any;
 }
+*/
 
 export interface PluginWidget {
   component: any;
@@ -27,7 +28,7 @@ export interface PluginPage {
 
 export interface PluginModule {
   manifest: PluginManifest;
-  settings?: PluginSettings;
+  //settings?: PluginSettings;
   widget?: PluginWidget;
   page?: PluginPage;
 }

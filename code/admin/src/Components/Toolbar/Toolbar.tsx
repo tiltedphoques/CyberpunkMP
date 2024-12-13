@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import ThemeSwitch from "./ThemeSwitch.tsx";
-import {ToolbarProps} from "../App.tsx";
+import {ToolbarProps} from "../../App.tsx";
 
 export default function Toolbar({open, onOpenDrawer}: ToolbarProps) {
   return (

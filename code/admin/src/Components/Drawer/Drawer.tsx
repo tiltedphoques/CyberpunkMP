@@ -1,5 +1,5 @@
 import IconButton from "@mui/material/IconButton";
-import {theme} from "../Theme.ts";
+import {theme} from "../../Theme.ts";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Divider from "@mui/material/Divider";
@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 import {CSSObject, styled, Theme} from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import {ToolbarProps} from "../App.tsx";
+import {ToolbarProps} from "../../App.tsx";
 import {createElement, Fragment} from "react";
 
 export const drawerWidth = 240;

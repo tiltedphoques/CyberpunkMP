@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Route, Routes} from 'react-router';
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -6,13 +6,19 @@ import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from "@mui/material";
 import {theme} from "./Theme.ts";
-import Toolbar from "./Toolbar/Toolbar.tsx";
-import Drawer, {drawerWidth} from "./Drawer/Drawer.tsx";
-import ToastProvider from "./Toast/ToastProvider.tsx";
+import Toolbar from "./Components/Toolbar/Toolbar.tsx";
+import Drawer, {drawerWidth} from "./Components/Drawer/Drawer.tsx";
+import ToastProvider from "./Components/Toast/ToastProvider.tsx";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
 import Plugins from "./Pages/Plugins/Plugins.tsx";
 import Settings from "./Pages/Settings/Settings.tsx";
 import About from "./Pages/About/About.tsx";
+import {useAppDispatch, useAppSelector} from "./Stores/AppStore.ts";
+import {PluginModule} from "./Data/PluginData.ts";
+import {WebApiClient, WebApiError} from "./Clients/WebApiClient.ts";
+import {loadPlugins} from "./Stores/PluginStore.ts";
+import {loadLayouts} from './Stores/StorageStore.ts';
+import {showToast} from './Stores/ToastStore.ts';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -48,13 +54,52 @@ export interface ToolbarProps {
 }
 
 export default function App() {
+  const {isLoaded} = useAppSelector(state => state.plugin);
+  const dispatch = useAppDispatch();
+
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  const handleDrawerOpen = () => {
+  useEffect(() => {
+    if (isLoaded) {
+      return;
+    }
+    dispatch(loadLayouts());
+    getPlugins().then(plugins => {
+      dispatch(loadPlugins(plugins));
+    }).catch(e => {
+      const error = e as WebApiError;
+
+      if (error.type === 'plugins') {
+        dispatch(showToast({
+          style: 'error',
+          message: 'Failed to request API. Are you sure the server is running?',
+          duration: 5000
+        }));
+      }
+    });
+  }, []);
+
+  const getPlugins = async (): Promise<PluginModule[]> => {
+    const plugins: PluginModule[] = await WebApiClient.getPlugins();
+
+    for (const plugin of plugins) {
+      const module: PluginModule | undefined = await WebApiClient.getWidget(plugin.manifest.name);
+
+      if (module) {
+        plugin.manifest = {...plugin.manifest, ...module.manifest};
+        //plugin.settings = module.settings;
+        plugin.widget = module.widget;
+        plugin.page = module.page;
+      }
+    }
+    return plugins;
+  };
+
+  const onOpenDrawer = () => {
     setOpenDrawer(true);
   };
 
-  const handleDrawerClose = () => {
+  const onCloseDrawer = () => {
     setOpenDrawer(false);
   };
 
@@ -62,35 +107,35 @@ export default function App() {
     <ThemeProvider theme={theme}
                    defaultMode="system"
                    noSsr>
-      <ToastProvider>
-        <Box sx={{height: '100%', display: 'flex'}}>
-          <CssBaseline/>
+      <ToastProvider/>
 
-          <AppBar position="fixed"
-                  color="primary"
-                  enableColorOnDark
-                  open={openDrawer}>
-            <Toolbar open={openDrawer} onOpenDrawer={handleDrawerOpen}/>
-          </AppBar>
+      <Box sx={{height: '100%', display: 'flex'}}>
+        <CssBaseline/>
 
-          <Drawer open={openDrawer} onCloseDrawer={handleDrawerClose}/>
+        <AppBar position="fixed"
+                color="primary"
+                enableColorOnDark
+                open={openDrawer}>
+          <Toolbar open={openDrawer} onOpenDrawer={onOpenDrawer}/>
+        </AppBar>
 
-          <Box component="main"
-               sx={{
-                 overflowY: 'auto',
-                 flexGrow: 1,
-                 p: 3,
-                 mt: '64px'
-               }}>
-            <Routes>
-              <Route index element={<Dashboard/>}/>
-              <Route path="plugins" element={<Plugins/>}/>
-              <Route path="settings" element={<Settings/>}/>
-              <Route path="about" element={<About/>}/>
-            </Routes>
-          </Box>
+        <Drawer open={openDrawer} onCloseDrawer={onCloseDrawer}/>
+
+        <Box component="main"
+             sx={{
+               overflowY: 'auto',
+               flexGrow: 1,
+               p: 3,
+               mt: '64px'
+             }}>
+          <Routes>
+            <Route index element={<Dashboard/>}/>
+            <Route path="plugins" element={<Plugins/>}/>
+            <Route path="settings" element={<Settings/>}/>
+            <Route path="about" element={<About/>}/>
+          </Routes>
         </Box>
-      </ToastProvider>
+      </Box>
     </ThemeProvider>
   );
 }
