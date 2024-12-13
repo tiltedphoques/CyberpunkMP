@@ -40,6 +40,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-xmake-packages-
 
+      # Install pnpm for better disk/cache performance
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # Fix long path issue
+      - name: Setup pnpm
+        run: pnpm config set virtual-store-dir-max-length=50
+
       # Install xmake
       - name: 'Setup xmake'
         uses: xmake-io/github-action-setup-xmake@v1
@@ -54,16 +64,6 @@ jobs:
       # Build the game
       - name: 'Build with xmake'
         run: xmake -y
-
-      # Install pnpm for better disk/cache performance
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      # Fix long path issue
-      - name: Configure pnpm
-        run: pnpm config set virtual-store-dir-max-length=50
 
       # Install node
       - uses: actions/setup-node@v4
