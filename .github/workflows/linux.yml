@@ -31,6 +31,12 @@ jobs:
     - name: 'Update apt repositories'
       run: sudo apt-get update
 
+    # Install pnpm for better disk/cache performance
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
     # Install xmake
     - name: 'Setup xmake'
       uses: xmake-io/github-action-setup-xmake@v1
