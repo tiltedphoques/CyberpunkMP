@@ -1,16 +1,19 @@
 import RGL, {Layout, ReactGridLayoutProps, WidthProvider, WidthProviderProps} from "react-grid-layout";
-import {Component, createElement, Suspense, useEffect, useRef, useState} from "react";
-import {Alert, Card, CircularProgress} from "@mui/material";
+import {Component, createElement, Fragment, Suspense, useEffect, useRef, useState} from "react";
+import {Alert, Card, CircularProgress, GlobalStyles} from "@mui/material";
+import Box from "@mui/material/Box";
 import {ErrorBoundary} from "react-error-boundary";
 import {PluginManifest, PluginModule, PluginWidget} from "../../Data/PluginData.ts";
 import {useAppDispatch, useAppSelector} from "../../Stores/AppStore.ts";
 import {saveLayouts} from "../../Stores/StorageStore.ts";
+import {GridMode} from "./Dashboard.tsx";
 
 const GridLayout = WidthProvider(RGL);
 type GridLayoutComponent = Component<ReactGridLayoutProps & WidthProviderProps, any, any>;
 
 interface WidgetGridProps {
   readonly plugins: PluginModule[];
+  readonly gridMode: GridMode;
 }
 
 interface WidgetLayout {
@@ -19,7 +22,7 @@ interface WidgetLayout {
   readonly layout: Layout;
 }
 
-export default function WidgetGrid({plugins}: WidgetGridProps) {
+export default function WidgetGrid({plugins, gridMode}: WidgetGridProps) {
   const MARGIN: number = 24;
   const CELL_SIZE: number = 64;
 
@@ -80,35 +83,61 @@ export default function WidgetGrid({plugins}: WidgetGridProps) {
   };
 
   const layout: Layout[] = grid.map(item => item.layout);
+  const canEditLayout: boolean = gridMode === 'edit';
+  const pointerEvents: string = gridMode === 'edit' ? 'none' : 'auto';
 
   return (
-    <GridLayout
-      ref={$root}
-      className="layout"
-      margin={[MARGIN, MARGIN]}
-      containerPadding={[0, 0]}
-      cols={columns}
-      rowHeight={CELL_SIZE}
-      layout={layout}
-      isDraggable
-      isResizable
-      onLayoutChange={onLayoutChange}
-    >
-      {grid.map(widget => (
-        <Card key={widget.key}>
-          <ErrorBoundary fallbackRender={
-            ({error}) => (
-              <Alert severity="error" sx={{width: '500px', m: 'auto'}}>
-                Error while rendering widget: {error.message}
-              </Alert>
-            )
-          }>
-            <Suspense fallback={<CircularProgress/>}>
-              {widget.component}
-            </Suspense>
-          </ErrorBoundary>
-        </Card>
-      ))}
-    </GridLayout>
+    <Fragment>
+      <GlobalStyles
+        styles={{
+          '.react-grid-item.react-grid-placeholder': {
+            backgroundColor: 'var(--mui-palette-secondary-main)',
+          },
+          '.react-grid-item:not(.resizing):hover': {
+            cursor: canEditLayout ? 'grab' : 'auto',
+          },
+          '.react-grid-item.react-draggable-dragging:not(.resizing)': {
+            cursor: 'grabbing',
+          },
+          '.react-grid-item.resizing': {
+            cursor: 'se-resize',
+          },
+          '.react-grid-item > .react-resizable-handle::after': {
+            borderColor: 'var(--mui-palette-secondary-main)',
+          }
+        }}
+      />
+      <GridLayout
+        ref={$root}
+        className="layout"
+        margin={[MARGIN, MARGIN]}
+        containerPadding={[0, 0]}
+        cols={columns}
+        rowHeight={CELL_SIZE}
+        resizeHandles={['se']}
+        layout={layout}
+        isDraggable={canEditLayout}
+        isResizable={canEditLayout}
+        onLayoutChange={onLayoutChange}
+      >
+        {grid.map(widget => (
+          <Card key={widget.key}>
+            <ErrorBoundary fallbackRender={
+              ({error}) => (
+                <Alert severity="error" sx={{width: '500px', m: 'auto'}}>
+                  Error while rendering widget: {error.message}
+                </Alert>
+              )
+            }>
+              <Box sx={{pointerEvents: pointerEvents}}>
+                <Suspense fallback={<CircularProgress/>}>
+                  {widget.component}
+                </Suspense>
+              </Box>
+            </ErrorBoundary>
+          </Card>
+        ))}
+      </GridLayout>
+    </Fragment>
   );
 }

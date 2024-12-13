@@ -14,7 +14,7 @@ export default defineConfig({
           'vendor-1': ['react', 'react-dom', 'react-error-boundary', 'react-router'],
           'vendor-2': ['@emotion/react', '@emotion/styled'],
           'vendor-3-0': ['@mui/material'],
-          'vendor-3-1': ['@mui/icons-material'],
+          'vendor-3-1': ['@mui/icons-material', '@mdi/react', '@mdi/js'],
         }
       }
     }
