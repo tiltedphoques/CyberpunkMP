@@ -1,50 +1,78 @@
-# React + TypeScript + Vite
+# Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This webapp provides an admin panel to manage the server. It is made to allow
+extensions using widgets provided by plugins themselves.
 
-Currently, two official plugins are available:
+## Features with WebApi
+- secure access using basic authentication (credentials through environment variables).
+  - always allow Server List System routes.
+- dashboard with widgets from plugins (move/resize widgets).
+- list of plugins (only implementing widgets for now).
+- automatically load widget when implemented by a plugin.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Stack
+- [react](https://react.dev/learn) (library)
+- [react-redux](https://react-redux.js.org/introduction/getting-started) (state management)
+- [@mui](https://mui.com/material-ui/getting-started/) (UI/UX)
+- [@mdi](https://pictogrammers.com/docs/library/mdi/getting-started/react/) (additional icons)
+- [systemjs](https://github.com/systemjs/systemjs) (dynamically import UMD widgets)
 
-## Expanding the ESLint configuration
+## ROADMAP
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [ ] replace basic authentication using Discord OAuth2.
+- [ ] add a Flecs page, using client Api to show stuff.
+- [ ] let user hide/show widgets in Dashboard page.
+- [ ] dynamically add plugin page, when implemented by plugin. It should be
+      listed in Drawer component.
 
-- Configure the top-level `parserOptions` property like this:
+## Development
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+- [Node.js](https://nodejs.org/en/)
+- [PNPM](https://pnpm.io/)
+- server is built in `build/<os>/<arch>/debug/`
+
+> [!TIP]
+> **pnpm** is used instead of **npm** to save disk space on your system. This
+> is particularly useful as multiple projects in this repository are using the
+> same dependencies.
+
+1. Clone the repository:
+```shell
+git clone https://github.com/tiltedphoques/CyberpunkMP.git
 ```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Move to directory `code/admin`
+3. Run commands:
+```shell
+pnpm install
+pnpm start
 ```
+4. Start the backend server:
+```shell
+..\..\build\windows\x64\debug\Server.Loader.exe
+```
+5. Open your browser in `http://localhost:5173`. It is configured to proxy API 
+request (`/api`) to the backend on `http://localhost:11778`.
+
+### Create a widget for a plugin
+
+TBD, see `code\server\scripting\EmoteSystem\Admin`.
+
+## Production
+You can manually build the webapp using `pnpm build`. It will output the build
+in `dist/`. The content of this directory must be put in 
+`distrib/launcher/server/assets`.
+
+These steps are already implemented for you when running
+`xmake install -o distrib`.
+
+You'll need to define two environment variables, otherwise the server will 
+abort when starting in release mode:
+```shell
+CYBERPUNKMP_ADMIN_USERNAME=<username>
+CYBERPUNKMP_ADMIN_PASSWORD=<password>
+```
+Now, your browser will show a popup asking you for the username/password 
+credentials. Failing this step will prevent access to any routes of the backend
+server. Except for `/api/v1/mods` and `/api/v1/statistics`, which is available 
+to anyone.
