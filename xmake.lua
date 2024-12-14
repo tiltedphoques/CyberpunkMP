@@ -50,6 +50,7 @@ includes("code/netpack")
 includes("code/common")
 includes("code/protocol")
 includes("code/server")
+includes("code/admin")
 
 option("game")
     set_showmenu(true)
