@@ -25,7 +25,7 @@
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
 
-    <Target Name="Admin" BeforeTargets="Publish">
+    <Target Name="Admin" BeforeTargets="Build;Publish">
         <Exec Command="pnpm install" WorkingDirectory="$(ProjectDir)\Admin"/>
         <Exec Command="pnpm run build" WorkingDirectory="$(ProjectDir)\Admin"/>
     </Target>

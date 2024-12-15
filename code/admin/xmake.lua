@@ -2,48 +2,69 @@ target("Admin")
     set_kind("phony")
     set_group("Server")
 
-    add_deps("Server.Scripting")
+    add_deps("Server.Loader", "Server.Native", "Server.Scripting")
 
-    on_install(function (target)
-        local function run_command(cmd, args)
-            print("  $ " .. cmd .. " " .. table.concat(args or {}, " "))
-            local stdout, stderr = os.iorunv(cmd, args)
+    local function get_pnpm(os)
+        local function pnpm(args)
+            local cmd = is_host("windows") and "pnpm.cmd" or "pnpm"
+
+            print("$ " .. cmd .. " " .. table.concat(args or {}, " "))
+            os.runv(cmd, args)
         end
 
-        local function run_install(cmd)
+        local function pnpm_install()
             --if os.getenv("IS_CI") == "true" then
-            --    run_command(cmd, {"ci"})
+            --    pnpm({"ci"})
             --else
-            run_command(cmd, {"install"})
+            pnpm({"install"})
             --end
         end
 
-		print("installing Admin")
+        return pnpm, pnpm_install
+    end
 
+    local function setup(os, raise, dst)
         os.cd("code/admin")
 
-        local pnpm = is_host("windows") and "pnpm.cmd" or "pnpm"
+        local pnpm, pnpm_install = get_pnpm(os)
 
         -- Run pnpm commands in the root directory
-        run_install(pnpm)
-        run_command(pnpm, {"run", "build"})
+        pnpm_install()
+        pnpm({"run", "build"})
 
         local src = path.join(os.curdir(), "dist")
         if not os.isdir(src) then
             raise(string.format("Source directory not found %s", src))
         end
 
-        local dst = path.join("..", "..", target:installdir("launcher"), "server", "assets")
+        dst = path.join("..", "..", dst)
         if os.isdir(dst) then
             os.rmdir(dst)
         end
-
-		os.mkdir(dst)
+        os.mkdir(dst)
 
         -- Copy produced files
-        print(string.format("  Copying from %s to %s", src, dst))
+        print(string.format("Copying from %s to %s", src, dst))
         os.cp(path.join(src, "*"), dst)
 
         -- Reset to base directory
         os.cd("../..")
+    end
+
+    on_build(function (target, opt)
+        import("utils.progress")
+
+        progress.show(opt.progress, "${color.build.target}build Server.Admin")
+
+        local dst = path.join(target:targetdir(), "assets")
+        setup(os, raise, dst)
+    end)
+
+    on_install(function (target)
+        import("utils.progress")
+
+        print("installing Server.Admin")
+
+        local dst = path.join(target:installdir("launcher"), "server", "assets")
+        setup(os, raise, dst)
     end)

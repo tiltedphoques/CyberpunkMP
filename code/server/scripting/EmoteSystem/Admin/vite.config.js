@@ -10,7 +10,11 @@ export default defineConfig({
     ],
     build: {
         lib: {
-            name: 'widget',
+            // IMPORTANT: this name must be unique, or it will conflict
+            //            with other plugins. We recommend to use the name
+            //            of the plugin `EmoteSystem` without its suffix
+            //            `System`.
+            name: 'Emote',
             entry: './index.ts',
             formats: ['umd'],
             fileName: 'widget',
@@ -18,22 +22,17 @@ export default defineConfig({
         rollupOptions: {
             external: [
                 'react',
-                'react-redux',
+                //'react-redux',
                 '@mui/material',
-                '@mdi/react',
+                //'@mdi/react',
                 'App'
             ],
             output: {
-                // IMPORTANT: this name must be unique, or it will conflict
-                //            with other plugins. We recommend to use the name
-                //            of the plugin `EmoteSystem` without its suffix
-                //            `System`.
-                name: 'Emote',
                 globals: {
                     'react': 'React',
-                    'react-redux': 'Redux',
+                    //'react-redux': 'Redux',
                     '@mui/material': 'MUI',
-                    '@mdi/react': 'MDI',
+                    //'@mdi/react': 'MDI',
                     'App': 'App',
                 }
             }

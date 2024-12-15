@@ -9,13 +9,13 @@ target("Server.Loader")
 
     on_build(function (target, opt)
         import("utils.progress")
-        
+
         local script = target:scriptdir()
         local proj = path.join(script, "Server.Loader.csproj")
-        local sdk_output = path.join(target:targetdir(), "server")
+        local mode = is_mode("debug") and "Debug" or "Release"
         progress.show(opt.progress, "${color.build.target}build Server.Loader")
-        os.run("dotnet build " .. proj)
-        os.run("dotnet publish " .. proj .. " -o " .. target:targetdir())
+        os.run("dotnet build " .. proj .. " -c " .. mode)
+        os.run("dotnet publish " .. proj .. " -c " .. mode .. " -o " .. target:targetdir())
     end)
 
     after_install(function (target)
@@ -28,7 +28,7 @@ target("Server.Loader")
     on_install(function (target)
         local src_plugins = target:targetdir()
         local dest_plugins = target:installdir("bin")
-        
+
         os.cp(path.join(src_plugins, "Server.Loader.dll"), path.join(target:installdir("bin"), "Server.Loader.dll"))
         os.cp(path.join(src_plugins, "Server.Loader.exe"), path.join(target:installdir("bin"), "Server.Loader.exe"))
         os.cp(path.join(src_plugins, "Server.Loader.runtimeconfig.json"), path.join(target:installdir("bin"), "Server.Loader.runtimeconfig.json"))
