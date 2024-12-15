@@ -69,10 +69,15 @@ These steps are already implemented for you when running
 You'll need to define two environment variables, otherwise the server will 
 abort when starting in release mode:
 ```shell
-CYBERPUNKMP_ADMIN_USERNAME=<username>
-CYBERPUNKMP_ADMIN_PASSWORD=<password>
+# PowerShell
+$env:CYBERPUNKMP_ADMIN_USERNAME="<username>"
+$env:CYBERPUNKMP_ADMIN_PASSWORD="<password>"
+
+# Bash
+export CYBERPUNKMP_ADMIN_USERNAME "<username>"
+export CYBERPUNKMP_ADMIN_PASSWORD "<password>"
 ```
 Now, your browser will show a popup asking you for the username/password 
 credentials. Failing this step will prevent access to any routes of the backend
-server. Except for `/api/v1/mods` and `/api/v1/statistics`, which is available 
-to anyone.
+server. Except for `/api/v1/mods` and `/api/v1/statistics`, which must be 
+available to anyone.
