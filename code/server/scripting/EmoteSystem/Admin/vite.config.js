@@ -18,14 +18,22 @@ export default defineConfig({
         rollupOptions: {
             external: [
                 'react',
+                'react-redux',
                 '@mui/material',
+                '@mdi/react',
                 'App'
             ],
             output: {
-                name: 'Widget',
+                // IMPORTANT: this name must be unique, or it will conflict
+                //            with other plugins. We recommend to use the name
+                //            of the plugin `EmoteSystem` without its suffix
+                //            `System`.
+                name: 'Emote',
                 globals: {
                     'react': 'React',
+                    'react-redux': 'Redux',
                     '@mui/material': 'MUI',
+                    '@mdi/react': 'MDI',
                     'App': 'App',
                 }
             }

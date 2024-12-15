@@ -129,7 +129,7 @@ export default function WidgetGrid({plugins, gridMode}: WidgetGridProps) {
                 </Alert>
               )
             }>
-              <Box sx={{pointerEvents: pointerEvents}}>
+              <Box sx={{width: '100%', height: '100%', pointerEvents: pointerEvents}}>
                 <Suspense fallback={<CircularProgress/>}>
                   {widget.component}
                 </Suspense>
