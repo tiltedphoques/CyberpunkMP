@@ -1,7 +1,7 @@
 ﻿// NOTE: common script for plugins when implementing a widget in Admin/.
 //       run `pnpm build:watch` to watch changes, build widget, copy output in
 //       debug directory of the plugin. You'll need to hit F5 to reload the
-//       widget when running `pnpm start` in `code/admin`.
+//       widget when running `pnpm start` in `code/server/admin`.
 import chokidar from 'chokidar';
 import fs from 'fs';
 import path from 'path';
@@ -14,7 +14,7 @@ console.log(`watching Admin.${plugin}`);
 console.log(`copying from "${src}"`);
 console.log(`          to "${dst}"`);
 
-const watcher = chokidar.watch('dist/**/*');
+const watcher = chokidar.watch('./dist');
 
 process.once('SIGINT', abort);
 process.once('SIGTERM', abort);

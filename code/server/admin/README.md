@@ -19,6 +19,13 @@ extensions using widgets provided by plugins themselves.
 
 ## ROADMAP
 
+- [ ] hot reload plugin's widget when changed on server.
+- [ ] define a manifest by plugin. It would provide metadata for all plugins,
+      without requiring to implement a `widget.umd.js`. We could provide some
+      `IPlugin::GetManifest()` method to be implemented. It could contain 
+      common metadata like `name`, `author`, `version`, and maybe `flags` like
+      whether widget/page are supported for example. It reduces the burden of 
+      writing an additional `manifest.json` file, and serve it for example. 
 - [ ] replace basic authentication using Discord OAuth2.
 - [ ] add a Flecs page, using client Api to show stuff.
 - [ ] let user hide/show widgets in Dashboard page.
@@ -41,7 +48,7 @@ extensions using widgets provided by plugins themselves.
 ```shell
 git clone https://github.com/tiltedphoques/CyberpunkMP.git
 ```
-2. Move to directory `code/admin`
+2. Move to directory `code/server/admin`
 3. Run commands:
 ```shell
 pnpm install
@@ -49,14 +56,14 @@ pnpm start
 ```
 4. Start the backend server:
 ```shell
-..\..\build\windows\x64\debug\Server.Loader.exe
+../../../build/windows/x64/debug/Server.Loader.exe
 ```
 5. Open your browser in `http://localhost:5173`. It is configured to proxy API 
 request (`/api`) to the backend on `http://localhost:11778`.
 
 ### Create a widget for a plugin
 
-TBD, see `code\server\scripting\EmoteSystem\Admin`.
+TBD, see `code/server/admin/scripting/EmoteSystem/Admin`.
 
 ## Production
 You can manually build the webapp using `pnpm build`. It will output the build

@@ -24,7 +24,7 @@ target("Admin")
     end
 
     local function setup(os, raise, dst)
-        os.cd("code/admin")
+        os.cd("code/server/admin")
 
         local pnpm, pnpm_install = get_pnpm(os)
 
@@ -37,7 +37,7 @@ target("Admin")
             raise(string.format("Source directory not found %s", src))
         end
 
-        dst = path.join("..", "..", dst)
+        dst = path.join("..", "..", "..", dst)
         if os.isdir(dst) then
             os.rmdir(dst)
         end
@@ -48,7 +48,7 @@ target("Admin")
         os.cp(path.join(src, "*"), dst)
 
         -- Reset to base directory
-        os.cd("../..")
+        os.cd("../../..")
     end
 
     on_build(function (target, opt)

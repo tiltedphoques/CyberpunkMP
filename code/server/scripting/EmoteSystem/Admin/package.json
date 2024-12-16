@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "build:watch": "npx concurrently --kill-others \"vite build --watch\" \"node ..\\..\\..\\..\\admin\\watcher.js\""
+    "build:watch": "npx concurrently --kill-others \"vite build --watch\" \"node ..\\..\\..\\admin\\watcher.js\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
