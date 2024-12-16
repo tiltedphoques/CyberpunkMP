@@ -1,4 +1,5 @@
 import {Layout} from "react-grid-layout";
+import {FunctionComponent} from "react";
 
 export interface PluginDto {
   readonly Name: string;
@@ -18,15 +19,14 @@ export interface PluginSettings {
 */
 
 export interface PluginWidget {
-  component: any;
+  component: FunctionComponent<unknown>;
   layout: Partial<Layout>;
 }
 
-export interface PluginPage {
-
-}
+export type PluginPage = unknown
 
 export interface PluginModule {
+  updatedAt?: string;
   manifest: PluginManifest;
   //settings?: PluginSettings;
   widget?: PluginWidget;

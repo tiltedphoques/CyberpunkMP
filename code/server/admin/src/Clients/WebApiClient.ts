@@ -19,7 +19,7 @@ export class WebApiClient {
       return {
         manifest: {
           name: plugin.Name,
-          url: `/api/v1/plugins/${plugin.Name}`,
+          url: `/api/v1/plugins/${plugin.Name.toLowerCase()}`,
           author: '',
           version: '',
         }
@@ -27,13 +27,33 @@ export class WebApiClient {
     });
   }
 
-  public static async getWidget(name: string): Promise<PluginModule | undefined> {
-    const url: string = `/api/v1/plugins/${name}/assets/widget.umd.js`;
+  public static async getWidget(name: string): Promise<Blob | undefined> {
+    const url: string = `/api/v1/plugins/${name.toLowerCase()}/assets/widget.umd.js`;
 
     try {
-      return await System.import(url) as PluginModule;
+      const response: Response = await fetch(url);
+
+      return await response.blob();
     } catch (error) {
       console.error(error);
     }
+  }
+
+  public static async getWidgetETag(name: string, etag?: string): Promise<string | undefined> {
+    return await this.getETag(`/api/v1/plugins/${name.toLowerCase()}/assets/widget.umd.js`, etag);
+  }
+
+  private static async getETag(url: string, etag?: string): Promise<string | undefined> {
+    const headers: Record<string, string> = {};
+
+    if (etag) {
+      headers['ETag'] = etag;
+    }
+    const response: Response = await fetch(url, {method: 'HEAD', headers});
+
+    if (!response.ok) {
+      return;
+    }
+    return response.headers.get('ETag') ?? undefined;
   }
 }

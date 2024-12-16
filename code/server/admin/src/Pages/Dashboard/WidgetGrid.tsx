@@ -1,5 +1,5 @@
 import RGL, {Layout, ReactGridLayoutProps, WidthProvider, WidthProviderProps} from "react-grid-layout";
-import {Component, createElement, Fragment, Suspense, useEffect, useRef, useState} from "react";
+import {Component, createElement, Fragment, ReactElement, Suspense, useEffect, useRef, useState} from "react";
 import {Alert, Card, CircularProgress, GlobalStyles} from "@mui/material";
 import Box from "@mui/material/Box";
 import {ErrorBoundary} from "react-error-boundary";
@@ -9,7 +9,7 @@ import {saveLayouts} from "../../Stores/StorageStore.ts";
 import {GridMode} from "./Dashboard.tsx";
 
 const GridLayout = WidthProvider(RGL);
-type GridLayoutComponent = Component<ReactGridLayoutProps & WidthProviderProps, any, any>;
+type GridLayoutComponent = Component<ReactGridLayoutProps & WidthProviderProps, never, never>;
 
 interface WidgetGridProps {
   readonly plugins: PluginModule[];
@@ -18,7 +18,7 @@ interface WidgetGridProps {
 
 interface WidgetLayout {
   readonly key: string;
-  readonly component: any;
+  readonly component: ReactElement;
   readonly layout: Layout;
 }
 
@@ -49,7 +49,7 @@ export default function WidgetGrid({plugins, gridMode}: WidgetGridProps) {
     if (!$root.current) {
       return;
     }
-    // @ts-ignore
+    // @ts-expect-error should force a type
     const rect: DOMRect = $root.current.elementRef.current.getBoundingClientRect();
     const columns: number = Math.round(rect.width / CELL_SIZE);
     const width: number = rect.width - MARGIN * columns;

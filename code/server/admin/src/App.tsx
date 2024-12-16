@@ -16,7 +16,7 @@ import About from "./Pages/About/About.tsx";
 import {useAppDispatch, useAppSelector} from "./Stores/AppStore.ts";
 import {PluginModule} from "./Data/PluginData.ts";
 import {WebApiClient, WebApiError} from "./Clients/WebApiClient.ts";
-import {loadPlugins} from "./Stores/PluginStore.ts";
+import {loadPlugins, updatePlugin} from "./Stores/PluginStore.ts";
 import {loadLayouts} from './Stores/StorageStore.ts';
 import {showToast} from './Stores/ToastStore.ts';
 
@@ -54,7 +54,7 @@ export interface ToolbarProps {
 }
 
 export default function App() {
-  const {isLoaded} = useAppSelector(state => state.plugin);
+  const {isLoaded, plugins} = useAppSelector(state => state.plugin);
   const dispatch = useAppDispatch();
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -79,21 +79,79 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    // NOTE: only enable hot-reload of plugins during development. Tree-shaking
+    //       compliant.
+    if (import.meta.env.DEV) {
+      const handle: number = setInterval(reloadPlugins, 1000);
+
+      return () => {
+        clearInterval(handle);
+      };
+    }
+  }, [plugins]);
+
   const getPlugins = async (): Promise<PluginModule[]> => {
-    const plugins: PluginModule[] = await WebApiClient.getPlugins();
+    const entries: PluginModule[] = await WebApiClient.getPlugins();
+    const plugins: PluginModule[] = [];
 
-    for (const plugin of plugins) {
-      const module: PluginModule | undefined = await WebApiClient.getWidget(plugin.manifest.name);
+    for (const entry of entries) {
+      let plugin: PluginModule | undefined = await importPlugin(entry.manifest.name);
 
-      if (module) {
-        plugin.manifest = {...plugin.manifest, ...module.manifest};
-        //plugin.settings = module.settings;
-        plugin.widget = module.widget;
-        plugin.page = module.page;
+      if (plugin) {
+        plugin = await resolvePlugin(entry, plugin);
+        plugins.push(plugin);
       }
     }
     return plugins;
   };
+
+  const importPlugin = async (name: string): Promise<PluginModule | undefined> => {
+    // NOTE: manually fetch widget's script, otherwise SystemJS hits the cache
+    //       instead of the latest version of the widget.
+    const blob: Blob | undefined = await WebApiClient.getWidget(name);
+
+    if (!blob) {
+      return;
+    }
+    const url: string = URL.createObjectURL(blob);
+    let module: PluginModule | undefined;
+
+    try {
+      // NOTE: clean previous module, SystemJS doesn't override module by
+      //       default.
+      delete (window as never)[name];
+      module = await System.import(url) as PluginModule;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+    return module;
+  };
+
+  const resolvePlugin = async (plugin: PluginModule, module: PluginModule): Promise<PluginModule> => {
+    return {
+      updatedAt: await WebApiClient.getWidgetETag(plugin.manifest.name),
+      manifest: {...plugin.manifest, ...module.manifest},
+      //settings: {...plugin.settings},
+      widget: module.widget,
+      page: module.page
+    };
+  };
+
+  const reloadPlugins = async (): Promise<void> => {
+    for (const plugin of plugins) {
+      const updatedAt: string | undefined = await WebApiClient.getWidgetETag(plugin.manifest.name, plugin.updatedAt);
+
+      if (updatedAt && updatedAt !== plugin.updatedAt) {
+        let module: PluginModule | undefined = await importPlugin(plugin.manifest.name);
+
+        if (module) {
+          module = await resolvePlugin(plugin, module);
+          dispatch(updatePlugin(module));
+        }
+      }
+    }
+  }
 
   const onOpenDrawer = () => {
     setOpenDrawer(true);

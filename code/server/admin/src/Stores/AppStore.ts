@@ -8,7 +8,9 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['plugin/loadPlugins'],
+        ignoredActions: [
+          'plugin/loadPlugins', 'plugin/updatePlugin',
+        ],
         ignoredPaths: ['plugin.plugins'],
       },
     }),

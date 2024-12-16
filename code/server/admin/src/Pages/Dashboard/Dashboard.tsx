@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import {Fab, Tooltip} from "@mui/material";
 import {useState} from "react";
 import Icon from "@mdi/react";
-import {mdiViewDashboardEdit, mdiViewDashboard} from "@mdi/js";
+import {mdiViewDashboard, mdiViewDashboardEdit} from "@mdi/js";
 import WidgetGrid from "./WidgetGrid.tsx";
 import {useAppSelector} from "../../Stores/AppStore.ts";
 import {PluginModule} from "../../Data/PluginData.ts";

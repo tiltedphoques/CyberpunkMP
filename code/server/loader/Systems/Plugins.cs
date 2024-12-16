@@ -332,9 +332,9 @@ namespace Server.Loader.Systems
                             RuntimeHelpers.RunClassConstructor(plugin.TypeHandle);
 
                             rpcManager.ParseAssembly(assembly);
-                            var pluginName = directoryName[..^"System".Length].ToLower();
+                            var pluginName = directoryName[..^"System".Length];
                             var hasHook = DetectWebApiHook(plugin, pluginName);
-                            var hasAssets = DetectAssets(directory, pluginName);
+                            var hasAssets = DetectAssets(directory, pluginName.ToLower());
                             logger.Info($"Loaded Plugin" +
                                         $"{(hasHook ? " + WebApi" : "")}" +
                                         $"{(hasAssets ? " + Assets" : "")}: {directoryName}");

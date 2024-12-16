@@ -9,6 +9,7 @@ extensions using widgets provided by plugins themselves.
 - dashboard with widgets from plugins (move/resize widgets).
 - list of plugins (only implementing widgets for now).
 - automatically load widget when implemented by a plugin.
+- hot reload widget per plugin, when changed, in development mode only.
 
 ## Stack
 - [react](https://react.dev/learn) (library)
@@ -19,7 +20,6 @@ extensions using widgets provided by plugins themselves.
 
 ## ROADMAP
 
-- [ ] hot reload plugin's widget when changed on server.
 - [ ] define a manifest by plugin. It would provide metadata for all plugins,
       without requiring to implement a `widget.umd.js`. We could provide some
       `IPlugin::GetManifest()` method to be implemented. It could contain 

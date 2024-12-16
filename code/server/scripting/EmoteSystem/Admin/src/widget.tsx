@@ -47,8 +47,8 @@ export function Widget() {
             if (!data) {
                 return;
             }
-            setUsername(data.Username);
-            setEmote(data.Emote);
+            setUsername(data.Username ?? '');
+            setEmote(data.Emote ?? '');
         })
     }
 
