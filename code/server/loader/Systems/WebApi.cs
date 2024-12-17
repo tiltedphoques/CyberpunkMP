@@ -57,21 +57,25 @@ namespace Server.Loader.Systems
 
         private void RegisterPlugins(WebServer server)
         {
-            foreach (var (path, name) in Plugins.Assets)
+            var withAssets = Plugins.GetPlugins(p => p.Assets != null);
+
+            foreach (var plugin in withAssets)
             {
                 server.WithStaticFolder(
-                    baseRoute: $"/api/v1/plugins/{name}/assets/",
-                    fileSystemPath: path,
+                    baseRoute: plugin.GetAssetsUrl,
+                    fileSystemPath: plugin.GetAssetsPath,
                     isImmutable: EnvironmentHelper.IsRelease,
                     configure: m => { m.AddCustomMimeType(".umd.js", "application/javascript"); });
             }
+            var withHooks = Plugins.GetPlugins(p => p.WebApi != null);
 
-            foreach (var (name, hook) in Plugins.Hooks)
+            foreach (var plugin in withHooks)
             {
+                var hook = plugin.WebApi!;
                 var controller = hook.BuildController()();
 
                 server.WithWebApi(
-                    baseRoute: $"/api/v1/plugins/{name}",
+                    baseRoute: plugin.GetWebApiUrl,
                     configure: m => m.WithController(controller));
             }
 
@@ -135,11 +139,12 @@ namespace Server.Loader.Systems
 
         private Task HandleListPlugins(IHttpContext context)
         {
+            var withHooks = Plugins.GetPlugins(p => p.WebApi != null);
+
             return context.SendDataAsync(
-                Plugins.Hooks
-                    .Select(hook => new WebApiPluginDto
+                withHooks.Select(plugin => new WebApiPluginDto
                     {
-                        Name = hook.Key
+                        Name = plugin.Name,
                     })
                     .ToList()
             );

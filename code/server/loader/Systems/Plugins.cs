@@ -2,6 +2,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using CurseForge.APIClient;
+using CurseForge.APIClient.Models.Enums;
+using CurseForge.APIClient.Models.Files;
 using CurseForge.APIClient.Models.Mods;
 using CyberpunkSdk;
 using CyberpunkSdk.Systems;
@@ -37,21 +40,31 @@ namespace Server.Loader.Systems
         public string Checksum { get; set; } = "";
     }
 
+    internal class PluginInfo
+    {
+        public string Name { get; set; } = "";
+        public string FullName { get; set; } = "";
+        public IWebApiHook? WebApi { get; set; }
+        public string? Assets { get; set; }
+
+        public string GetWebApiUrl => $"/api/v1/plugins/{Name.ToLower()}";
+        
+        public string GetAssetsUrl => $"/api/v1/plugins/{Name.ToLower()}/assets/";
+        public string GetAssetsPath => Assets!;
+    }
+
     internal class Plugins
     {
         private Configuration configuration = new();
         private Cache cache = new();
         private List<ModDef> serverMods = [];
         private List<ModDef> clientMods = [];
-        private Dictionary<string, IWebApiHook> hooks = [];
-        private Dictionary<string, string> assets = [];
+        private List<PluginInfo> plugins = [];
         private Logger logger = new("SDK");
 
         public IList<ModDef> ClientMods => clientMods;
-
-        public IDictionary<string, IWebApiHook> Hooks => hooks;
         
-        public IDictionary<string, string> Assets => assets;
+        public IList<PluginInfo> GetPlugins(Func<PluginInfo, bool> predicate) => plugins.Where(predicate).ToList();
 
         private void LoadConfiguration(string path)
         {
@@ -103,7 +116,7 @@ namespace Server.Loader.Systems
             if (mods == null || mods.Count == 0)
                 return;
 
-            using (var cfApiClient = new CurseForge.APIClient.ApiClient(configuration.ApiKey))
+            using (var cfApiClient = new ApiClient(configuration.ApiKey))
             {
                 var modList = cfApiClient.GetModsByIdListAsync(new GetModsByIdsListRequestBody
                 {
@@ -122,12 +135,12 @@ namespace Server.Loader.Systems
                         if (f.Id != m.MainFileId)
                             continue;
 
-                        if (f.FileStatus == CurseForge.APIClient.Models.Files.FileStatus.Approved)
+                        if (f.FileStatus == FileStatus.Approved)
                         {
                             def.Url = f.DownloadUrl;
                             foreach (var hash in f.Hashes)
                             {
-                                if (hash.Algo == CurseForge.APIClient.Models.Enums.HashAlgo.Sha1)
+                                if (hash.Algo == HashAlgo.Sha1)
                                 {
                                     def.Checksum = hash.Value;
                                     break;
@@ -263,39 +276,36 @@ namespace Server.Loader.Systems
             File.WriteAllText(filepath, content);
         }
 
-        private bool DetectWebApiHook(Type plugin, string name)
+        private IWebApiHook? DetectWebApiHook(Type plugin, string name)
         {
             var property = plugin.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
             if (property == null)
             {
-                return false;
+                return null;
             }
 
             var instance = property.GetValue(null);
             if (instance is not IWebApiHook hook)
             {
-                return false;
+                return null;
             }
-
-            hooks.Add(name, hook);
-            return true;
+            return hook;
         }
 
-        private bool DetectAssets(string path, string name)
+        private string? DetectAssets(string path, string name)
         {
-            path = Path.Combine(path, "Assets");
+            path = Path.Combine(path, "assets");
 
             if (!Directory.Exists(path))
             {
-                return false;
+                return null;
             }
 
             if (Directory.GetFiles(path).Length == 0)
             {
-                return false;
+                return null;
             }
-            assets.Add(path, name);
-            return true;
+            return path;
         }
 
         internal Plugins(RpcManager rpcManager)
@@ -332,9 +342,16 @@ namespace Server.Loader.Systems
                             RuntimeHelpers.RunClassConstructor(plugin.TypeHandle);
 
                             rpcManager.ParseAssembly(assembly);
-                            var pluginName = directoryName[..^"System".Length];
-                            var hasHook = DetectWebApiHook(plugin, pluginName);
-                            var hasAssets = DetectAssets(directory, pluginName.ToLower());
+                            
+                            var info = new PluginInfo();
+                            info.Name = directoryName[..^"System".Length];
+                            info.FullName = directoryName;
+                            info.WebApi = DetectWebApiHook(plugin, info.Name);
+                            info.Assets = DetectAssets(directory, info.Name.ToLower());
+                            plugins.Add(info);
+                            
+                            var hasHook = info.WebApi != null;
+                            var hasAssets = info.Assets != null;
                             logger.Info($"Loaded Plugin" +
                                         $"{(hasHook ? " + WebApi" : "")}" +
                                         $"{(hasAssets ? " + Assets" : "")}: {directoryName}");
