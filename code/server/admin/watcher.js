@@ -19,7 +19,7 @@ const watcher = chokidar.watch('./dist');
 process.once('SIGINT', abort);
 process.once('SIGTERM', abort);
 
-watcher.on('change', () => {
+watcher.on('all', () => {
     fs.cpSync(src, dst, {recursive: true});
 });
 
