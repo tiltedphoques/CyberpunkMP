@@ -48,7 +48,7 @@ bool NetworkWorldSystem::Spawn(uint64_t aServerId, const Red::Vector4& aPosition
 
     if (!Red::Detail::CallFunctionWithArgs(m_pCreatePuppet, handle, id, aPosition, aRotation, stateHandle.instance->isBodyGenderMale))
         return false;
-    
+
     auto apprSystem = Red::GetGameSystem<NetworkWorldSystem>()->GetAppearanceSystem();
     apprSystem->AddEntity(id, aEquipment, aCcstate);
 
@@ -147,7 +147,11 @@ void NetworkWorldSystem::Update(uint64_t aTick)
 }
 
 void NetworkWorldSystem::OnWorldAttached(RED4ext::world::RuntimeScene* aScene)
-{    
+{
+    if (Settings::IsDisabled())
+    {
+        return;
+    }
     spdlog::info("[NetworkWorldSystem] OnWorldAttached");
     IGameSystem::OnWorldAttached(aScene);
 
@@ -161,6 +165,10 @@ void NetworkWorldSystem::OnWorldAttached(RED4ext::world::RuntimeScene* aScene)
 
 void NetworkWorldSystem::OnAfterWorldDetach()
 {
+    if (Settings::IsDisabled())
+    {
+        return;
+    }
     spdlog::info("[NetworkWorldSystem] OnAfterWorldDetach");
     m_ready = false;
 
@@ -175,6 +183,10 @@ void NetworkWorldSystem::OnAfterWorldDetach()
 
 void NetworkWorldSystem::OnBeforeWorldDetach(RED4ext::world::RuntimeScene* aScene)
 {
+    if (Settings::IsDisabled())
+    {
+        return;
+    }
     IGameSystem::OnBeforeWorldDetach(aScene);
 
     m_appearanceSystem->OnBeforeWorldDetach(aScene);
@@ -192,7 +204,7 @@ void NetworkWorldSystem::HandleCharacterLoad(const PacketEvent<server::NotifyCha
     const Red::Quaternion rotation{quat.x, quat.y, quat.z, quat.w};
 
     auto equipment = Red::DynArray<Red::TweakDBID>(this->GetAllocator());
-    for (auto item : aMessage.get_equipment()) 
+    for (auto item : aMessage.get_equipment())
     {
         equipment.EmplaceBack(item);
     }
@@ -219,12 +231,12 @@ void NetworkWorldSystem::HandleSpawnCharacterResponse(const PacketEvent<server::
 }
 
 static Core::RawFunc<
-    1160782872UL, 
-    bool (*)(Red::game::mounting::MountingFacility *, const Red::ent::Entity &, const Red::game::mounting::MountingSlotId &, bool)> 
+    1160782872UL,
+    bool (*)(Red::game::mounting::MountingFacility *, const Red::ent::Entity &, const Red::game::mounting::MountingSlotId &, bool)>
     IsMountedToObject;
 static Core::RawFunc<
-    3120376212UL, 
-    bool (*)(Red::game::mounting::MountingFacility *, const Red::ent::Entity &, const Red::game::mounting::MountingSlotId &, Red::game::mounting::MountingInfo &)> 
+    3120376212UL,
+    bool (*)(Red::game::mounting::MountingFacility *, const Red::ent::Entity &, const Red::game::mounting::MountingSlotId &, Red::game::mounting::MountingInfo &)>
     GetMountingInfo;
 
 void NetworkWorldSystem::UpdatePlayerLocation() const
@@ -365,7 +377,7 @@ void NetworkWorldSystem::OnInitialize(const RED4ext::JobHandle& aJob)
 
     IGameSystem::OnInitialize(aJob);
 
-    if (!Settings::Get().enabled)
+    if (Settings::IsDisabled())
         return;
 
     const auto pNetworkService = Core::Container::Get<NetworkService>();

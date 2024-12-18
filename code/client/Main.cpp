@@ -47,12 +47,7 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
     {
     case RED4ext::EMainReason::Load:
     {
-        Settings::Load();
-
         Initialize();
-
-        if (!Settings::Get().enabled)
-            return false;
 
         App::GApplication = MakeUnique<App::Application>(aHandle, aSdk);
         App::GApplication->Bootstrap();
@@ -73,7 +68,7 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
         }
         else
         {
-            const auto message = 
+            const auto message =
                 L"The following CyperpunkMP requirements were not met:\n\n* Input Loader v0.2.0\nPlease ensure the mods "
                 L"above are installed/up-to-date.";
             MessageBoxW(nullptr, message, L"CyperpunkMP requirements could not be found", MB_SYSTEMMODAL | MB_ICONERROR);
@@ -92,7 +87,7 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
     }
     case RED4ext::EMainReason::Unload:
     {
-        if (!Settings::Get().enabled)
+        if (Settings::IsDisabled())
             return false;
 
         App::GApplication->Shutdown();

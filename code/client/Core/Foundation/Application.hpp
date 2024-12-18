@@ -21,12 +21,15 @@ public:
     virtual ~Application();
     void Bootstrap();
     void Shutdown();
+
+    void Load(RED4ext::CGameApplication* apApp);
     void Update(RED4ext::CGameApplication* apApp) const;
 
     static bool Discover(AutoDiscoveryCallback aCallback);
 
 protected:
 
+    static bool RunLoad(RED4ext::CGameApplication* apApp);
     static bool RunUpdate(RED4ext::CGameApplication* apApp);
 
     void OnRegistered(const SharedPtr<Feature>& aFeature) override;
@@ -37,6 +40,8 @@ protected:
     virtual void OnStopped() {}
 
 private:
+    RED4ext::PluginHandle m_plugin;
+    const RED4ext::Sdk* m_sdk;
     bool m_booted = false;
 
     inline static Vector<AutoDiscoveryCallback> s_discoveryCallbacks;
