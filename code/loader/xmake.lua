@@ -1,6 +1,14 @@
 if not os.isfile(get_config("game")) then
     print("Please set the path to Cyberpunk2077.exe using the xmake f --game=<path> command")
 else
+    local function is_game_running(os)
+        if not is_plat("windows") then
+            return false
+        end
+        local stdout, stderr = os.iorunv("tasklist", {"/FI", "IMAGENAME eq Cyberpunk2077.exe"})
+        return #stdout >= 3
+    end
+    
     target("Cyberpunk2077")
         set_kind("binary")
         set_basename("Cyberpunk2077")
@@ -21,6 +29,10 @@ else
 
             local modPath = path.join(red4extPlugins, "zzzCyberpunkMP")
 
+            if is_game_running(os) then
+                print("CyberpunkMP.dll not installed: game is running.")
+                return
+            end
             if os.exists(modPath) then
                 if os.isdir(modPath) then
                     os.rmdir(modPath)
@@ -30,7 +42,7 @@ else
             end
 
             os.mkdir(modPath)
-            
+
             local client_dll_path = path.join(clientdir, "CyberpunkMP.dll")
             local symlink_path = path.join(modPath, "CyberpunkMP.dll")
 
@@ -59,6 +71,10 @@ else
 
             local modPath = path.join(red4extPlugins, "zzzCyberpunkMP")
 
+            if is_game_running(os) then
+                print("CyberpunkMP.dll not installed: game is running.")
+                return
+            end
             if os.exists(modPath) then
                 if os.isdir(modPath) then
                     os.rmdir(modPath)
