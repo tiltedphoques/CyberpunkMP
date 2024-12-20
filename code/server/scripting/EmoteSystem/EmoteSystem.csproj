@@ -1,21 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CyberpunkSdk\CyberpunkSdk.csproj" />
-  </ItemGroup>
-	
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath>..\..\..\..\build\windows\x64\debug\plugins\EmoteSystem</OutputPath>
-		<PackageOutputPath>..\..\..\..\build\windows\x64\debug\plugins\EmoteSystem</PackageOutputPath>
-		<NoWarn>1701;1702;3270</NoWarn>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	</PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CyberpunkSdk\CyberpunkSdk.csproj"/>
+    </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="Admin\dist\**\*.*">
+            <Link>assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\..\..\build\windows\x64\debug\plugins\EmoteSystem</OutputPath>
+        <PackageOutputPath>..\..\..\..\build\windows\x64\debug\plugins\EmoteSystem</PackageOutputPath>
+        <NoWarn>1701;1702;3270</NoWarn>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <Target Name="Admin" BeforeTargets="Build;Publish">
+        <Exec Command="pnpm install" WorkingDirectory="$(ProjectDir)\Admin"/>
+        <Exec Command="pnpm run build" WorkingDirectory="$(ProjectDir)\Admin"/>
+    </Target>
 </Project>

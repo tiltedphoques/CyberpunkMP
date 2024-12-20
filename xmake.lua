@@ -85,7 +85,7 @@ if is_plat("windows") then
                 add_files_recursively(subdir, root_dir)
             end
         end
-    
+
         add_files_recursively("distrib/launcher")
 
         set_version("0.1.0.0")
