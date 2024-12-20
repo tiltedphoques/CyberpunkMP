@@ -1,11 +1,20 @@
 #include "Application.hpp"
 
-Core::Application::Application(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk)
-{
-    RED4ext::GameState state{nullptr, nullptr, nullptr};
-    state.OnUpdate = &RunUpdate;
+#include "App/Settings.h"
+#include "RED4ext/GameStates.hpp"
+#include "RED4ext/Api/Sdk.hpp"
 
-    aSdk->gameStates->Add(aPlugin, RED4ext::EGameStateType::Running, &state);
+Core::Application::Application(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk)
+    : m_plugin(aPlugin),
+      m_sdk(aSdk)
+{
+    RED4ext::GameState loadingState{nullptr, nullptr, nullptr};
+    RED4ext::GameState runningState{nullptr, nullptr, nullptr};
+    loadingState.OnEnter = &RunLoad;
+    runningState.OnUpdate = &RunUpdate;
+
+    aSdk->gameStates->Add(aPlugin, RED4ext::EGameStateType::Initialization, &loadingState);
+    aSdk->gameStates->Add(aPlugin, RED4ext::EGameStateType::Running, &runningState);
 
     s_pApp = this;
 }
@@ -58,8 +67,22 @@ void Core::Application::Shutdown()
     m_booted = false;
 }
 
+void Core::Application::Load(RED4ext::CGameApplication* apApp)
+{
+    Settings::Load();
+
+    if (Settings::IsDisabled())
+    {
+        m_sdk->logger->Warn(m_plugin, "CyberpunkMP is disabled: \"--online\" flag is missing.");
+    }
+}
+
 void Core::Application::Update(RED4ext::CGameApplication* apApp) const
 {
+    if (Settings::IsDisabled())
+    {
+        return;
+    }
     for (const auto& feature : GetRegistered())
     {
         feature->OnGameUpdate(apApp);
@@ -80,6 +103,13 @@ bool Core::Application::Discover(AutoDiscoveryCallback aCallback)
 {
     s_discoveryCallbacks.push_back(aCallback);
     return true;
+}
+
+bool Core::Application::RunLoad(RED4ext::CGameApplication* apApp)
+{
+    if (s_pApp)
+        s_pApp->Load(apApp);
+    return false;
 }
 
 bool Core::Application::RunUpdate(RED4ext::CGameApplication* apApp)

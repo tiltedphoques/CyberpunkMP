@@ -9,6 +9,10 @@ struct Settings
         static Settings instance;
         return instance;
     }
+    static bool IsDisabled()
+    {
+        return !Get().enabled;
+    }
     static void Load();
 
     fs::path exePath{};
