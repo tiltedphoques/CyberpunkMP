@@ -1,11 +1,16 @@
-import {App} from "./api";
+import {useToasts} from "./src/Stores/ToastStore.ts";
 
 declare global {
   interface Window {
-    MUI: typeof import('@mui/material');
-    MDI: typeof import('@mdi/react');
     Redux: typeof import('react-redux');
-    App: App;
+    MUI: typeof import('@mui/material');
+    MUIIcons: typeof import('@mui/icons-material');
+    MDI: typeof import('@mdi/react');
+    MDIIcons: typeof import('@mdi/js');
+    StatusCodes: typeof import('http-status-codes');
+    App: {
+      useToasts: typeof useToasts;
+    }
   }
 }
 

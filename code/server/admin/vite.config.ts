@@ -17,7 +17,10 @@ export default defineConfig({
           ],
           'vendor-2': ['@emotion/react', '@emotion/styled'],
           'vendor-3-0': ['@mui/material'],
-          'vendor-3-1': ['@mui/icons-material', '@mdi/react'],
+          'vendor-3-1': ['@mui/icons-material'],
+          'vendor-3-2': ['@mdi/react'],
+          'vendor-3-3': ['@mdi/js'],
+          'vendor-4': ['http-status-codes'],
         }
       }
     }
