@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import {Fab, Tooltip} from "@mui/material";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import Icon from "@mdi/react";
 import {mdiViewDashboard, mdiViewDashboardEdit} from "@mdi/js";
 import WidgetGrid from "./WidgetGrid.tsx";
@@ -18,7 +18,10 @@ export default function Dashboard() {
     setGridMode(gridMode === 'view' ? 'edit' : 'view');
   };
 
-  const filteredPlugins: PluginModule[] = plugins.filter(plugin => plugin.widget);
+  const filteredPlugins: PluginModule[] = useMemo(() => {
+    return plugins.filter(plugin => plugin.widget);
+  }, [plugins]);
+
   const isEditing: boolean = gridMode === 'edit';
 
   return (
@@ -31,7 +34,7 @@ export default function Dashboard() {
              color="secondary"
              sx={{position: 'absolute', right: 0, bottom: 0}}
              onClick={onToggleGridMode}>
-          <Icon size="28px" path={isEditing ? mdiViewDashboard : mdiViewDashboardEdit} />
+          <Icon size="28px" path={isEditing ? mdiViewDashboard : mdiViewDashboardEdit}/>
         </Fab>
       </Tooltip>
     </Box>

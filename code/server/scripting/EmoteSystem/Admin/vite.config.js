@@ -11,9 +11,8 @@ export default defineConfig({
     build: {
         lib: {
             // IMPORTANT: this name must be unique, or it will conflict
-            //            with other plugins. We recommend to use the name
-            //            of the plugin `EmoteSystem` without its suffix
-            //            `System`.
+            //            with other plugins. You must use the name of the
+            //            plugin `EmoteSystem` without its suffix `System`.
             name: 'Emote',
             entry: './index.ts',
             formats: ['umd'],
@@ -24,7 +23,10 @@ export default defineConfig({
                 'react',
                 //'react-redux',
                 '@mui/material',
+                //'@mui/icons-material',
                 //'@mdi/react',
+                //'@mdi/js',
+                'http-status-codes',
                 'App'
             ],
             output: {
@@ -32,7 +34,10 @@ export default defineConfig({
                     'react': 'React',
                     //'react-redux': 'Redux',
                     '@mui/material': 'MUI',
+                    //'@mui/icons-material': 'MUIIcons',
                     //'@mdi/react': 'MDI',
+                    //'@mdi/js': 'MDIIcons',
+                    'http-status-codes': 'StatusCodes',
                     'App': 'App',
                 }
             }
