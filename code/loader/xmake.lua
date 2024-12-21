@@ -6,9 +6,10 @@ else
             return false
         end
         local stdout, stderr = os.iorunv("tasklist", {"/FI", "IMAGENAME eq Cyberpunk2077.exe"})
-        return #stdout >= 3
+
+        return string.find(stdout, "Cyberpunk2077.exe")
     end
-    
+
     target("Cyberpunk2077")
         set_kind("binary")
         set_basename("Cyberpunk2077")
@@ -20,7 +21,7 @@ else
         on_clean(function(target) end)
         on_link(function(target) end)
         on_install(function(target) end)
-        after_build(function(target) 
+        after_build(function(target)
             local targetdir = target:targetdir()
             local clientdir = path.join(os.projectdir(), target:dep("Client"):targetdir())
 
@@ -62,7 +63,7 @@ else
         on_clean(function(target) end)
         on_link(function(target) end)
         on_install(function(target) end)
-        after_build(function(target) 
+        after_build(function(target)
             local targetdir = target:targetdir()
             local clientdir = path.join(os.projectdir(), target:dep("Client"):targetdir())
 
@@ -84,7 +85,7 @@ else
             end
 
             os.mkdir(modPath)
-            
+
             local client_dll_path = path.join(clientdir, "CyberpunkMP.dll")
             local symlink_path = path.join(modPath, "CyberpunkMP.dll")
 
