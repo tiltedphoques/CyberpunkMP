@@ -124,7 +124,7 @@ export default function WidgetGrid({plugins, gridMode}: WidgetGridProps) {
           <Card key={widget.key}>
             <ErrorBoundary fallbackRender={
               ({error}) => (
-                <Alert severity="error" sx={{width: '500px', m: 'auto'}}>
+                <Alert severity="error" sx={{width: '100%', height: '100%', m: 'auto'}}>
                   Error while rendering widget: {error.message}
                 </Alert>
               )
